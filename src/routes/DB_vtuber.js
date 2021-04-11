@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const DB_add_vtuber = require("../controllers/DB_add_vtuber");
+//const DB_add_vtuber = require("../controllers/DB_add_vtuber");
 const DB_get_vtuber = require("../controllers/DB_get_vtuber");
 
-// http://localhost:3002/DB/vtuber?
-// Affiliation= (にじさんじ, ...) & name= (える, ...) firestoreの仕様で10個まで指定できるよ
+// http://localhost:8080/DB/vtuber?
+// Affiliation= (にじさんじ, ...) & name= (える, ...)
 // クエリ指定しないと全てのデータが返ってくるよ
 router.get("/", async function (req, res) {
   console.log("query", req.query);
@@ -20,9 +20,9 @@ router.post("/", async function (req, res) {
 
   res.json({
     message: result,
-    body: req.body
+    body: req.body,
   });
-})
+});
 
 //routerをモジュールとして扱う準備
 module.exports = router;
