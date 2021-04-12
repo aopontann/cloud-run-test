@@ -49,7 +49,7 @@ module.exports = async function (all_videoId) {
 };
 
 
-/* youtube api videos から返ってくるデータ
+/* data から返ってくるデータ
 {
       "kind": "youtube#videoListResponse",
       "etag": "pMx5emovzWPwlQIibWc477mBJfs",
