@@ -12,8 +12,8 @@ router.get("/", async function (req, res) {
 
   if(req.query.select === "yes") {
     console.log("取得したデータを歌動画か判別するよ");
-    // 判別できたデータは result_selectedVideos.confirm = true になる
-    // 判別が難しいデータは result_selectedVideos.confirm = false になる
+    // 判別できたデータは result_selectedVideos.confirm[]に格納する
+    // 判別が難しいデータは result_selectedVideos.unconfirm[]に格納する
     const result_select_videos = select_videos(
       result_getVideoInfo
     );
@@ -21,7 +21,10 @@ router.get("/", async function (req, res) {
 
   } else if(req.query.select === "no") {
     console.log("取得したデータをそのまま返すよ");
-    res.json(result_getVideoInfo);
+    res.json({
+      confirm: result_getVideoInfo,
+      unconfirm: []
+    });
     
   } else {
     res.json({
