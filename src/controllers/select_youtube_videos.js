@@ -2,10 +2,7 @@
 // all_videoInfo はどのようなデータなのか一番下に記載
 module.exports = function (all_videoInfo) {
   //  条件にあった全ての動画データを入れる
-  let return_data = {
-    confirm: [],
-    unconfirm: []
-  };
+  let return_data = [];
 
   for (const videoInfo of all_videoInfo) {
     const videotime = videoInfo.contentDetails.duration;  // 例 "PT1H33M45S"
@@ -19,15 +16,19 @@ module.exports = function (all_videoInfo) {
       const match_strings_3 = ["feat", "歌", "うた", "曲", "vocal", "Vocal", "唄"];
 
       if (select_video(checktitle, match_strings_1)) {
-        return_data.unconfirm.push(videoInfo);
+        videoInfo.songConfirm = false;
+        return_data.push(videoInfo);
       } else if(select_video(checktitle, match_strings_2)) {
-        return_data.confirm.push(videoInfo);
+        videoInfo.songConfirm = true;
+        return_data.push(videoInfo);
       } else if(select_video(checktitle, match_strings_3) || select_video(checkDesc, match_strings_3)){
-        return_data.unconfirm.push(videoInfo);
+        videoInfo.songConfirm = false;
+        return_data.push(videoInfo);
       }
     }
   }   
   return return_data;
+
 };
 
 function select_video(search, all_match_data) {
@@ -40,81 +41,96 @@ function select_video(search, all_match_data) {
 }
 
 
-/* all_videoInfo から返ってくるデータ
-{
-      "kind": "youtube#videoListResponse",
-      "etag": "pMx5emovzWPwlQIibWc477mBJfs",
-      "items": [
-        {
-          "kind": "youtube#video",
-          "etag": "QJ3F9Ln0tBlibRGZDTzlIjcKvvQ",
-          "id": "OLWqLMbq5QY",
-          "snippet": {
-            "publishedAt": "2018-07-13T21:30:02Z",
-            "channelId": "UCsg-YqdqQ-KFF0LNk23BY4A",
-            "title": "MapleDancer【樋口楓オリジナル曲】",
-            "description": "作詞・作曲・編曲・Mix：かずぺそ\n映像：ソムニア\nサムネイル：brat\n歌：樋口楓\n\n楽曲提供ありがとうございました！\n音楽：かずぺそ\nhttps://twitter.com/kazupeso88\nhttp://www.nicovideo.jp/watch/sm33178298\n映像：ソムニア\nhttps://twitter.com/somnia_RS\nサムネイル：brat\nhttps://twitter.com/brabrabrat00\n\n\n歌詞\n\n白いリボン　秋に染めて\n開演の時間 心燃やすぜ\n\n手を　拝借　いざ　参る\n二次と三次の交わる間\nさあ 今日も 踊りましょ\nポニーテール揺らして\n\nDance!! 月に楓は ふわり宙を舞う\nその姿に見とれた 紅い目が濡れる　\noh yeah\n\n黒い夜空 秋を描く\n最高の時間 魂燃やすぜ\n\nさあ Clap Your Hands\nねえ Shall We Dance?\n兎にも角にも進めよ前へ\n奏でろよ 音楽を\nスカート翻して\n\nJump!! 宵(よい)に楓はふわり弧を描く\nその水面(みなも)に湖月(こげつ)は\n蛙(かわず)を照らす\noh yeah\n\nDance 月に楓は～\nその姿に見とれて\n\nDance!!! 月と楓は 空に舞い踊る\nその宴に見蕩れた 紅い目が揺れる\noh yeah\n\nDance! 月に楓はふわり宙を舞う\n\n歌ってみたシリーズの再生リストはこちら！\nhttps://www.youtube.com/playlist?list=PLXVn5n2jQV_AnMLuD_8gsG5Q2Mehikf_0\n_(-ω- ´ _)⌒)__(-ω- ´ _)⌒)__(-ω- ´ _)⌒)__(-ω- ´ _)⌒)_\n\n◆Twitter◆\nhttps://twitter.com/Higuchikaede/\n創作タグ→#でろあーと\n生放送タグ→#でろおんえあ\n\n◆お問い合わせ先◆\n東京都港区六本木7-18-18 住友不動産六本木通ビル2F incube内\nいちから株式会社 \n\n◆公式ホームページ◆\nhttps://nijisanji.ichikara.co.jp/contact/\n\n◆お問い合わせメール◆\ninfo@ichikara.co.jp\n\n_(-ω- ´ _)⌒)__(-ω- ´ _)⌒)__(-ω- ´ _)⌒)__(-ω- ´ _)⌒)_",
-            "thumbnails": {
-              "default": {
-                "url": "https://i.ytimg.com/vi/OLWqLMbq5QY/default.jpg",
-                "width": 120,
-                "height": 90
-              },
-              "medium": {
-                "url": "https://i.ytimg.com/vi/OLWqLMbq5QY/mqdefault.jpg",
-                "width": 320,
-                "height": 180
-              },
-              "high": {
-                "url": "https://i.ytimg.com/vi/OLWqLMbq5QY/hqdefault.jpg",
-                "width": 480,
-                "height": 360
-              },
-              "standard": {
-                "url": "https://i.ytimg.com/vi/OLWqLMbq5QY/sddefault.jpg",
-                "width": 640,
-                "height": 480
-              },
-              "maxres": {
-                "url": "https://i.ytimg.com/vi/OLWqLMbq5QY/maxresdefault.jpg",
-                "width": 1280,
-                "height": 720
-              }
-            },
-            "channelTitle": "樋口楓【にじさんじ所属】",
-            "tags": [
-              "樋口楓",
-              "でろーん",
-              "MapleDancer",
-              "KANA-DERO",
-              "オリジナル曲",
-              "歌ってみた",
-              "だんちぇ"
-            ],
-            "categoryId": "10",
-            "liveBroadcastContent": "none",
-            "localized": {
-              "title": "MapleDancer【樋口楓オリジナル曲】",
-              "description": "作詞・作曲・編曲・Mix：かずぺそ\n映像：ソムニア\nサムネイル：brat\n歌：樋口楓\n\n楽曲提供ありがとうございました！\n音楽：かずぺそ\nhttps://twitter.com/kazupeso88\nhttp://www.nicovideo.jp/watch/sm33178298\n映像：ソムニア\nhttps://twitter.com/somnia_RS\nサムネイル：brat\nhttps://twitter.com/brabrabrat00\n\n\n歌詞\n\n白いリボン　秋に染めて\n開演の時間 心燃やすぜ\n\n手を　拝借　いざ　参る\n二次と三次の交わる間\nさあ 今日も 踊りましょ\nポニーテール揺らして\n\nDance!! 月に楓は ふわり宙を舞う\nその姿に見とれた 紅い目が濡れる　\noh yeah\n\n黒い夜空 秋を描く\n最高の時間 魂燃やすぜ\n\nさあ Clap Your Hands\nねえ Shall We Dance?\n兎にも角にも進めよ前へ\n奏でろよ 音楽を\nスカート翻して\n\nJump!! 宵(よい)に楓はふわり弧を描く\nその水面(みなも)に湖月(こげつ)は\n蛙(かわず)を照らす\noh yeah\n\nDance 月に楓は～\nその姿に見とれて\n\nDance!!! 月と楓は 空に舞い踊る\nその宴に見蕩れた 紅い目が揺れる\noh yeah\n\nDance! 月に楓はふわり宙を舞う\n\n歌ってみたシリーズの再生リストはこちら！\nhttps://www.youtube.com/playlist?list=PLXVn5n2jQV_AnMLuD_8gsG5Q2Mehikf_0\n_(-ω- ´ _)⌒)__(-ω- ´ _)⌒)__(-ω- ´ _)⌒)__(-ω- ´ _)⌒)_\n\n◆Twitter◆\nhttps://twitter.com/Higuchikaede/\n創作タグ→#でろあーと\n生放送タグ→#でろおんえあ\n\n◆お問い合わせ先◆\n東京都港区六本木7-18-18 住友不動産六本木通ビル2F incube内\nいちから株式会社 \n\n◆公式ホームページ◆\nhttps://nijisanji.ichikara.co.jp/contact/\n\n◆お問い合わせメール◆\ninfo@ichikara.co.jp\n\n_(-ω- ´ _)⌒)__(-ω- ´ _)⌒)__(-ω- ´ _)⌒)__(-ω- ´ _)⌒)_"
-            },
-            "defaultAudioLanguage": "ja"
-          },
-          "contentDetails": {
-            "duration": "PT3M18S",
-            "dimension": "2d",
-            "definition": "hd",
-            "caption": "true",
-            "licensedContent": true,
-            "contentRating": {},
-            "projection": "rectangular"
-          },
-          "statistics": {
-            "viewCount": "1478411",
-            "likeCount": "28416",
-            "dislikeCount": "206",
-            "favoriteCount": "0",
-            "commentCount": "1019"
-          }
-        },
-        ...
+/* all_videoInfo データ
+ [
+  {
+    kind: 'youtube#video',
+    etag: 'MnxfMb6LV5Tnn4akp44EvIVhYDM',
+    id: 'oG8xJF6_B8A',
+    snippet: {
+      publishedAt: '2020-03-01T09:38:57Z',
+      channelId: 'UCuep1JCrMvSxOGgGhBfJuYw',
+      title: '【Minecraft】一ヵ月が経ちました【フレン・Ｅ・ルスタリオ/にじさんじ】',
+      description: '配信タグ：#ルスタリオンエア\n' +
+        '\n' +
+        'さむねあとでかえる！ごめん！！\n' +
+        '\n' +
+        'きかくにむけてれんしゅう！\n' +
+        'いっかげつたったしこれからのこととかいろんなはなししよ\n' +
+        '\n' +
+        '\n' +
+        '\n' +
+        'にじさんじ所属新人バーチャルライバーの\n' +
+        'フレン・E・ルスタリオです\n' +
+        '\n' +
+        '応援してね\n' +
+        '\n' +
+        'チャンネル登録、高評価、通知設定よかったらよろしく！\n' +
+        '\n' +
+        'ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n' +
+        '\n' +
+        '◆ Twitter\n' +
+        'https://twitter.com/furen_2434\n' +
+        '◆チャンネル登録\n' +
+        'https://www.youtube.com/channel/UCuep...\n' +
+        '\n' +
+        '◆生放送関連のツイート #ルスタリオンエア\n' +
+        '◆ファントーク #フレン親衛隊\n' +
+        '◆ファンアート #フレン見て\n' +
+        '\n' +
+        '\n' +
+        '【にじさんじ関連】\n' +
+        '\n' +
+        '◆ 公式HP\n' +
+        'https://nijisanji.ichikara.co.jp/\n' +
+        '\n' +
+        '◆ 公式Twitter\n' +
+        'https://twitter.com/Nijisanji_app\n' +
+        '\n' +
+        '◆ Booth公式Twitter\n' +
+        'https://twitter.com/booth_pm\n' +
+        '\n' +
+        '◆ 公式オンラインショップ\n' +
+        'https://nijisanji.booth.pm/\n' +
+        '\n' +
+        '◆ お問い合わせやプレゼントはこちら\n' +
+        'https://nijisanji.ichikara.co.jp/cont...\n' +
+        '\n' +
+        'ファンレター・プレゼントは、下記住所宛てにお送り下さい。\n' +
+        '\n' +
+        '〒175-0082\n' +
+        '東京都板橋区高島平6-2-1\n' +
+        'ネットデポ新高島平内\n' +
+        'いちから株式会社 フレン・E・ルスタリオ宛\n' +
+        '\n' +
+        'ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー',
+      thumbnails: [Object],
+      channelTitle: 'フレン・E・ルスタリオ',
+      categoryId: '20',
+      liveBroadcastContent: 'none',
+      localized: [Object]
+    },
+    contentDetails: {
+      duration: 'PT59M55S',
+      dimension: '2d',
+      definition: 'hd',
+      caption: 'false',
+      licensedContent: true,
+      contentRating: {},
+      projection: 'rectangular'
+    },
+    statistics: {
+      viewCount: '34750',
+      likeCount: '1353',
+      dislikeCount: '3',
+      favoriteCount: '0',
+      commentCount: '39'
+    },
+    liveStreamingDetails: {
+      actualStartTime: '2020-03-01T08:31:28Z',
+      actualEndTime: '2020-03-01T09:31:03Z',
+      scheduledStartTime: '2020-03-01T08:30:00Z'
+    }
+  },
+  ...
 */
