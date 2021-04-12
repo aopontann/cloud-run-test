@@ -37,7 +37,6 @@ model Times {
 model Videos {
   id          String       @id @db.VarChar(20)
   title       String       @db.VarChar(255)
-  description String?      @db.Text
   songConfirm Boolean      @default(false)
   SongVtuber  SongVtuber[]
   statistic   Statistics?
