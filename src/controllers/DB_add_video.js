@@ -40,10 +40,10 @@ module.exports = async function (body) {
         return {
           id: videoInfo.id,
           videoLength: videoInfo.contentDetails.duration,
-          scheduledStartTime:
-            videoInfo.liveStreamingDetails != "none"
+          startTime:
+            videoInfo.liveStreamingDetails
               ? videoInfo.liveStreamingDetails.scheduledStartTime
-              : null,
+              : videoInfo.snippet.publishedAt,
         };
       }),
     }),
