@@ -7,7 +7,8 @@ module.exports = async function(all_videoId) {
       include: {
         statistic: true,
         thumbnail: true,
-        time: true
+        time: true,
+        SongVtuber: true
       }
     });
     await prisma.$disconnect();
@@ -21,7 +22,8 @@ module.exports = async function(all_videoId) {
     include: {
       statistic: true,
       thumbnail: true,
-      time: true
+      time: true,
+      SongVtuber: true
     }
   });
   await prisma.$disconnect();
