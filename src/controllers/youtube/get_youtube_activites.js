@@ -31,8 +31,6 @@ module.exports = async function (all_channelId, datetimeAfter, datetimeBefore) {
         return return_data;
       }
 
-      console.log(data);
-
       data.items.forEach(item => {
         const content = item.contentDetails.upload || null;
         if (content && content.videoId) {
