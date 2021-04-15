@@ -3,9 +3,13 @@ const express = require('express');
 const app = express();
 
 //app.use(express.urlencoded({ extended: true }));
-//app.use(express.json());
+// ↓これがないと(POST)bodyが受け取れなくなる
+app.use(express.json());
 
 const port = process.env.PORT || 8080; // port番号を指定
+
+const youtube_activities_router = require('./routes/youtube_activities');
+app.use('/youtube/activities', youtube_activities_router);
 
 const youtube_search_router = require('./routes/youtube_search');
 app.use('/youtube/search', youtube_search_router);
@@ -21,8 +25,6 @@ app.use('/DB/vtuber', DB_vtuber_router);
 
 const routin_router = require('./routes/routine');
 app.use('/routine', routin_router);
-
-
 
 
 //サーバ起動
