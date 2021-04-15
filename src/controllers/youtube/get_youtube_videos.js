@@ -8,11 +8,12 @@ const { json } = require("body-parser");
 const { DefaultDeserializer } = require("v8");
 
 // serachVideoで取得したvideoIdを使ってYoutube Data Api Videosを叩いて動画の詳細データを取得する
-// all_videoId [URL, URL, ...]
-module.exports = async function (all_videoId) {
+module.exports = async function (query) {
   const YoutubeApiVideos = "https://www.googleapis.com/youtube/v3/videos";
   const Key = process.env.YOUTUBE_DATA_API_KEY;
-  const part = "statistics,contentDetails,snippet,liveStreamingDetails";
+
+  const part = query.part;
+  let all_videoId = query.videoId; // query.videoId [URL, URL, ...]
 
   //  複数の動画データを入れる
   let return_data = [];

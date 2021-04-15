@@ -6,9 +6,10 @@ const select_videos = require("../controllers/youtube/select_youtube_videos");
 
 //http://localhost:3002/youtube/videos?select=(bool)&videoId=
 router.get("/", async function (req, res) {
-  const result_getVideoInfo = await get_videoinfo(
-    req.query.videoId.split(",")
-  );
+  const result_getVideoInfo = await get_videoinfo({
+    videoId: req.query.videoId ? req.query.videoId.split(",") : [],
+    part: req.query.part || "statistics,contentDetails,snippet,liveStreamingDetails"
+  });
 
   if(req.query.select === "yes") {
     console.log("取得したデータを歌動画か判別するよ");
