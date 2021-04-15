@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const get_search_videos = require('../controllers/get_youtube_search');
+const get_search_videos = require('../controllers/youtube/get_youtube_search');
 
 //http://localhost:3002/youtube/search?channelId=UCuep1JCrMvSxOGgGhBfJuYw&datetimeAfter=2020-03-01T00:00:00Z&datetimeBefore=2020-03-05T00:00:00Z
 router.get('/', async function(req,res){

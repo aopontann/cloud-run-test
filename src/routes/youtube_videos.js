@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const get_videoinfo = require("../controllers/get_youtube_videos");
-const select_videos = require("../controllers/select_youtube_videos");
+const get_videoinfo = require("../controllers/youtube/get_youtube_videos");
+const select_videos = require("../controllers/youtube/select_youtube_videos");
 
 //http://localhost:3002/youtube/videos?select=(bool)&videoId=
 router.get("/", async function (req, res) {

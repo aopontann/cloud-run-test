@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const get_youtube_activites = require('../controllers/get_youtube_activites');
+const get_youtube_activites = require('../controllers/youtube/get_youtube_activites');
 
 
 router.get('/', async function(req,res){
