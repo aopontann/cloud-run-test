@@ -1,53 +1,65 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const get_search_songVtuber = require('./get_search_songVtuber');
+
 module.exports = async function (body) {
-  await prisma.$transaction([
-    prisma.videos.createMany({
-      data: body.map((videoInfo) => {
-        return {
-          id: videoInfo.id,
-          title: videoInfo.snippet.title,
-          songConfirm: videoInfo.songConfirm,
-        };
-      }),
+  const result_search = await get_search_songVtuber(body);
+  /* result_search
+  [{
+    videoId: videoInfo.id,
+    channelId: vtuber.id,
+    role: "歌"
+  }]
+  */
+  const songVtuber = prisma.songVtuber.createMany({
+    data: result_search
+  });
+  const videos = prisma.videos.createMany({
+    data: body.map((videoInfo) => {
+      return {
+        id: videoInfo.id,
+        title: videoInfo.snippet.title,
+        songConfirm: videoInfo.songConfirm,
+      };
     }),
-    prisma.thumbnails.createMany({
-      data: body.map((videoInfo) => {
-        return {
-          id: videoInfo.id,
-          defaultUrl: videoInfo.snippet.thumbnails.default.url,
-          medium: videoInfo.snippet.thumbnails.medium.url,
-          high: videoInfo.snippet.thumbnails.high.url,
-          standard: videoInfo.snippet.thumbnails.standard.url,
-          maxres: videoInfo.snippet.thumbnails.maxres.url,
-        };
-      }),
+  });
+  const thumbnails = prisma.thumbnails.createMany({
+    data: body.map((videoInfo) => {
+      return {
+        id: videoInfo.id,
+        defaultUrl: videoInfo.snippet.thumbnails.default.url,
+        medium: videoInfo.snippet.thumbnails.medium.url,
+        high: videoInfo.snippet.thumbnails.high.url,
+        standard: videoInfo.snippet.thumbnails.standard.url,
+        maxres: videoInfo.snippet.thumbnails.maxres.url,
+      };
+    })
+  });
+  const statistics = prisma.statistics.createMany({
+    data: body.map((videoInfo) => {
+      return {
+        id: videoInfo.id,
+        viewCount: Number(videoInfo.statistics.viewCount),
+        likeCount: Number(videoInfo.statistics.likeCount),
+        dislikeCount: Number(videoInfo.statistics.dislikeCount),
+        commentCount: Number(videoInfo.statistics.commentCount),
+      };
     }),
-    prisma.statistics.createMany({
-      data: body.map((videoInfo) => {
-        return {
-          id: videoInfo.id,
-          viewCount: Number(videoInfo.statistics.viewCount),
-          likeCount: Number(videoInfo.statistics.likeCount),
-          dislikeCount: Number(videoInfo.statistics.dislikeCount),
-          commentCount: Number(videoInfo.statistics.commentCount),
-        };
-      }),
+  });
+  const times = prisma.times.createMany({
+    data: body.map((videoInfo) => {
+      return {
+        id: videoInfo.id,
+        videoLength: videoInfo.contentDetails.duration,
+        startTime:
+          videoInfo.liveStreamingDetails
+            ? videoInfo.liveStreamingDetails.scheduledStartTime
+            : videoInfo.snippet.publishedAt,
+      };
     }),
-    prisma.times.createMany({
-      data: body.map((videoInfo) => {
-        return {
-          id: videoInfo.id,
-          videoLength: videoInfo.contentDetails.duration,
-          startTime:
-            videoInfo.liveStreamingDetails
-              ? videoInfo.liveStreamingDetails.scheduledStartTime
-              : videoInfo.snippet.publishedAt,
-        };
-      }),
-    }),
-  ]);
+  });
+  await prisma.$transaction([videos, thumbnails, statistics, times, songVtuber]);
   
   await prisma.$disconnect();
 };
