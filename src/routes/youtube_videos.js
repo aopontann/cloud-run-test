@@ -12,6 +12,12 @@ router.get("/", async function (req, res) {
   });
 
   if(req.query.select === "yes") {
+    if(!req.query.part.match(/snippet/)) {
+      res.json({
+        error: "select するには snippet が必要です"
+      });
+      return;
+    }
     console.log("取得したデータを歌動画か判別するよ");
     // 判別できたデータは result_select_Videos.songConfirm = true になる
     // 判別が難しいデータは result_select_Videos.songConfirm = false になる
