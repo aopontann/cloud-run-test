@@ -7,15 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Statistics {
-  id           String @id @db.VarChar(20)
-  viewCount    Int?   @db.UnsignedInt
-  likeCount    Int?   @db.UnsignedInt
-  dislikeCount Int?   @db.UnsignedInt
-  commentCount Int?   @db.UnsignedInt
-  video        Videos @relation(fields: [id], references: [id])
-}
-
 model Thumbnails {
   id         String  @id @db.VarChar(20)
   defaultUrl String? @db.VarChar(255)
@@ -35,13 +26,14 @@ model Times {
 }
 
 model Videos {
-  id          String       @id @db.VarChar(20)
-  title       String       @db.VarChar(255)
-  songConfirm Boolean      @default(false)
-  SongVtuber  SongVtuber[]
-  statistic   Statistics?
-  thumbnail   Thumbnails?
-  time        Times?
+  id              String         @id @db.VarChar(20)
+  title           String         @db.VarChar(255)
+  songConfirm     Boolean        @default(false)
+  checkSongVtuber Boolean        @default(false)
+  dayViewCount    DayCount[]
+  songVtuber      SongVtuber[]
+  thumbnail       Thumbnails?
+  time            Times?
 }
 
 model Vtuber {
@@ -59,11 +51,23 @@ model SongVtuber {
   createdAt DateTime @default(now()) @db.Timestamp(0)
   videoId   String   @db.VarChar(20)
   channelId String   @db.VarChar(30)
-  confirm   Boolean  @default(false)
   role      String   @db.VarChar(20)
   vtuber    Vtuber   @relation(fields: [channelId], references: [id])
   videos    Videos   @relation(fields: [videoId], references: [id])
 
   @@index([channelId], name: "channelId")
+  @@index([videoId], name: "videoId")
+}
+
+model DayCount {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  videoId   String   @db.VarChar(20)
+  viewCount    Int?   @db.UnsignedInt
+  likeCount    Int?   @db.UnsignedInt
+  dislikeCount Int?   @db.UnsignedInt
+  commentCount Int?   @db.UnsignedInt
+  videos    Videos   @relation(fields: [videoId], references: [id])
+
   @@index([videoId], name: "videoId")
 }
