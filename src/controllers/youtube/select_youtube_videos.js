@@ -5,41 +5,62 @@ module.exports = function (all_videoInfo) {
   let return_data = [];
 
   for (const videoInfo of all_videoInfo) {
-    const videotime = videoInfo.contentDetails.duration;  // 例 "PT1H33M45S"
-    const comptime = "PT9M59S" // 9分59秒
+    const videotime = videoInfo.contentDetails.duration; // 例 "PT1H33M45S"
+    const comptime = "PT9M59S"; // 9分59秒
 
-    if (comptime.length >= videotime.length) {    // 動画の長さが9分59秒以下の場合
+    if (comptime.length >= videotime.length) {
+      // 動画の長さが9分59秒以下の場合
       const checktitle = videoInfo.snippet.title;
       const checkDesc = videoInfo.snippet.description;
       const match_strings_1 = ["試聴", "short", "Short"];
-      const match_strings_2 = ["歌ってみた", "歌って踊ってみた", "cover", "Cover", "MV", "Music Video", "ソング", "song", "オリジナル曲"];
-      const match_strings_3 = ["feat", "歌", "うた", "曲", "vocal", "Vocal", "唄"];
+      const match_strings_2 = [
+        "歌ってみた",
+        "歌って踊ってみた",
+        "cover",
+        "Cover",
+        "MV",
+        "Music Video",
+        "ソング",
+        "song",
+        "オリジナル曲",
+      ];
+      const match_strings_3 = [
+        "feat",
+        "歌",
+        "うた",
+        "曲",
+        "vocal",
+        "Vocal",
+        "唄",
+      ];
 
       if (select_video(checktitle, match_strings_1)) {
         videoInfo.songConfirm = false;
         return_data.push(videoInfo);
-      } else if(select_video(checktitle, match_strings_2)) {
+      } else if (select_video(checktitle, match_strings_2)) {
         videoInfo.songConfirm = true;
         return_data.push(videoInfo);
-      } else if(select_video(checktitle, match_strings_3) || select_video(checkDesc, match_strings_3)){
+      } else if (
+        select_video(checktitle, match_strings_3) ||
+        select_video(checkDesc, match_strings_3)
+      ) {
         videoInfo.songConfirm = false;
         return_data.push(videoInfo);
       }
     }
-  }   
+  }
   return return_data;
-
 };
 
 function select_video(search, all_match_data) {
-  for(const match_data of all_match_data) {
-    if(search.match(match_data)){
+  for (const match_data of all_match_data) {
+    const reg = new RegExp(match_data);
+    if (search.match(reg)) {
       return true;
     }
   }
   return false;
 }
-
 
 /* all_videoInfo データ
  [
