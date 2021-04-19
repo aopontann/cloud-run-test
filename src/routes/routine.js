@@ -10,7 +10,7 @@ const DB_add_videos = require("../controllers/DB_add_video");
 const DB_add_viewCount = require("../controllers/DB_add_viewCount");
 
 router.post("/addNewVideo", async function (req, res) {
-  /*
+  
   const result_DB_get_vtuber = await DB_get_vtuber({
     Affiliation: "にじさんじ,にじさんじユニット,にじさんじ公式"
   });
@@ -23,8 +23,7 @@ router.post("/addNewVideo", async function (req, res) {
   const datatimeBefore = "2021-01-31T23:59:59Z"
   const result_get_youtube_activites = await get_youtube_activites(search_vtuber_channelId, datatimeAfter, datatimeBefore);
   console.log(result_get_youtube_activites); // videoId, videoId, ...
-  */
-  const result_get_youtube_activites = require("../../jsonFolder/videoId.json");
+
   // 動画の詳細データを取得する
   const result_get_youtube_videos = await get_youtube_videos({
     videoId: result_get_youtube_activites.videoId.split(','),
