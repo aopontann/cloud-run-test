@@ -1,46 +1,56 @@
-//getVideoInfoが取得した動画詳細データを使って、動画が歌ってみた系なのか判別する
-// all_videoInfo はどのようなデータなのか一番下に記載
-module.exports = function (all_videoInfo) {
-  //  条件にあった全ての動画データを入れる
-  let return_data = {
-    confirm: [],
-    unconfirm: []
-  };
+// fetchをnode.jsで使う
+const fetch = require("node-fetch");
 
-  for (const videoInfo of all_videoInfo) {
-    const videotime = videoInfo.contentDetails.duration;  // 例 "PT1H33M45S"
-    const comptime = "PT9M59S" // 9分59秒
+// 環境変数を使う
+require("dotenv").config();
 
-    if (comptime.length >= videotime.length) {    // 動画の長さが9分59秒以下の場合
-      const checktitle = videoInfo.snippet.title;
-      const checkDesc = videoInfo.snippet.description;
-      const match_strings_1 = ["試聴", "short", "Short"];
-      const match_strings_2 = ["歌ってみた", "歌って踊ってみた", "cover", "Cover", "MV", "Music Video", "ソング", "song", "オリジナル曲"];
-      const match_strings_3 = ["feat", "歌", "うた", "曲", "vocal", "Vocal", "唄"];
+const { json } = require("body-parser");
+const { DefaultDeserializer } = require("v8");
 
-      if (select_video(checktitle, match_strings_1)) {
-        return_data.unconfirm.push(videoInfo);
-      } else if(select_video(checktitle, match_strings_2)) {
-        return_data.confirm.push(videoInfo);
-      } else if(select_video(checktitle, match_strings_3) || select_video(checkDesc, match_strings_3)){
-        return_data.unconfirm.push(videoInfo);
-      }
+// serachVideoで取得したvideoIdを使ってYoutube Data Api Videosを叩いて動画の詳細データを取得する
+module.exports = async function (query) {
+  const YoutubeApiVideos = "https://www.googleapis.com/youtube/v3/videos";
+  const Key = process.env.YOUTUBE_DATA_API_KEY;
+
+  const part = query.part;
+  let all_videoId = query.videoId; // query.videoId [URL, URL, ...]
+
+  //  複数の動画データを入れる
+  let return_data = [];
+
+  // ZArPzQu_cXE
+  console.log("Youtube Data 取得開始");
+
+  const cutsize = 50;
+  while (all_videoId.length > 0) {
+    console.log("Youtube Data 取得中");
+    // 50個のURLに分ける
+    const videoId = all_videoId.slice(0, cutsize); // 0 - 49まで配列をコピー 49ない場合最後まで
+    const send_videoId = videoId.join(","); // 配列を , 区切り文字列に変換
+
+    const res = await fetch(
+      `${YoutubeApiVideos}?part=${part}&id=${send_videoId}&key=${Key}`
+    );
+    const data = await res.json();
+
+    if (data.error) {
+      console.log("get_youtube_videos error!");
+      return return_data;
     }
-  }   
+
+    const result_get_videos = data.items.slice();
+    return_data.push(...result_get_videos);
+
+    all_videoId = all_videoId.slice(cutsize);
+  }
+
+  console.log("return_data", return_data);
+  console.log("Youtube Data 完了!");
   return return_data;
 };
 
-function select_video(search, all_match_data) {
-  for(const match_data of all_match_data) {
-    if(search.match(match_data)){
-      return true;
-    }
-  }
-  return false;
-}
 
-
-/* all_videoInfo から返ってくるデータ
+/* data から返ってくるデータ
 {
       "kind": "youtube#videoListResponse",
       "etag": "pMx5emovzWPwlQIibWc477mBJfs",

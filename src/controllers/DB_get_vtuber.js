@@ -1,56 +1,101 @@
-const admin = require("firebase-admin");
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-// 初期化は一度だけ
-if (!admin.apps.length) {
-  console.log("admin 初期化するよ");
-  const serviceAccount = require("../../path/to/natural-venture-305013-21e2c77b1f88.json");
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-} else {
-  console.log("admin 初期化してあるよ");
-}
-
-const db = admin.firestore();
-
-module.exports = async function (query) {
-  /*
-  このクエリにあったデータを持ってくる
-  例　query { Affiliation: 'にじさんじ, ...', name: 'aaa, ...' }
-  */
-  let return_data = [];
-
-  // クエリ nameがある場合  Affiliationも指定されているかも
-  if (query.name) {
-    const search_name = query.name.split(",");
-    const snapshot = await db
-      .collection("VtuberInfo-nijisanji")
-      .where("name", "in", search_name)
-      .get();
-    snapshot.forEach((doc) => {
-      if (!query.Affiliation) {
-        return_data.push(doc.data());
-      } else if (query.Affiliation.search(doc.data().Affiliation)) {
-        return_data.push(doc.data());
+module.exports = async function(query) {
+  const affi = query.Affiliation ? query.Affiliation.split(',') : null;
+  const names = query.name ? query.name.split(',') : null;
+  const channelId = query.channelId ? query.channelId.split(',') : null;
+  
+  // 所属と名前が指定されている場合 条件にあった情報を返す
+  if (affi && names) {
+    const getVtuber = await prisma.vtuber.findMany({
+      where: {
+        AND: [
+          {
+            name: { in: names }
+          },
+          {
+            affiliation: { in: affi }
+          }
+        ]
+      },
+      include: {
+        songVtuber: true
       }
     });
-  // クエリ nameはないけど、Affiliationがある場合
-  } else if (query.Affiliation) {
-    const search_Affiliation = query.Affiliation.split(",");
-    const snapshot = await db
-      .collection("VtuberInfo-nijisanji")
-      .where("Affiliation", "in", search_Affiliation)
-      .get();
-    snapshot.forEach((doc) => {
-      return_data.push(doc.data());
-    });
-  // クエリ nameもAffiliationもない場合
-  } else {
-    const snapshot = await db.collection("VtuberInfo-nijisanji").get();
-    snapshot.forEach((doc) => {
-      return_data.push(doc.data());
-    });
+    await prisma.$disconnect();
+    return getVtuber;
   }
 
-  return return_data;
-};
+  // 所属とチャンネルIDが指定されている場合
+  if (affi && channelId) {
+    const getVtuber = await prisma.vtuber.findMany({
+      where: {
+        AND: [
+          {
+            id: { in: channelId }
+          },
+          {
+            affiliation: { in: affi }
+          }
+        ]
+      },
+      include: {
+        songVtuber: true
+      }
+    });
+    await prisma.$disconnect();
+    return getVtuber;
+  }
+
+  // 所属のみ指定されている場合
+  if (affi) {
+    const getVtuber = await prisma.vtuber.findMany({
+      where: {
+        affiliation: { in: affi }
+      },
+      include: {
+        songVtuber: true
+      }
+    });
+    await prisma.$disconnect();
+    return getVtuber;
+  }
+
+  // 名前のみ指定されている場合
+  if (names) {
+    const getVtuber = await prisma.vtuber.findMany({
+      where: {
+        name: { in: names }
+      },
+      include: {
+        songVtuber: true
+      }
+    });
+    await prisma.$disconnect();
+    return getVtuber;
+  }
+
+  // チャンネルIDのみ指定されている場合
+  if (channelId) {
+    const getVtuber = await prisma.vtuber.findMany({
+      where: {
+        id: { in: channelId }
+      },
+      include: {
+        songVtuber: true
+      }
+    });
+    await prisma.$disconnect();
+    return getVtuber;
+  }
+
+  // 何も指定されていない場合 全ての情報を返す
+  const getVtuber = await prisma.vtuber.findMany({
+    include: {
+      songVtuber: true
+    }
+  });
+  await prisma.$disconnect();
+  return getVtuber;
+}

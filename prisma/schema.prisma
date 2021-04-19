@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Thumbnails {
+  id         String  @id @db.VarChar(20)
+  defaultUrl String? @db.VarChar(255)
+  medium     String? @db.VarChar(255)
+  high       String? @db.VarChar(255)
+  standard   String? @db.VarChar(255)
+  maxres     String? @db.VarChar(255)
+  video      Videos  @relation(fields: [id], references: [id])
+}
+
+model Times {
+  id          String    @id @db.VarChar(20)
+  createdAt   DateTime  @default(now()) @db.Timestamp(0)
+  videoLength String    @db.VarChar(10)
+  startTime   DateTime? @db.DateTime(0)
+  video       Videos    @relation(fields: [id], references: [id])
+}
+
+model Videos {
+  id              String         @id @db.VarChar(20)
+  title           String         @db.VarChar(255)
+  songConfirm     Boolean        @default(false)
+  checkSongVtuber Boolean        @default(false)
+  dayCount    DayCount[]
+  songVtuber      SongVtuber[]
+  thumbnail       Thumbnails?
+  time            Times?
+}
+
+model Vtuber {
+  id          String       @id @db.VarChar(30)
+  name        String       @db.VarChar(255)
+  readname    String       @db.VarChar(255)
+  affiliation String       @db.VarChar(255)
+  birthday    String?      @db.Char(4)
+  image       String?      @db.VarChar(255)
+  songVtuber  SongVtuber[]
+}
+
+model SongVtuber {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  videoId   String   @db.VarChar(20)
+  channelId String   @db.VarChar(30)
+  role      String   @db.VarChar(20)
+  vtuber    Vtuber   @relation(fields: [channelId], references: [id])
+  videos    Videos   @relation(fields: [videoId], references: [id])
+
+  @@index([channelId], name: "channelId")
+  @@index([videoId], name: "videoId")
+}
+
+model DayCount {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  videoId   String   @db.VarChar(20)
+  viewCount    Int?   @db.UnsignedInt
+  likeCount    Int?   @db.UnsignedInt
+  dislikeCount Int?   @db.UnsignedInt
+  commentCount Int?   @db.UnsignedInt
+  videos    Videos   @relation(fields: [videoId], references: [id])
+
+  @@index([videoId], name: "videoId")
+}
