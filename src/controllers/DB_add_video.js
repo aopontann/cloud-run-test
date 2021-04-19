@@ -1,10 +1,57 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const get_search_songVtuber = require('./get_search_songVtuber');
+const get_search_songVtuber = require("./get_search_songVtuber");
 
-module.exports = async function (body) {
-  const result_search = await get_search_songVtuber(body);
+module.exports = async function (videoInfo) {
+  const find = await prisma.videos.findFirst({
+    where: {
+      id: videoInfo.id
+    }
+  });
+  // 既に動画情報が保存されている場合
+  if (find) {
+    await prisma.$disconnect();
+    return "already videoId exist"
+  }
+  const videos = prisma.videos.create({
+    data: {
+      id: videoInfo.id,
+      title: videoInfo.snippet.title,
+      songConfirm: videoInfo.songConfirm,
+    },
+  });
+  const thumb = videoInfo.snippet.thumbnails;
+  const thumbnails = prisma.thumbnails.create({
+    data: {
+      id: videoInfo.id,
+      defaultUrl: thumb.default ? thumb.default.url : null,
+      medium: thumb.medium ? thumb.medium.url : null,
+      high: thumb.high ? thumb.high.url : null,
+      standard: thumb.standard ? thumb.standard.url : null,
+      maxres: thumb.maxres ? thumb.maxres.url : null,
+    },
+  });
+  const times = prisma.times.create({
+    data: {
+      id: videoInfo.id,
+      videoLength: videoInfo.contentDetails.duration,
+      startTime: videoInfo.liveStreamingDetails
+        ? videoInfo.liveStreamingDetails.scheduledStartTime
+        : videoInfo.snippet.publishedAt,
+    },
+  });
+  const count = videoInfo.statistics;
+  const daycount = prisma.dayCount.create({
+    data: {
+      videoId: videoInfo.id,
+      viewCount: count.viewCount ? Number(count.viewCount) : null,
+      likeCount: count.likeCount ? Number(count.likeCount) : null,
+      dislikeCount: count.dislikeCount ? Number(count.dislikeCount) : null,
+      commentCount: count.commentCount ? Number(count.commentCount) : null,
+    },
+  });
+  const result_search = await get_search_songVtuber(videoInfo);
   /* result_search
   [{
     videoId: videoInfo.id,
@@ -13,59 +60,17 @@ module.exports = async function (body) {
   }]
   */
   const songVtuber = prisma.songVtuber.createMany({
-    data: result_search
+    data: result_search,
   });
-  const videos = prisma.videos.createMany({
-    data: body.map((videoInfo) => {
-      return {
-        id: videoInfo.id,
-        title: videoInfo.snippet.title,
-        songConfirm: videoInfo.songConfirm,
-      };
-    }),
-  });
-  const thumbnails = prisma.thumbnails.createMany({
-    data: body.map((videoInfo) => {
-      return {
-        id: videoInfo.id,
-        defaultUrl: videoInfo.snippet.thumbnails.default.url,
-        medium: videoInfo.snippet.thumbnails.medium.url,
-        high: videoInfo.snippet.thumbnails.high.url,
-        standard: videoInfo.snippet.thumbnails.standard.url,
-        maxres: videoInfo.snippet.thumbnails.maxres.url,
-      };
-    })
-  });
-  const statistics = prisma.statistics.createMany({
-    data: body.map((videoInfo) => {
-      return {
-        id: videoInfo.id,
-        viewCount: Number(videoInfo.statistics.viewCount),
-        likeCount: Number(videoInfo.statistics.likeCount),
-        dislikeCount: Number(videoInfo.statistics.dislikeCount),
-        commentCount: Number(videoInfo.statistics.commentCount),
-      };
-    }),
-  });
-  const times = prisma.times.createMany({
-    data: body.map((videoInfo) => {
-      return {
-        id: videoInfo.id,
-        videoLength: videoInfo.contentDetails.duration,
-        startTime:
-          videoInfo.liveStreamingDetails
-            ? videoInfo.liveStreamingDetails.scheduledStartTime
-            : videoInfo.snippet.publishedAt,
-      };
-    }),
-  });
-  await prisma.$transaction([videos, thumbnails, statistics, times, songVtuber]);
-  
+
+  await prisma.$transaction([videos, thumbnails, times, daycount, songVtuber]);
+
   await prisma.$disconnect();
+
+  return "success";
 };
 
 /* body = get_youtube_videos の取得データ 例
-[
     {
         "kind": "youtube#video",
         "etag": "MnxfMb6LV5Tnn4akp44EvIVhYDM",
@@ -200,5 +205,4 @@ module.exports = async function (body) {
         },
         "songConfirm": true
     }
-]
 */
