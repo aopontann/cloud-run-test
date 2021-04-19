@@ -30,7 +30,7 @@ model Videos {
   title           String         @db.VarChar(255)
   songConfirm     Boolean        @default(false)
   checkSongVtuber Boolean        @default(false)
-  dayViewCount    DayCount[]
+  dayCount    DayCount[]
   songVtuber      SongVtuber[]
   thumbnail       Thumbnails?
   time            Times?
