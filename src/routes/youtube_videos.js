@@ -6,13 +6,16 @@ const select_videos = require("../controllers/youtube/select_youtube_videos");
 
 //http://localhost:3002/youtube/videos?select=(bool)&videoId=
 router.get("/", async function (req, res) {
+  console.log("query", req.query);
+  const part = req.query.part || "statistics,contentDetails,snippet,liveStreamingDetails";
+  
   const result_getVideoInfo = await get_videoinfo({
     videoId: req.query.videoId ? req.query.videoId.split(",") : [],
-    part: req.query.part || "statistics,contentDetails,snippet,liveStreamingDetails"
+    part: part
   });
 
   if(req.query.select === "yes") {
-    if(!req.query.part.match(/snippet/)) {
+    if(!part.match(/snippet/)) {
       res.json({
         error: "select するには snippet が必要です"
       });
