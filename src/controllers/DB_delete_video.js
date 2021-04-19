@@ -2,6 +2,15 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 module.exports = async function(delete_id) {
+  const find = await prisma.videos.findFirst({
+    where: {
+      id: delete_id
+    }
+  });
+  if (!find) {
+    await prisma.$disconnect();
+    return "not delete videoId";
+  }
   const deleteDayCount = prisma.dayCount.deleteMany({
     where: {
       videoId: delete_id
@@ -29,4 +38,5 @@ module.exports = async function(delete_id) {
   });
   await prisma.$transaction([deleteDayCount, deleteSongVideos, times, thumbnails, videos]);
   await prisma.$disconnect();
+  return "deleted video";
 }
