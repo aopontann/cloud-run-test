@@ -2,10 +2,7 @@
 const fetch = require("node-fetch");
 
 // 環境変数を使う
-require("dotenv").config();
-
-const { json } = require("body-parser");
-const { DefaultDeserializer } = require("v8");
+//require("dotenv").config();
 
 // serachVideoで取得したvideoIdを使ってYoutube Data Api Videosを叩いて動画の詳細データを取得する
 module.exports = async function (query) {
