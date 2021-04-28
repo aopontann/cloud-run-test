@@ -2,12 +2,16 @@
 const fetch = require("node-fetch");
 
 //指定した期間と指定したチャンネルの全ての動画URLを取得する
-module.exports = async function (all_channelId, datetimeAfter, datetimeBefore) {
+module.exports = async function (query) {
   //引数datetime は "1970-01-01T00:00:00Z" のようなデータを使用する
   //Youtube Data API を叩くためのプロパティ
   const YoutubeApiSearch = "https://www.googleapis.com/youtube/v3/activities";
   const Key = process.env.YOUTUBE_DATA_API_KEY;
   const part = "contentDetails";
+
+  const all_channelId = query.all_channelId || [];
+  const datetimeAfter = query.datetimeAfter;
+  const datetimeBefore = query.datetimeBefore;
 
   //  期間分全ての動画情報を入れる
   let return_data = [];
