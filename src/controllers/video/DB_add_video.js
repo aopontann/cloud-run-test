@@ -1,73 +1,69 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+// タイムゾーンの時間を取得
+const { formatToTimeZone } = require("date-fns-timezone");
+const FORMAT = "YYYY-MM-DDTHH:mm:ss";
+const TIME_ZONE_TOKYO = "Asia/Tokyo";
+const now = new Date();
+const formatted_now = formatToTimeZone(now, FORMAT, {
+  timeZone: TIME_ZONE_TOKYO,
+});
 
-const get_search_songVtuber = require("./get_search_songVtuber");
+module.exports = async function (query) {
+  const all_videoInfo = query.all_videoInfo;
+  const songConfirm = query.songConfirm || false;
+  const result = {
+    success: [],
+    error: [],
+    success_videoInfo: [],
+  };
 
-module.exports = async function (videoInfo) {
-  const find = await prisma.videos.findFirst({
-    where: {
-      id: videoInfo.id
-    }
-  });
-  // 既に動画情報が保存されている場合
-  if (find) {
-    await prisma.$disconnect();
-    return "already videoId exist"
+  console.log("add video start!!");
+  for await (const videoInfo of all_videoInfo) {
+    let errorFlag = false;
+    console.log("videoId = ", videoInfo.id);
+    const thumb = videoInfo.snippet.thumbnails;
+    await prisma.videos
+      .create({
+        data: {
+          id: videoInfo.id,
+          title: videoInfo.snippet.title,
+          songConfirm: songConfirm,
+          thumbnail: {
+            create: {
+              defaultUrl: thumb.default ? thumb.default.url : null,
+              medium: thumb.medium ? thumb.medium.url : null,
+              high: thumb.high ? thumb.high.url : null,
+              standard: thumb.standard ? thumb.standard.url : null,
+              maxres: thumb.maxres ? thumb.maxres.url : null,
+            },
+          },
+          time: {
+            create: {
+              createdAt: formatted_now + "Z",
+              videoLength: videoInfo.contentDetails.duration,
+              startTime: videoInfo.liveStreamingDetails
+                ? videoInfo.liveStreamingDetails.scheduledStartTime
+                : videoInfo.snippet.publishedAt,
+            },
+          },
+        },
+      })
+      .catch((e) => {
+        console.log("add video error!");
+        errorFlag = true;
+      })
+      .finally(() => {
+        errorFlag
+          ? result.error.push(videoInfo.id)
+          : result.success.push(videoInfo.id) && result.success_videoInfo.push(videoInfo);
+      });
   }
-  const videos = prisma.videos.create({
-    data: {
-      id: videoInfo.id,
-      title: videoInfo.snippet.title,
-      songConfirm: videoInfo.songConfirm,
-    },
-  });
-  const thumb = videoInfo.snippet.thumbnails;
-  const thumbnails = prisma.thumbnails.create({
-    data: {
-      id: videoInfo.id,
-      defaultUrl: thumb.default ? thumb.default.url : null,
-      medium: thumb.medium ? thumb.medium.url : null,
-      high: thumb.high ? thumb.high.url : null,
-      standard: thumb.standard ? thumb.standard.url : null,
-      maxres: thumb.maxres ? thumb.maxres.url : null,
-    },
-  });
-  const times = prisma.times.create({
-    data: {
-      id: videoInfo.id,
-      videoLength: videoInfo.contentDetails.duration,
-      startTime: videoInfo.liveStreamingDetails
-        ? videoInfo.liveStreamingDetails.scheduledStartTime
-        : videoInfo.snippet.publishedAt,
-    },
-  });
-  const count = videoInfo.statistics;
-  const daycount = prisma.dayCount.create({
-    data: {
-      videoId: videoInfo.id,
-      viewCount: count.viewCount ? Number(count.viewCount) : null,
-      likeCount: count.likeCount ? Number(count.likeCount) : null,
-      dislikeCount: count.dislikeCount ? Number(count.dislikeCount) : null,
-      commentCount: count.commentCount ? Number(count.commentCount) : null,
-    },
-  });
-  const result_search = await get_search_songVtuber(videoInfo);
-  /* result_search
-  [{
-    videoId: videoInfo.id,
-    channelId: vtuber.id,
-    role: "歌"
-  }]
-  */
-  const songVtuber = prisma.songVtuber.createMany({
-    data: result_search,
-  });
 
-  await prisma.$transaction([videos, thumbnails, times, daycount, songVtuber]);
-
+  console.log("add video end");
+  console.log(result);
   await prisma.$disconnect();
-
-  return "success";
+  return result;
 };
 
 /* body = get_youtube_videos の取得データ 例

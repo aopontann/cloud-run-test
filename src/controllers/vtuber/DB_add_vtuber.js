@@ -9,8 +9,7 @@ module.exports = async function(body) {
         name: vtuberInfo.name,
         readname: vtuberInfo.readname,
         affiliation: vtuberInfo.affiliation,
-        birthday: vtuberInfo.birthday,
-        image: vtuberInfo.image
+        birthday: vtuberInfo.birthday
       },
     });
   }

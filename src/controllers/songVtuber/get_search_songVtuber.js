@@ -1,32 +1,41 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-module.exports = async function (videoInfo) {
+module.exports = async function (query) {
+  const all_videoInfo = query.all_videoInfo;
   const all_search_vtuber = await prisma.vtuber.findMany({
     where: {
       NOT: {
         name: "にじさんじ",
       },
     },
+    select: {
+      id: true,
+      name: true,
+    },
   });
   //const all_search_vtuber = result_findMany.map(vtuber => vtuber.name);
-  let result_search_vtuber = [];
+  //let result_search_vtuber = [];
 
-  all_search_vtuber.forEach((vtuber) => {
-    const reg = new RegExp(vtuber.name)
-    if (
-      videoInfo.snippet.description.match(reg) ||
-      videoInfo.snippet.title.match(reg)
-    ) {
-      result_search_vtuber.push({
-        videoId: videoInfo.id,
-        channelId: vtuber.id,
-        role: "歌",
-      });
-    }
+  const return_data = all_videoInfo.map((videoInfo) => {
+    let joinVtuber = [];
+    all_search_vtuber.forEach((vtuber) => {
+      const reg = new RegExp(vtuber.name);
+      const snippet = videoInfo.snippet;
+      if (snippet.description.match(reg) || snippet.title.match(reg)) {
+        joinVtuber.push({
+          channelId: vtuber.id,
+          role: "歌",
+        });
+      }
+    });
+    return {
+      videoId: videoInfo.id,
+      joinVtuber: joinVtuber,
+    };
   });
-
-  return result_search_vtuber;
+  await prisma.$disconnect();
+  return return_data;
 };
 
 /* videoInfo (sample)

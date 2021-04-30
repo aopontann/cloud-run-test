@@ -2,13 +2,17 @@
 // all_videoInfo はどのようなデータなのか一番下に記載
 module.exports = function (all_videoInfo) {
   //  条件にあった全ての動画データを入れる
-  let return_data = [];
+  // songConfirm 歌ってみた動画確定 // unsongConfirm 不確定
+  let return_data = {
+    songConfirm: [],
+    unsongConfirm: []
+  };
 
   for (const videoInfo of all_videoInfo) {
     const videotime = videoInfo.contentDetails.duration; // 例 "PT1H33M45S"
     const comptime = "PT9M59S"; // 9分59秒
 
-    if (comptime.length >= videotime.length) {
+    if (videotime.search(/\d\dM/) === -1 && comptime.length >= videotime.length) {
       // 動画の長さが9分59秒以下の場合
       const checktitle = videoInfo.snippet.title;
       const checkDesc = videoInfo.snippet.description;
@@ -35,17 +39,17 @@ module.exports = function (all_videoInfo) {
       ];
 
       if (select_video(checktitle, match_strings_1)) {
-        videoInfo.songConfirm = false;
-        return_data.push(videoInfo);
+        //videoInfo.songConfirm = false;
+        return_data.unsongConfirm.push(videoInfo);
       } else if (select_video(checktitle, match_strings_2)) {
-        videoInfo.songConfirm = true;
-        return_data.push(videoInfo);
+        //videoInfo.songConfirm = true;
+        return_data.songConfirm.push(videoInfo);
       } else if (
         select_video(checktitle, match_strings_3) ||
         select_video(checkDesc, match_strings_3)
       ) {
-        videoInfo.songConfirm = false;
-        return_data.push(videoInfo);
+        //videoInfo.songConfirm = false;
+        return_data.unsongConfirm.push(videoInfo);
       }
     }
   }
