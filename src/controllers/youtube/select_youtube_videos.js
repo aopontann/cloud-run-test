@@ -12,7 +12,7 @@ module.exports = function (all_videoInfo) {
     const videotime = videoInfo.contentDetails.duration; // 例 "PT1H33M45S"
     const comptime = "PT9M59S"; // 9分59秒
 
-    if (comptime.length >= videotime.length) {
+    if (videotime.search(/\d\dM/) === -1 && comptime.length >= videotime.length) {
       // 動画の長さが9分59秒以下の場合
       const checktitle = videoInfo.snippet.title;
       const checkDesc = videoInfo.snippet.description;
