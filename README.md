@@ -10,6 +10,8 @@
 - Jest
 ## 機能一覧
 - aaa
+## インフラ構成図
+## ER図
 ## セットアップ
 1. YouYube API を取得する
 2. .envの作成
@@ -29,3 +31,7 @@ npm install
 ```
 npm run dev
 ```
+## 参考サイト
+- [YouTube APIキーの取得 (2020/03/25時点)](https://qiita.com/iroiro_bot/items/1016a6a439dfb8d21eca)
+- [prisma](https://www.prisma.io/)
+- [さくらのナレッジ Docker入門](https://knowledge.sakura.ad.jp/13265/)
