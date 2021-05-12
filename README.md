@@ -9,9 +9,14 @@
 - Docker
 - Jest
 ## 機能一覧
-- aaa
+- 指定されたチャンネルIDと期間から、アップロードされた動画IDを取得
+- 動画IDから、詳細動画データを取得(全動画 or 歌ってみた動画か判定された動画)
+- 詳細動画データから、その動画に出演しているにじさんじライバーを取得
+- 詳細動画データのCRUD機能
+- にじさんじライバーデータのCRUD機能
 ## インフラ構成図
 ## ER図
+![](https://storage.googleapis.com/vtuber_image/prisma-erd.svg)
 ## セットアップ
 1. YouYube API を取得する
 2. .envの作成
@@ -27,7 +32,15 @@ docker-compose up -d
 ```
 npm install
 ```
-5. 開発環境の起動
+5. テーブル作成
+```
+npx prisma migrate dev --name init
+```
+6. テストデータ作成
+```
+npx prisma db seed --preview-feature
+```
+7. 開発環境の起動
 ```
 npm run dev
 ```
