@@ -51,6 +51,7 @@ model VtuberImage {
   createdAt DateTime @default(now()) @db.Timestamp(0)
   type      String   @db.VarChar(255) @default("icon")
   url       String   @db.VarChar(255)
+  poster    String   @db.VarChar(255)
   channelId String   @db.VarChar(30)
   vtuber    Vtuber   @relation(fields: [channelId], references: [id])
 
