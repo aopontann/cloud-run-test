@@ -8,14 +8,12 @@ const select_videos = require("../controllers/youtube/select_youtube_videos");
 router.get('/activities', async function(req,res){
   // datetime "1970-01-01T00:00:00Z"
   const result_activities = await get_youtube_activities({
-    all_channelId: req.query.channelId.split(','),
-    datetimeAfter: req.query.datetimeAfter,
-    datetimeBefore: req.query.datetimeBefore
+    all_channelId: req.query.channelId ? req.query.channelId.split(',') : [],
+    datetimeAfter: req.query.datetimeAfter || "1970-01-01T00:00:00Z",
+    datetimeBefore: req.query.datetimeBefore || "1970-01-01T00:00:00Z"
   });
   console.log(result_activities);
-  res.json({
-    result: result_activities
-  });
+  res.json(result_activities.split(","));
 });
 
 //http://localhost:3002/youtube/videos?select=(bool)&videoId=

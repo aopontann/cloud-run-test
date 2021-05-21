@@ -1,5 +1,5 @@
 {
-  "name": "cloudRun-test",
+  "name": "nijisanji-songs-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
+    "cors": "^2.8.5",
     "prisma": "^2.20.1"
   }
 }
