@@ -9,14 +9,10 @@
 - Docker
 - Jest
 ## 機能一覧
-- 指定されたチャンネルIDと期間から、アップロードされた動画IDを取得
-- 動画IDから、詳細動画データを取得(全動画 or 歌ってみた動画か判定された動画)
-- 詳細動画データから、その動画に出演しているにじさんじライバーを取得
-- 詳細動画データのCRUD機能
-- にじさんじライバーデータのCRUD機能
+[swagger-ui](https://storage.googleapis.com/nijisongs-swagger-ui/dist/index.html) をみてください
 ## インフラ構成図
 ## ER図
-![](https://storage.googleapis.com/vtuber_image/prisma-erd.svg)
+![](https://storage.googleapis.com/vtuber_image/nijisongs-schema.svg)
 ## セットアップ
 1. YouYube API を取得する
 2. .envの作成
