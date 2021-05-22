@@ -16,6 +16,7 @@ module.exports = async function (body) {
         data: {
           createdAt: formatted_now + "Z",
           type: vtuberImage.type,
+          poster: vtuberImage.poster,
           url: vtuberImage.url,
           channelId: vtuberImage.channelId,
         },
