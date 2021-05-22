@@ -1,7 +1,11 @@
 require('events').EventEmitter.defaultMaxListeners = 15;
 // ライブラリ読み込み
 const express = require('express');
+// const cors = require('cors');
 const app = express();
+
+// ローカルのクライアントからフェッチできるように
+// app.use(cors());
 
 //app.use(express.urlencoded({ extended: true }));
 // ↓これがないと(POST)bodyが受け取れなくなる

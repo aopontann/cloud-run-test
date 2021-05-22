@@ -16,51 +16,53 @@ module.exports = async function (query) {
   }
   const all_videoId = query.id.split(",");
   const songConfirm = query.songConfirm;
-  const checkSongVtuber =query.checkSongVtuber;
-
-  const include = {
-    thumbnail: true,
-    time: true,
-    dayCount: true,
-    songVtuber: {
-      select: {
-        role: true,
-        vtuber: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    },
-  };
-  const whereAND = {};
+  const checkSongVtuber = query.checkSongVtuber;
+  const createdAtAfter = query.createdAtAfter;
+  const createdAtBefore = query.createdAtBefore;
+  const maxResults = query.maxResults;
+  
+  const whereAND = [];
   if (songConfirm != "all") {
-    whereAND.songConfirm = songConfirm == "true" ? true : false;
+    whereAND.push({ songConfirm: songConfirm == "true" ? true : false });
   }
   if (checkSongVtuber != "all") {
-    whereAND.checkSongVtuber = checkSongVtuber == "true" ? true : false;
+    whereAND.push({ checkSongVtuber: checkSongVtuber == "true" ? true : false });
   }
   if (query.id != "all") {
-    whereAND.id = { in: all_videoId };
+    whereAND.push({ id: { in: all_videoId } });
   }
-  console.log("whereAND", whereAND);
-
-  // 全ての動画を取得する
-  if (query.id == "all" && songConfirm == "all" && checkSongVtuber == "all") {
-    const getVideo = await prisma.videos.findMany({
-      include: include
-    });
-    await prisma.$disconnect();
-    return getVideo;
+  if (createdAtAfter) {
+    whereAND.push({ time: { createdAt: {gte: createdAtAfter} } })
+  }
+  if (createdAtBefore) {
+    whereAND.push({ time: { createdAt: {lte: createdAtBefore} } })
   }
 
   const getVideo = await prisma.videos.findMany({
     where: {
       AND: whereAND,
     },
-    include: include,
+    include:{
+      thumbnail: true,
+      time: true,
+      dayCount: true,
+      songVtuber: {
+        select: {
+          role: true,
+          vtuber: {
+            select: {
+              id: true,
+              name: true,
+              vtuberImage: {
+                select: { url: true }
+              }
+            }
+          }
+        }
+      }
+    },
   });
+
   await prisma.$disconnect();
-  return getVideo;
+  return getVideo.slice(0, maxResults || getVideo.length);
 };
