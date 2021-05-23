@@ -1,14 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-// タイムゾーンの時間を取得
-const { formatToTimeZone } = require("date-fns-timezone");
-const FORMAT = "YYYY-MM-DDTHH:mm:ss";
-const TIME_ZONE_TOKYO = "Asia/Tokyo";
-const now = new Date();
-const formatted_now = formatToTimeZone(now, FORMAT, {
-  timeZone: TIME_ZONE_TOKYO,
-});
-
+const { get_time } = require("../controllers/get_times");
 const get_youtube_videos = require("./youtube/get_youtube_videos");
 
 module.exports = async function (query) {
@@ -40,7 +32,7 @@ module.exports = async function (query) {
     await prisma.dayCount.create({
       data: {
         videoId: videoInfo.id,
-        createdAt: formatted_now + "Z",
+        createdAt: get_time("Asia/Tokyo", 0),
         viewCount: count.viewCount ? Number(count.viewCount) : null,
         likeCount: count.likeCount ? Number(count.likeCount) : null,
         dislikeCount: count.dislikeCount ? Number(count.dislikeCount) : null,
