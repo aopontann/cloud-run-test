@@ -11,19 +11,12 @@ CREATE TABLE `Thumbnails` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Times` (
-    `id` VARCHAR(20) NOT NULL,
-    `createdAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
-    `videoLength` VARCHAR(10) NOT NULL,
-    `startTime` DATETIME(0),
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `Videos` (
     `id` VARCHAR(20) NOT NULL,
     `title` VARCHAR(255) NOT NULL,
+    `description` LONGTEXT NOT NULL,
+    `startTime` DATETIME(0) NOT NULL,
+    `createdAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
     `songConfirm` BOOLEAN NOT NULL DEFAULT false,
     `checkSongVtuber` BOOLEAN NOT NULL DEFAULT false,
 
@@ -47,6 +40,7 @@ CREATE TABLE `VtuberImage` (
     `createdAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
     `type` VARCHAR(255) NOT NULL DEFAULT 'icon',
     `url` VARCHAR(255) NOT NULL,
+    `poster` VARCHAR(255) NOT NULL,
     `channelId` VARCHAR(30) NOT NULL,
 INDEX `channelId`(`channelId`),
 
@@ -82,9 +76,6 @@ INDEX `videoId`(`videoId`),
 
 -- AddForeignKey
 ALTER TABLE `Thumbnails` ADD FOREIGN KEY (`id`) REFERENCES `Videos`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Times` ADD FOREIGN KEY (`id`) REFERENCES `Videos`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `VtuberImage` ADD FOREIGN KEY (`channelId`) REFERENCES `Vtuber`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
