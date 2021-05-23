@@ -44,7 +44,6 @@ module.exports = async function (query) {
     },
     include:{
       thumbnail: true,
-      time: true,
       dayCount: true,
       songVtuber: {
         select: {
