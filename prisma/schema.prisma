@@ -17,23 +17,17 @@ model Thumbnails {
   video      Videos  @relation(fields: [id], references: [id])
 }
 
-model Times {
-  id          String    @id @db.VarChar(20)
-  createdAt   DateTime  @default(now()) @db.Timestamp(0)
-  videoLength String    @db.VarChar(10)
-  startTime   DateTime? @db.DateTime(0)
-  video       Videos    @relation(fields: [id], references: [id])
-}
-
 model Videos {
   id              String       @id @db.VarChar(20)
   title           String       @db.VarChar(255)
+  description     String       @db.LongText
+  startTime       DateTime     @db.DateTime(0)
+  createdAt       DateTime     @default(now()) @db.Timestamp(0)
   songConfirm     Boolean      @default(false)
   checkSongVtuber Boolean      @default(false)
   dayCount        DayCount[]
   songVtuber      SongVtuber[]
   thumbnail       Thumbnails?
-  time            Times?
 }
 
 model Vtuber {
