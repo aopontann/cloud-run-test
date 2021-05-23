@@ -17,10 +17,10 @@ const youtube_router = require('./routes/youtube');
 app.use('/youtube', youtube_router);
 
 const DB_videos_router = require('./routes/videos');
-app.use('/DB/videos', DB_videos_router);
+app.use('/videos', DB_videos_router);
 
 const DB_vtuber_router = require('./routes/vtuber');
-app.use('/DB/vtuber', DB_vtuber_router);
+app.use('/vtuber', DB_vtuber_router);
 
 const routin_router = require('./routes/routine');
 app.use('/routine', routin_router);
