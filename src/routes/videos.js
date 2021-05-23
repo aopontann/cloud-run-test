@@ -100,7 +100,7 @@ router.post("/", async function (req, res) {
   ]
 */
 
-router.put("/update", async function (req, res) {
+router.put("/", async function (req, res) {
   console.log("update body", req.body);
   const result = await DB_update_videos({
     videoId: req.body.videoId || "",
