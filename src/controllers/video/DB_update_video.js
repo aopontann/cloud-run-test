@@ -10,30 +10,24 @@ module.exports = async function (body) {
   const songConfirm = body.songConfirm || false;
   const checkSongVtuber = body.checkSongVtuber || false;
   // 指定した動画IDがDBに存在するか調べる
-  const search_videoId = await prisma.videos.findFirst({
+  const search_video = await prisma.videos.findFirst({
     where: {
       id: videoId
     }
   });
-  if (!search_videoId) {
+  if (!search_video) {
     console.log("not exist");
     return "not exist";
   }
-  // 一旦、動画に出演しているVtuber情報を削除する
-  /*
-  const deleteSongVtuber = prisma.songVtuber.deleteMany({
-    where: {
-      videoId: body.id,
-    },
-  });
-  */
-  // 歌ってみた動画か自分で確認してDBに保存する
+  console.log(search_video);
   // 出演Vtuberを確認したら自分で確認済みチェックを入れることができる checkSongVtuber
   const updateSongConfirm = await prisma.videos.update({
     where: {
       id: videoId,
     },
     data: {
+      title: body.title,
+      description: body.description,
       songConfirm: songConfirm,
       checkSongVtuber: checkSongVtuber
     },
