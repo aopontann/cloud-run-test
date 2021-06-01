@@ -1,26 +1,17 @@
 version: '3'
+
 services:
-  mysql:
-    image: mysql:5.7
-    container_name: mysql
+  postgres:
+    image: postgres:13.1
+    container_name: postgres
     ports:
-      - 3306:3306
-    environment:
-      - MYSQL_ROOT_HOST=%
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_USER=aopontann
-      - MYSQL_PASSWORD=password
-      - MYSQL_DATABASE=nijisongs
+      - 5432:5432
     volumes:
-      - ./mysqldata:/var/lib/mysql
-      - ./my.cnf:/etc/mysql/conf.d/my.cnf
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: nijisongs-app
-    tty: true
-    ports:
-      - 8080:8080
-    depends_on:
-      - mysql
+      - ./postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: nijisongs
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+      TZ: "Asia/Tokyo"
+    restart: always
