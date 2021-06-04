@@ -16,7 +16,7 @@ module.exports = function (all_videoInfo) {
       // 動画の長さが9分59秒以下の場合
       const checktitle = videoInfo.snippet.title;
       const checkDesc = videoInfo.snippet.description;
-      const NG_match = ["まいにち動画", "【アニメ】", "マリオカート", "Apex", "ARK", "Ark"];
+      const NG_match = ["まいにち動画", "【アニメ】", "マリオカート", "Apex", "APEX", "ARK", "Ark"];
       const match_strings_1 = ["試聴", "short", "Short"];
       const match_strings_2 = [
         "歌ってみた",
