@@ -31,7 +31,7 @@ module.exports = async function (query) {
     const data = await res.json();
 
     if (data.error) {
-      console.log("get_youtube_videos error!");
+      console.error("get_youtube_videos error!");
       return return_data;
     }
 
@@ -41,7 +41,6 @@ module.exports = async function (query) {
     all_videoId = all_videoId.slice(cutsize);
   }
 
-  console.log("return_data", return_data);
   console.log("Youtube Data 完了!");
   return return_data;
 };

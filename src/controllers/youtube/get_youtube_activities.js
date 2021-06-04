@@ -1,6 +1,7 @@
 // fetchをnode.jsで使う
 const fetch = require("node-fetch");
 const { get_time } = require("../get_times");
+const get_vtuber = require("../vtuber/DB_get_vtuber");
 //Youtube Data API を叩くためのプロパティ
 const YoutubeApiSearch = "https://www.googleapis.com/youtube/v3/activities";
 const Key = process.env.YOUTUBE_DATA_API_KEY;
@@ -14,7 +15,7 @@ module.exports = async function (query) {
 
   let all_channelId;
   if (query.all_channelId[0] == "all") {
-    const result_DB_get_vtuber = await DB_get_vtuber();
+    const result_DB_get_vtuber = await get_vtuber();
     all_channelId = result_DB_get_vtuber.map((vtuber) => vtuber.id);
   } else {
     all_channelId = query.all_channelId || [];
@@ -28,6 +29,7 @@ module.exports = async function (query) {
     let cnt = 0;
     const cntMax = 50;
     let pageToken = "";
+    console.log("channelId=", channelId);
     // なんかのバグで無限ループになったら怖いから回数制限する
     // 長期間の探索はやめた方がいいかも
     while (cnt++ < cntMax) {
@@ -38,7 +40,7 @@ module.exports = async function (query) {
 
       // 取得失敗した場合
       if (data.error) {
-        console.log("search error!");
+        console.error("search error!");
         return return_data.join(",");
       }
 
@@ -48,17 +50,14 @@ module.exports = async function (query) {
           return_data.push(content.videoId);
         }
       });
-      // [OLWqLMbq5QY, ...]
 
       if (!data.nextPageToken) {
-        console.log("get activity ok!");
         break;
       }
 
       pageToken = data.nextPageToken;
     }
   }
-  console.log("return_data", return_data);
   return return_data.join(","); // videoId,videoId,...
 };
 
