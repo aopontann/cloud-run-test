@@ -13,9 +13,9 @@ const DB_add_viewCount = require("../controllers/DB_add_viewCount");
 // http://localhost:8080/DB/videos?
 router.get("/", async function (req, res) {
   const result = await DB_get_videos({
-    id: req.query.id || "",
-    songConfirm: req.query.songConfirm || "all",
-    checkSongVtuber: req.query.checkSongVtuber || "all",
+    videoId: req.query.id ? req.query.id.split(",") : null,
+    songConfirm: req.query.songConfirm || null,
+    checkSongVtuber: req.query.checkSongVtuber || null,
     createdAtAfter: req.query.createdAtAfter || null,
     createdAtBefore: req.query.createdAtBefore || null,
     maxResults: req.query.maxResults || null
