@@ -1,15 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-// タイムゾーンの時間を取得
-const { formatToTimeZone } = require("date-fns-timezone");
-const FORMAT = "YYYY-MM-DDTHH:mm:ss";
-const TIME_ZONE_TOKYO = "Asia/Tokyo";
+const { get_time } = require("../get_times");
 
 module.exports = async function (query) {
-  const now = new Date();
-  const formatted_now = formatToTimeZone(now, FORMAT, {
-    timeZone: TIME_ZONE_TOKYO,
-  });
   const type = query.type || "update";
   const videoId = query.videoId || "";
   const joinVtuber = query.joinVtuber || null;
@@ -42,7 +35,7 @@ module.exports = async function (query) {
       .createMany({
         data: oneVideoInfo.joinVtuber.map((oneVtuber) => {
           return {
-            createdAt: formatted_now + "Z",
+            createdAt: get_time("Asia/Tokyo", 0),
             videoId: oneVideoInfo.videoId,
             channelId: oneVtuber.channelId,
             role: oneVtuber.role,
