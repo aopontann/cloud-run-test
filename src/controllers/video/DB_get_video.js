@@ -1,42 +1,21 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-/* query {
-  id: "videoId, videoId, ..." or "" or "all"
-  songConfirm: "true" or "false" or "all"
-  checkSongVtuber: "true" or "false" or "all"
-}
-true, false, all 以外は false として扱う
-*/ 
-
 module.exports = async function (query) {
-  console.log("query", query);
-  if (!query.id) {
-    return [];
-  }
-  const all_videoId = query.id.split(",");
-  const songConfirm = query.songConfirm;
-  const checkSongVtuber = query.checkSongVtuber;
-  const createdAtAfter = query.createdAtAfter;
-  const createdAtBefore = query.createdAtBefore;
-  const maxResults = query.maxResults;
+  const all_videoId = query ? query.videoId || null : null;
+  const songConfirm = query ? query.songConfirm || null : null;
+  const checkSongVtuber = query ? query.checkSongVtuber || null : null;
+  const createdAtAfter = query ? query.createdAtAfter || null : null;
+  const createdAtBefore = query ? query.createdAtBefore || null : null;
+  const maxResults = query ? query.maxResults || null : null;
   
+  all_videoId ? whereAND.push({ id: { in: all_videoId } }) : ""
+  songConfirm ? whereAND.push({ songConfirm: songConfirm == "true" ? true : false }) : ""
+  checkSongVtuber ? whereAND.push({ checkSongVtuber: checkSongVtuber == "true" ? true : false }) : ""
+  createdAtAfter ? whereAND.push({ time: { createdAt: {gte: createdAtAfter} } }) : ""
+  createdAtBefore ? whereAND.push({ time: { createdAt: {lte: createdAtBefore} } }) : ""
+
   const whereAND = [];
-  if (songConfirm != "all") {
-    whereAND.push({ songConfirm: songConfirm == "true" ? true : false });
-  }
-  if (checkSongVtuber != "all") {
-    whereAND.push({ checkSongVtuber: checkSongVtuber == "true" ? true : false });
-  }
-  if (query.id != "all") {
-    whereAND.push({ id: { in: all_videoId } });
-  }
-  if (createdAtAfter) {
-    whereAND.push({ time: { createdAt: {gte: createdAtAfter} } })
-  }
-  if (createdAtBefore) {
-    whereAND.push({ time: { createdAt: {lte: createdAtBefore} } })
-  }
 
   const getVideo = await prisma.videos.findMany({
     where: {
