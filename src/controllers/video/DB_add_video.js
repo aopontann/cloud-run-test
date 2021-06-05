@@ -53,7 +53,7 @@ module.exports = async function (query) {
   }
 
   console.log("add video end");
-  console.log(result);
+  //console.log(result);
   await prisma.$disconnect();
   return result;
 };
