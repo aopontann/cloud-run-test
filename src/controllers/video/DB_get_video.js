@@ -1,66 +1,46 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-/* query {
-  id: "videoId, videoId, ..." or "" or "all"
-  songConfirm: "true" or "false" or "all"
-  checkSongVtuber: "true" or "false" or "all"
-}
-true, false, all 以外は false として扱う
-*/ 
-
 module.exports = async function (query) {
-  console.log("query", query);
-  if (!query.id) {
-    return [];
-  }
-  const all_videoId = query.id.split(",");
-  const songConfirm = query.songConfirm;
-  const checkSongVtuber =query.checkSongVtuber;
+  const all_videoId = query ? query.videoId || null : null;
+  const songConfirm = query ? query.songConfirm || null : null;
+  const checkSongVtuber = query ? query.checkSongVtuber || null : null;
+  const createdAtAfter = query ? query.createdAtAfter || null : null;
+  const createdAtBefore = query ? query.createdAtBefore || null : null;
+  const maxResults = query ? query.maxResults || null : null;
+  
+  all_videoId ? whereAND.push({ id: { in: all_videoId } }) : ""
+  songConfirm ? whereAND.push({ songConfirm: songConfirm == "true" ? true : false }) : ""
+  checkSongVtuber ? whereAND.push({ checkSongVtuber: checkSongVtuber == "true" ? true : false }) : ""
+  createdAtAfter ? whereAND.push({ time: { createdAt: {gte: createdAtAfter} } }) : ""
+  createdAtBefore ? whereAND.push({ time: { createdAt: {lte: createdAtBefore} } }) : ""
 
-  const include = {
-    thumbnail: true,
-    time: true,
-    dayCount: true,
-    songVtuber: {
-      select: {
-        role: true,
-        vtuber: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    },
-  };
-  const whereAND = {};
-  if (songConfirm != "all") {
-    whereAND.songConfirm = songConfirm == "true" ? true : false;
-  }
-  if (checkSongVtuber != "all") {
-    whereAND.checkSongVtuber = checkSongVtuber == "true" ? true : false;
-  }
-  if (query.id != "all") {
-    whereAND.id = { in: all_videoId };
-  }
-  console.log("whereAND", whereAND);
-
-  // 全ての動画を取得する
-  if (query.id == "all" && songConfirm == "all" && checkSongVtuber == "all") {
-    const getVideo = await prisma.videos.findMany({
-      include: include
-    });
-    await prisma.$disconnect();
-    return getVideo;
-  }
+  const whereAND = [];
 
   const getVideo = await prisma.videos.findMany({
     where: {
       AND: whereAND,
     },
-    include: include,
+    include:{
+      thumbnail: true,
+      dayCount: true,
+      songVtuber: {
+        select: {
+          role: true,
+          vtuber: {
+            select: {
+              id: true,
+              name: true,
+              vtuberImage: {
+                select: { url: true }
+              }
+            }
+          }
+        }
+      }
+    },
   });
+
   await prisma.$disconnect();
-  return getVideo;
+  return getVideo.slice(0, maxResults || getVideo.length);
 };

@@ -1,7 +1,7 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-module.exports = async function(body) {
+module.exports = async function (body) {
   for await (const vtuberInfo of body) {
     await prisma.vtuber.upsert({
       where: { id: vtuberInfo.channelId },
@@ -10,9 +10,9 @@ module.exports = async function(body) {
         name: vtuberInfo.name,
         readname: vtuberInfo.readname,
         affiliation: vtuberInfo.affiliation,
-        birthday: vtuberInfo.birthday || null
-      }
+        birthday: vtuberInfo.birthday || null,
+      },
     });
   }
   await prisma.$disconnect();
-}
+};

@@ -4,13 +4,14 @@ const router = express.Router();
 const get_youtube_activities = require('../controllers/youtube/get_youtube_activities');
 const get_videoinfo = require("../controllers/youtube/get_youtube_videos");
 const select_videos = require("../controllers/youtube/select_youtube_videos");
+const { get_time, toUTC } = require("../controllers/get_times");
 
 router.get('/activities', async function(req,res){
   // datetime "1970-01-01T00:00:00Z"
   const result_activities = await get_youtube_activities({
     all_channelId: req.query.channelId ? req.query.channelId.split(',') : [],
-    datetimeAfter: req.query.datetimeAfter || "1970-01-01T00:00:00Z",
-    datetimeBefore: req.query.datetimeBefore || "1970-01-01T00:00:00Z"
+    datetimeAfter: req.query.datetimeAfter ? toUTC(req.query.datetimeAfter) : get_time("UTC", -7),
+    datetimeBefore: req.query.datetimeBefore ? toUTC(req.query.datetimeBefore) : get_time("UTC", 0)
   });
   console.log(result_activities);
   res.json(result_activities.split(","));

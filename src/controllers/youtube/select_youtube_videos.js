@@ -16,6 +16,7 @@ module.exports = function (all_videoInfo) {
       // 動画の長さが9分59秒以下の場合
       const checktitle = videoInfo.snippet.title;
       const checkDesc = videoInfo.snippet.description;
+      const NG_match = ["まいにち動画", "【アニメ】", "マリオカート", "Apex", "APEX", "ARK", "Ark"];
       const match_strings_1 = ["試聴", "short", "Short"];
       const match_strings_2 = [
         "歌ってみた",
@@ -38,7 +39,9 @@ module.exports = function (all_videoInfo) {
         "唄",
       ];
 
-      if (select_video(checktitle, match_strings_1)) {
+      if (select_video(checktitle, NG_match)) {
+        ""
+      } else if (select_video(checktitle, match_strings_1)) {
         //videoInfo.songConfirm = false;
         return_data.unsongConfirm.push(videoInfo);
       } else if (select_video(checktitle, match_strings_2)) {

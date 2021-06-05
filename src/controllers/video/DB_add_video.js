@@ -1,13 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-// タイムゾーンの時間を取得
-const { formatToTimeZone } = require("date-fns-timezone");
-const FORMAT = "YYYY-MM-DDTHH:mm:ss";
-const TIME_ZONE_TOKYO = "Asia/Tokyo";
-const now = new Date();
-const formatted_now = formatToTimeZone(now, FORMAT, {
-  timeZone: TIME_ZONE_TOKYO,
-});
+const { get_time, toJST } = require("../get_times");
 
 module.exports = async function (query) {
   const all_videoInfo = query.all_videoInfo;
@@ -24,11 +17,17 @@ module.exports = async function (query) {
     console.log("videoId = ", videoInfo.id);
     const thumb = videoInfo.snippet.thumbnails;
     await prisma.videos
-      .create({
-        data: {
+      .upsert({
+        where: { id: videoInfo.id },
+        create: {
           id: videoInfo.id,
           title: videoInfo.snippet.title,
+          description: videoInfo.snippet.description,
           songConfirm: songConfirm,
+          startTime: videoInfo.liveStreamingDetails
+            ? toJST(videoInfo.liveStreamingDetails.scheduledStartTime || videoInfo.liveStreamingDetails.actualStartTime)
+            : toJST(videoInfo.snippet.publishedAt),
+          createdAt: get_time("Asia/Tokyo", 0),
           thumbnail: {
             create: {
               defaultUrl: thumb.default ? thumb.default.url : null,
@@ -38,16 +37,8 @@ module.exports = async function (query) {
               maxres: thumb.maxres ? thumb.maxres.url : null,
             },
           },
-          time: {
-            create: {
-              createdAt: formatted_now + "Z",
-              videoLength: videoInfo.contentDetails.duration,
-              startTime: videoInfo.liveStreamingDetails
-                ? videoInfo.liveStreamingDetails.scheduledStartTime
-                : videoInfo.snippet.publishedAt,
-            },
-          },
         },
+        update: {},
       })
       .catch((e) => {
         console.log("add video error!");
@@ -56,12 +47,13 @@ module.exports = async function (query) {
       .finally(() => {
         errorFlag
           ? result.error.push(videoInfo.id)
-          : result.success.push(videoInfo.id) && result.success_videoInfo.push(videoInfo);
+          : result.success.push(videoInfo.id) &&
+            result.success_videoInfo.push(videoInfo);
       });
   }
 
   console.log("add video end");
-  console.log(result);
+  //console.log(result);
   await prisma.$disconnect();
   return result;
 };

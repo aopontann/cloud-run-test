@@ -1,21 +1,15 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-// タイムゾーンの時間を取得
-const { formatToTimeZone } = require("date-fns-timezone");
-const FORMAT = "YYYY-MM-DDTHH:mm:ss";
-const TIME_ZONE_TOKYO = "Asia/Tokyo";
-const now = new Date();
-const formatted_now = formatToTimeZone(now, FORMAT, {
-  timeZone: TIME_ZONE_TOKYO,
-});
+const { get_time } = require("../get_times");
 
 module.exports = async function (body) {
   for await (const vtuberImage of body) {
     await prisma.vtuberImage
       .create({
         data: {
-          createdAt: formatted_now + "Z",
+          createdAt: get_time("Asia/Tokyo", 0),
           type: vtuberImage.type,
+          poster: vtuberImage.poster,
           url: vtuberImage.url,
           channelId: vtuberImage.channelId,
         },

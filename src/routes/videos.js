@@ -7,14 +7,18 @@ const DB_delete_videos = require("../controllers/video/DB_delete_video");
 const DB_update_videos = require("../controllers/video/DB_update_video");
 const search_songVtuber = require("../controllers/songVtuber/get_search_songVtuber");
 const DB_add_songVtuber = require("../controllers/songVtuber/DB_add_songVtuber");
+const delete_songVtuber = require("../controllers/songVtuber/delete_songVtuber");
 const DB_add_viewCount = require("../controllers/DB_add_viewCount");
 
 // http://localhost:8080/DB/videos?
 router.get("/", async function (req, res) {
   const result = await DB_get_videos({
-    id: req.query.id || "",
-    songConfirm: req.query.songConfirm || "all",
-    checkSongVtuber: req.query.checkSongVtuber || "all",
+    videoId: req.query.id ? req.query.id.split(",") : null,
+    songConfirm: req.query.songConfirm || null,
+    checkSongVtuber: req.query.checkSongVtuber || null,
+    createdAtAfter: req.query.createdAtAfter || null,
+    createdAtBefore: req.query.createdAtBefore || null,
+    maxResults: req.query.maxResults || null
   });
   console.log(result);
 
@@ -96,9 +100,13 @@ router.post("/", async function (req, res) {
   ]
 */
 
-router.post("/update", async function (req, res) {
-  console.log(req.body);
-  const result = await DB_update_videos(req.body);
+router.put("/", async function (req, res) {
+  console.log("update body", req.body);
+  const result = await DB_update_videos({
+    videoId: req.body.videoId || "",
+    songConfirm: req.body.songConfirm || false,
+    checkSongVtuber: req.body.checkSongVtuber || false
+  });
   res.json({
     message: result,
   });
@@ -117,13 +125,30 @@ router.delete("/", async function (req, res) {
 });
 
 router.put("/songVtuber", async function(req, res) {
+  console.log("update songVtuber body", req.body);
   const type = req.query.type === "update" ? "update" : "init"; // or update
   const result = await DB_add_songVtuber({
     type: type,
-    data: req.body
-  });
+    videoId: req.body.videoId || "",
+    joinVtuber: req.body.joinVtuber || []
+  }); // data: も使えるよ
+
   res.json({
     result: result
+  });
+});
+
+router.delete("/songVtuber", async function (req, res) {
+  // channelId = "id, id, ...", delete_videoId = "videoId"
+  // or channelId = "id", delete_videoId = "videoId, videoId, ..."
+  const channelId = req.query.channelId;
+  const delete_videoId = req.query.videoId;
+  await delete_songVtuber({
+    channelId: channelId,
+    deleteId: delete_videoId,
+  });
+  res.json({
+    message: "success",
   });
 });
 

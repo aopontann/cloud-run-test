@@ -1,37 +1,35 @@
 // fetchをnode.jsで使う
 const fetch = require("node-fetch");
-
-const DB_get_vtuber = require("../vtuber/DB_get_vtuber");
+const { get_time } = require("../get_times");
+const get_vtuber = require("../vtuber/DB_get_vtuber");
+//Youtube Data API を叩くためのプロパティ
+const YoutubeApiSearch = "https://www.googleapis.com/youtube/v3/activities";
+const Key = process.env.YOUTUBE_DATA_API_KEY;
+const part = "contentDetails";
 
 //指定した期間と指定したチャンネルの全ての動画URLを取得する
 module.exports = async function (query) {
-  //引数datetime は "1970-01-01T00:00:00Z" のようなデータを使用する
-  //Youtube Data API を叩くためのプロパティ
-  const YoutubeApiSearch = "https://www.googleapis.com/youtube/v3/activities";
-  const Key = process.env.YOUTUBE_DATA_API_KEY;
-  const part = "contentDetails";
-
-  const datetimeAfter = query.datetimeAfter;
-  const datetimeBefore = query.datetimeBefore;
+  //引数datetime は ISO 8601（YYYY-MM-DDThh:mm:ss.sZ）形式データを使用する(UTC)
+  const datetimeAfter = query.datetimeAfter || get_time("UTC", -7);
+  const datetimeBefore = query.datetimeBefore || get_time("UTC", 0);
 
   let all_channelId;
   if (query.all_channelId[0] == "all") {
-    const result_DB_get_vtuber = await DB_get_vtuber();
-    all_channelId = result_DB_get_vtuber.map(
-      (vtuber) => vtuber.id
-    );
+    const result_DB_get_vtuber = await get_vtuber();
+    all_channelId = result_DB_get_vtuber.map((vtuber) => vtuber.id);
   } else {
-    all_channelId = query.all_channelId || []
+    all_channelId = query.all_channelId || [];
   }
+  console.log(`探索期間(UTC) ${datetimeAfter} <--> ${datetimeBefore}`);
 
   //  期間分全ての動画情報を入れる
   let return_data = [];
 
   for await (const channelId of all_channelId) {
-    console.log("channelId", channelId);
     let cnt = 0;
     const cntMax = 50;
     let pageToken = "";
+    console.log("channelId=", channelId);
     // なんかのバグで無限ループになったら怖いから回数制限する
     // 長期間の探索はやめた方がいいかも
     while (cnt++ < cntMax) {
@@ -42,28 +40,24 @@ module.exports = async function (query) {
 
       // 取得失敗した場合
       if (data.error) {
-        console.log("search error!");
-        return return_data;
+        console.error("search error!");
+        return return_data.join(",");
       }
 
-      data.items.forEach(item => {
+      data.items.forEach((item) => {
         const content = item.contentDetails.upload || null;
         if (content && content.videoId) {
           return_data.push(content.videoId);
         }
       });
-      // [OLWqLMbq5QY, ...]
 
       if (!data.nextPageToken) {
-        console.log("get activity ok!");
         break;
       }
 
       pageToken = data.nextPageToken;
     }
   }
-
-  console.log("return_data", return_data);
   return return_data.join(","); // videoId,videoId,...
 };
 
