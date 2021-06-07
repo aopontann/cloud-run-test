@@ -4,23 +4,22 @@
 - express
 - JavaScript
 - Prettier
-- MySQL
+- postgreSQL
 - prisma
 - Docker
 - Jest
 ## 機能一覧
 [swagger-ui](https://storage.googleapis.com/nijisongs-swagger-ui/dist/index.html) をみてください
-## インフラ構成図
 ## ER図
 ![](https://storage.googleapis.com/vtuber_image/nijisongs-schema.svg)
 ## セットアップ
 1. YouYube API を取得する
 2. .envの作成
 ```
-DATABASE_URL="mysql://root:password@localhost:3306/nijisongs"
+DATABASE_URL="postgresql://root:password@localhost:15432/nijisongs"
 YOUTUBE_DATA_API_KEY=<YOUTUBE_API_KEY>
 ```
-3. API/DBの起動
+3. DBの起動
 ```
 docker-compose up -d
 ```
