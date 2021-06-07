@@ -34,7 +34,6 @@ module.exports = async function (query) {
           }
         }
        },
-      vtuberImage: true,
     },
   }).catch(e => {
     errorFlag = true;
