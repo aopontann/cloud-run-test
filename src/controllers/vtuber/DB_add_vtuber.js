@@ -11,6 +11,7 @@ module.exports = async function (body) {
         readname: vtuberInfo.readname,
         affiliation: vtuberInfo.affiliation,
         birthday: vtuberInfo.birthday || null,
+        image: vtuberInfo.image || null,
       },
     });
   }
