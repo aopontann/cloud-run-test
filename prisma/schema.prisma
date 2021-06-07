@@ -36,20 +36,8 @@ model Vtuber {
   readname    String       @db.VarChar(255)
   affiliation String       @db.VarChar(255)
   birthday    String?      @db.Char(4)
-  vtuberImage       VtuberImage[]
+  image       String?      @db.VarChar(255)
   songVtuber  SongVtuber[]
-}
-
-model VtuberImage {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @db.Timestamp(0)
-  type      String   @db.VarChar(255) @default("icon")
-  url       String   @db.VarChar(255)
-  poster    String   @db.VarChar(255)
-  channelId String   @db.VarChar(30)
-  vtuber    Vtuber   @relation(fields: [channelId], references: [id])
-
-  @@index([channelId], name: "image_channelId")
 }
 
 model SongVtuber {
