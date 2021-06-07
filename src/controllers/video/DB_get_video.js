@@ -9,13 +9,13 @@ module.exports = async function (query) {
   const createdAtBefore = query ? query.createdAtBefore || null : null;
   const maxResults = query ? query.maxResults || null : null;
   
+  const whereAND = [];
   all_videoId ? whereAND.push({ id: { in: all_videoId } }) : ""
   songConfirm ? whereAND.push({ songConfirm: songConfirm == "true" ? true : false }) : ""
   checkSongVtuber ? whereAND.push({ checkSongVtuber: checkSongVtuber == "true" ? true : false }) : ""
   createdAtAfter ? whereAND.push({ time: { createdAt: {gte: createdAtAfter} } }) : ""
   createdAtBefore ? whereAND.push({ time: { createdAt: {lte: createdAtBefore} } }) : ""
 
-  const whereAND = [];
 
   const getVideo = await prisma.videos.findMany({
     where: {
