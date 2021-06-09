@@ -1,6 +1,9 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["orderByRelation"]
 }
+
+// 3↑関係による並び替えをするため
 
 datasource db {
   provider = "postgres"
@@ -17,6 +20,17 @@ model Thumbnails {
   video      Videos  @relation(fields: [id], references: [id])
 }
 
+model Statistics {
+  id           String   @id @db.VarChar(20)
+  createdAt    DateTime @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime @default(now()) @db.Timestamp(0)
+  viewCount    Int?     @db.Integer
+  likeCount    Int?     @db.Integer
+  dislikeCount Int?     @db.Integer
+  commentCount Int?     @db.Integer
+  video        Videos   @relation(fields: [id], references: [id])
+}
+
 model Videos {
   id              String       @id @db.VarChar(20)
   title           String       @db.VarChar(255)
@@ -25,9 +39,9 @@ model Videos {
   createdAt       DateTime     @default(now()) @db.Timestamp(0)
   songConfirm     Boolean      @default(false)
   checkSongVtuber Boolean      @default(false)
-  dayCount        DayCount[]
   songVtuber      SongVtuber[]
   thumbnail       Thumbnails?
+  statistic       Statistics?
 }
 
 model Vtuber {
@@ -51,17 +65,4 @@ model SongVtuber {
 
   @@index([channelId], name: "channelId")
   @@index([videoId], name: "videoId")
-}
-
-model DayCount {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now()) @db.Timestamp(0)
-  videoId      String   @db.VarChar(20)
-  viewCount    Int?     @db.Integer
-  likeCount    Int?     @db.Integer
-  dislikeCount Int?     @db.Integer
-  commentCount Int?     @db.Integer
-  videos       Videos   @relation(fields: [videoId], references: [id])
-
-  @@index([videoId], name: "count_videoId")
 }
