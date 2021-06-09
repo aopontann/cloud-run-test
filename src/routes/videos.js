@@ -8,7 +8,6 @@ const DB_update_videos = require("../controllers/video/DB_update_video");
 const search_songVtuber = require("../controllers/songVtuber/get_search_songVtuber");
 const DB_add_songVtuber = require("../controllers/songVtuber/DB_add_songVtuber");
 const delete_songVtuber = require("../controllers/songVtuber/delete_songVtuber");
-const DB_add_viewCount = require("../controllers/DB_add_viewCount");
 
 // http://localhost:8080/DB/videos?
 router.get("/", async function (req, res) {
@@ -18,7 +17,8 @@ router.get("/", async function (req, res) {
     checkSongVtuber: req.query.checkSongVtuber || null,
     createdAtAfter: req.query.createdAtAfter || null,
     createdAtBefore: req.query.createdAtBefore || null,
-    maxResults: req.query.maxResults || null
+    maxResults: req.query.maxResults || null,
+    page: req.query.page || null
   });
   console.log(result);
 
@@ -29,28 +29,30 @@ router.get("/", async function (req, res) {
 router.post("/", async function (req, res) {
   const res_json = {};
   // 取得した動画情報をDBに保存する
-  const result_add_video = {}
-  result_add_video.confirm = await DB_add_videos({
+  //const result_add_video = {}
+  const result_add_video = await DB_add_videos({
     all_videoInfo: req.body.songConfirm || req.body.result || [],
     songConfirm: true
   });
-  result_add_video.unconfirm = await DB_add_videos({
+  const result_add_video2 = await DB_add_videos({
     all_videoInfo: req.body.unsongConfirm || [],
     songConfirm: false
   });
-  
-  const videoInfo_confirm = result_add_video.confirm.success_videoInfo;
-  const videoInfo_unconfirm = result_add_video.unconfirm.success_videoInfo;
+  if (result_add_video == "error" || result_add_video2 == "error") {
+    res.json({
+      error: "add_videos"
+    });
+    return;
+  }
 
-  // DB保存に成功した動画情報から出演しているVtuberを取得する
+  // 動画情報から出演しているVtuberを取得する
   const result_search_songVtuber = {};
   result_search_songVtuber.confirm = await search_songVtuber({
-    all_videoInfo: videoInfo_confirm,
+    all_videoInfo: req.body.songConfirm || req.body.result || [],
   });
   result_search_songVtuber.unconfirm = await search_songVtuber({
-    all_videoInfo: videoInfo_unconfirm,
+    all_videoInfo: req.body.unsongConfirm,
   });
-  
   // 取得したVtuber情報をDBに保存する
   const result_add_songVtuber = {}
   result_add_songVtuber.confirm = await DB_add_songVtuber({
@@ -62,28 +64,8 @@ router.post("/", async function (req, res) {
     data: result_search_songVtuber.unconfirm
   });
 
-  // 動画情報にある視聴回数などDBに保存する * videoIdも指定可能
-  const result_add_viewcCount = {};
-  result_add_viewcCount.confirm = await DB_add_viewCount({
-    all_videoInfo: videoInfo_confirm
-  });
-  result_add_viewcCount.unconfirm = await DB_add_viewCount({
-    all_videoInfo: videoInfo_unconfirm
-  });
-  
   res.json({
-    add_video: {
-      confirm: {
-        success: result_add_video.confirm.success,
-        error: result_add_video.confirm.error,
-      },
-      unconfirm: {
-        success: result_add_video.unconfirm.success,
-        error: result_add_video.unconfirm.error,
-      },
-    },
-    search_songVtuber: result_search_songVtuber,
-    add_songVtuber: result_add_songVtuber
+    message: "success"
   });
 });
 /* result_search_songVtuber_*
