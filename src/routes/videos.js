@@ -15,8 +15,8 @@ router.get("/", async function (req, res) {
     videoId: req.query.id ? req.query.id.split(",") : null,
     songConfirm: req.query.songConfirm || null,
     checkSongVtuber: req.query.checkSongVtuber || null,
-    createdAtAfter: req.query.createdAtAfter || null,
-    createdAtBefore: req.query.createdAtBefore || null,
+    startAtAfter: req.query.startAtAfter || null,
+    startAtBefore: req.query.startAtBefore || null,
     maxResults: req.query.maxResults || null,
     page: req.query.page || null
   });
