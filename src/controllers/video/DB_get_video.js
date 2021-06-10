@@ -5,13 +5,15 @@ module.exports = async function (query) {
   const all_videoId = query ? query.videoId || null : null;
   const songConfirm = query ? query.songConfirm || null : null;
   const checkSongVtuber = query ? query.checkSongVtuber || null : null;
-  const createdAtAfter = query ? query.createdAtAfter || null : null;
-  const createdAtBefore = query ? query.createdAtBefore || null : null;
+  const startAtAfter = query ? query.startAtAfter || null : null;
+  const startAtBefore = query ? query.startAtBefore || null : null;
   const maxResults = query ? Number(query.maxResults) || 9999 : 9999;
   const page = query ? Number(query.page > 0 ? query.page : 1) || 1 : 1;
 
   const whereAND = [];
-  all_videoId ? whereAND.push({ id: { in: all_videoId } }) : "";
+  all_videoId
+    ? whereAND.push({ id: { in: all_videoId } })
+    : "";
   songConfirm
     ? whereAND.push({ songConfirm: songConfirm == "true" ? true : false })
     : "";
@@ -20,19 +22,19 @@ module.exports = async function (query) {
         checkSongVtuber: checkSongVtuber == "true" ? true : false,
       })
     : "";
-  /*
-  const dayWhereAND = [];
-  createdAtAfter
-    ? dayWhereAND.push({ createdAt: { gte: createdAtAfter } })
+  startAtAfter
+    ? whereAND.push({ startTime: { gte: startAtAfter } })
     : "";
-  createdAtBefore
-    ? dayWhereAND.push({ createdAt: { lte: createdAtBefore } })
+  startAtBefore
+    ? whereAND.push({ startTime: { lte: startAtBefore } })
     : "";
-  */
+
 
   const getVideo = await prisma.videos.findMany({
     where: {
-      AND: whereAND,
+      AND: [
+        ...whereAND,
+      ],
     },
     orderBy: {
       statistic: {
