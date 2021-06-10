@@ -7,9 +7,10 @@ module.exports = async function (vtuberInfo) {
   vtuberInfo.readname ? updateData.readname = vtuberInfo.readname : ""
   vtuberInfo.affiliation ? updateData.affiliation = vtuberInfo.affiliation : ""
   vtuberInfo.birthday ? updateData.birthday = vtuberInfo.birthday : ""
+  vtuberInfo.image ? updateData.image = vtuberInfo.image : ""
   
   await prisma.vtuber.update({
-    where: { id: vtuberInfo.channelId },
+    where: { id: vtuberInfo.id },
     data: updateData
   });
   await prisma.$disconnect();

@@ -1,53 +1,40 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const { get_time } = require("../controllers/get_times");
-const get_youtube_videos = require("./youtube/get_youtube_videos");
+const { get_time } = require("./get_times");
 
 module.exports = async function (query) {
-  console.log("viewCount");
-  const all_videoId = query.all_videoId || [];
+  console.log("update_viewCount");
   const all_videoInfo = query.all_videoInfo || [];
-  let return_data = {
-    success: [],
-    error: []
-  }
-  let send_videoId;
+  let errorFlag = false; 
 
-  if (all_videoId[0] == "all") {
-    const result = await prisma.videos.findMany();
-    send_videoId = result.map((video) => video.id);
-  } else {
-    send_videoId = all_videoId;
-  }
-
-  const result_youtube_videos = await all_videoInfo
-    ? all_videoInfo
-    : await get_youtube_videos({
-        videoId: send_videoId,
-        part: "statistics",
-      });
-
-  for await (const videoInfo of result_youtube_videos) {
+  for await (const videoInfo of all_videoInfo) {
     const count = videoInfo.statistics;
-    await prisma.dayCount.create({
-      data: {
-        videoId: videoInfo.id,
-        createdAt: get_time("Asia/Tokyo", 0),
+    await prisma.statistics.upsert({
+      where: { id: videoInfo.id },
+      update: {
+        updatedAt: get_time("Asia/Tokyo", 0),
         viewCount: count.viewCount ? Number(count.viewCount) : null,
         likeCount: count.likeCount ? Number(count.likeCount) : null,
         dislikeCount: count.dislikeCount ? Number(count.dislikeCount) : null,
         commentCount: count.commentCount ? Number(count.commentCount) : null,
-      }
+      },
+      create: {
+        id: videoInfo.id,
+        createdAt: get_time("Asia/Tokyo", 0),
+        updatedAt: get_time("Asia/Tokyo", 0),
+        viewCount: count.viewCount ? Number(count.viewCount) : null,
+        likeCount: count.likeCount ? Number(count.likeCount) : null,
+        dislikeCount: count.dislikeCount ? Number(count.dislikeCount) : null,
+        commentCount: count.commentCount ? Number(count.commentCount) : null,
+      },
     }).catch((e) => {
-      console.log("add dayCount error!");
-      return_data.error.push(videoInfo.id);
-    }).finally(() => {
-      return_data.success.push(videoInfo.id);
+      errorFlag = true;
+      console.error("add dayCount error!", "videoId =", videoInfo.id);
     })
   }
     
   prisma.$disconnect();
-  return return_data;
+  return errorFlag ? "error" : "success";
 };
 
 /* result_youtube_videos

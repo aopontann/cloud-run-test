@@ -25,6 +25,6 @@
   "devDependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "prisma": "^2.23.0"
+    "prisma": "^2.24.1"
   }
 }

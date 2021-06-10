@@ -43,33 +43,21 @@ router.post("/", async function (req, res) {
 router.put("/", async function (req, res) {
   let errorFlag = false;
   await update_vtuber({
-    channelId: req.query.channelId || null,
-    name: req.query.name || null,
-    readname: req.query.readname || null,
-    affiliation: req.query.affiliation || null,
-    birthday: req.query.birthday || null,
+    id: req.body.id || null,
+    name: req.body.name || null,
+    readname: req.body.readname || null,
+    affiliation: req.body.affiliation || null,
+    birthday: req.body.birthday || null,
+    image: req.body.image || null,
   })
     .catch((e) => {
-      console.log("update_vtuber error!");
+      console.log("update_vtuber error!", e);
       errorFlag = true;
     })
     .finally(() => {
       errorFlag ? res.json("error!") : res.json("success!");
     });
 });
-
-router.post("/image", async function (req, res) {
-  let errorFlag = false;
-  await add_vtuberImage([...req.body])
-    .catch((e) => {
-      errorFlag = true;
-      console.log("create vtuberImage error!");
-    })
-    .finally(() => {
-      errorFlag ? res.json("error") : res.json("success");
-    });
-});
-
 
 //routerをモジュールとして扱う準備
 module.exports = router;

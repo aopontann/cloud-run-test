@@ -15,7 +15,7 @@ module.exports = async function (body) {
       id: videoId
     }
   });
-  if (!search_video) {
+  if (search_video.length == 0) {
     console.log("not exist");
     return "not exist";
   }

@@ -8,19 +8,14 @@ module.exports = async function (all_delete_id) {
   };
   for await (const deleteId of all_delete_id) {
     let errorFlag = false;
-    const deleteDayCount = prisma.dayCount.deleteMany({
+    const deleteStatistics = prisma.statistics.deleteMany({
       where: {
-        videoId: deleteId,
+        id: deleteId,
       },
     });
     const deleteSongVideos = prisma.songVtuber.deleteMany({
       where: {
         videoId: deleteId,
-      },
-    });
-    const times = prisma.times.delete({
-      where: {
-        id: deleteId,
       },
     });
     const thumbnails = prisma.thumbnails.delete({
@@ -34,9 +29,8 @@ module.exports = async function (all_delete_id) {
       },
     });
     await prisma.$transaction([
-      deleteDayCount,
+      deleteStatistics,
       deleteSongVideos,
-      times,
       thumbnails,
       videos,
     ]).catch((e) => {

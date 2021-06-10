@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const add_videos = require("../src/controllers/video/DB_add_video");
 const all_vtuberInfo = require("../jsonFolder/vtuber.json");
 const videoInfo = require("../jsonFolder/sample_videoInfo.json");
 const { get_time, toJST } = require("../src/controllers/get_times");
@@ -31,6 +32,11 @@ async function main() {
   }
 
   // video test data
+  const result_add = await add_videos({
+    all_videoInfo: videoInfo
+  });
+  console.log(result_add);
+  /*
   const thumb = videoInfo.snippet.thumbnails;
   const statistics = videoInfo.statistics;
   await prisma.videos.upsert({
@@ -76,6 +82,7 @@ async function main() {
   }).finally(() => {
     console.log("finished");
   })
+  */
   
 }
 
