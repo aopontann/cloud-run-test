@@ -8,7 +8,7 @@ const select_youtube_videos = require("../controllers/youtube/select_youtube_vid
 const DB_add_videos = require("../controllers/video/DB_add_video");
 const search_songVtuber = require("../controllers/songVtuber/get_search_songVtuber");
 const DB_add_songVtuber = require("../controllers/songVtuber/DB_add_songVtuber");
-const DB_add_viewCount = require("../controllers/DB_add_viewCount");
+const DB_add_viewCount = require("../controllers/update_statistics");
 const { get_time, toUTC } = require("../controllers/get_times");
 
 router.post("/addNewVideo", async function (req, res) {
@@ -109,7 +109,9 @@ router.post("/addNewViewCount", async function (req, res) {
     part: "statistics"
   });
 
-  const result = await DB_add_viewCount(result_get_youtube_videos);
+  const result = await DB_add_viewCount({
+    all_videoInfo: [...result_get_youtube_videos]
+  });
   res.json(result);
 })
 
