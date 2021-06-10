@@ -5,17 +5,14 @@ const { get_time, toJST } = require("../get_times");
 module.exports = async function (query) {
   const all_videoInfo = query.all_videoInfo;
   const songConfirm = query.songConfirm || false;
-  const result = {
-    success: [],
-    error: [],
-    success_videoInfo: [],
-  };
 
   console.log("add video start!!");
+  let errorFlag = false;
+
   for await (const videoInfo of all_videoInfo) {
-    let errorFlag = false;
     console.log("videoId = ", videoInfo.id);
     const thumb = videoInfo.snippet.thumbnails;
+    const count = videoInfo.statistics;
     await prisma.videos
       .upsert({
         where: { id: videoInfo.id },
@@ -25,7 +22,10 @@ module.exports = async function (query) {
           description: videoInfo.snippet.description,
           songConfirm: songConfirm,
           startTime: videoInfo.liveStreamingDetails
-            ? toJST(videoInfo.liveStreamingDetails.scheduledStartTime || videoInfo.liveStreamingDetails.actualStartTime)
+            ? toJST(
+                videoInfo.liveStreamingDetails.scheduledStartTime ||
+                  videoInfo.liveStreamingDetails.actualStartTime
+              )
             : toJST(videoInfo.snippet.publishedAt),
           createdAt: get_time("Asia/Tokyo", 0),
           thumbnail: {
@@ -37,25 +37,29 @@ module.exports = async function (query) {
               maxres: thumb.maxres ? thumb.maxres.url : null,
             },
           },
+          statistic: {
+            create: {
+              createdAt: get_time("Asia/Tokyo", 0),
+              updatedAt: get_time("Asia/Tokyo", 0),
+              viewCount: count.viewCount ? Number(count.viewCount) : null,
+              likeCount: count.likeCount ? Number(count.likeCount) : null,
+              dislikeCount: count.dislikeCount ? Number(count.dislikeCount) : null,
+              commentCount: count.commentCount ? Number(count.commentCount) : null,
+            },
+          },
         },
         update: {},
       })
       .catch((e) => {
         console.log("add video error!");
         errorFlag = true;
-      })
-      .finally(() => {
-        errorFlag
-          ? result.error.push(videoInfo.id)
-          : result.success.push(videoInfo.id) &&
-            result.success_videoInfo.push(videoInfo);
       });
   }
 
   console.log("add video end");
   //console.log(result);
   await prisma.$disconnect();
-  return result;
+  return errorFlag ? "error" : "success";
 };
 
 /* body = get_youtube_videos の取得データ 例
