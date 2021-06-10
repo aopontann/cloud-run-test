@@ -9,8 +9,9 @@ module.exports = async function (query) {
   console.log("add video start!!");
   let errorFlag = false;
 
+  let cnt = 1;
   for await (const videoInfo of all_videoInfo) {
-    console.log("videoId = ", videoInfo.id);
+    console.log(`(${cnt++} / ${all_videoInfo.length}) videoId = ${videoInfo.id}`)
     const thumb = videoInfo.snippet.thumbnails;
     const count = videoInfo.statistics;
     await prisma.videos
