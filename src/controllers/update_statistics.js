@@ -9,6 +9,7 @@ module.exports = async function (query) {
 
   for await (const videoInfo of all_videoInfo) {
     const count = videoInfo.statistics;
+    console.log("id =", videoInfo.id);
     await prisma.statistics.upsert({
       where: { id: videoInfo.id },
       update: {
