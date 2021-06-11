@@ -8,9 +8,7 @@ module.exports = async function (all_videoInfo) {
     songConfirm: [],
     unsongConfirm: []
   };
-  const result_get_vtuber = await get_vtuber({
-    affiliation: ["にじさんじ", "にじさんじ卒業"]
-  });
+  const result_get_vtuber = await get_vtuber();
   const all_channelId = result_get_vtuber.map((vtuber) => vtuber.id);
   //console.log(all_channelId);
 
