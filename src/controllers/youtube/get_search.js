@@ -37,7 +37,7 @@ module.exports = async function (q) {
         pageToken: pageToken,
         publishedAfter,
         publishedBefore,
-        q: "にじさんじ歌cover",
+        q: "にじさんじ歌",
         type: "video",
         videoDuration: "medium",
         key: Key,
