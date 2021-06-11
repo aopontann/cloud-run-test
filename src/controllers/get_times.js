@@ -13,6 +13,17 @@ module.exports.get_time = (TIME_ZONE, time_hour_diff) => {
   return formatted_time + "Z";
 };
 
+module.exports.get_time2 = (q) => {
+  const query = q || {};
+  const time = new Date()
+  const format = query.format || "YYYY-MM-DDTHH:mm:ss";
+  const timezone = query.timeZone || "Asia/Tokyo";
+  const formatted_time = formatToTimeZone(time, format, {
+    timeZone: timezone,
+  });
+  return formatted_time + "Z";
+}
+
 // JST 2021-05-23T16:22:24Z
 module.exports.toUTC = (JST) => {
   const time = Date.parse(JST);
