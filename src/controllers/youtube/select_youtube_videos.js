@@ -1,12 +1,18 @@
+const get_vtuber = require("../vtuber/DB_get_vtuber");
 //getVideoInfoが取得した動画詳細データを使って、動画が歌ってみた系なのか判別する
 // all_videoInfo はどのようなデータなのか一番下に記載
-module.exports = function (all_videoInfo) {
+module.exports = async function (all_videoInfo) {
   //  条件にあった全ての動画データを入れる
   // songConfirm 歌ってみた動画確定 // unsongConfirm 不確定
   let return_data = {
     songConfirm: [],
     unsongConfirm: []
   };
+  const result_get_vtuber = await get_vtuber({
+    affiliation: ["にじさんじ", "にじさんじ卒業"]
+  });
+  const all_channelId = result_get_vtuber.map((vtuber) => vtuber.id);
+  //console.log(all_channelId);
 
   for (const videoInfo of all_videoInfo) {
     const videotime = videoInfo.contentDetails.duration; // 例 "PT1H33M45S"
@@ -44,7 +50,7 @@ module.exports = function (all_videoInfo) {
       } else if (select_video(checktitle, match_strings_1)) {
         //videoInfo.songConfirm = false;
         return_data.unsongConfirm.push(videoInfo);
-      } else if (select_video(checktitle, match_strings_2)) {
+      } else if (select_video(checktitle, match_strings_2) && all_channelId.includes(videoInfo.snippet.channelId)) {
         //videoInfo.songConfirm = true;
         return_data.songConfirm.push(videoInfo);
       } else if (

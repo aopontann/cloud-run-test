@@ -19,6 +19,7 @@
     "@prisma/client": "^2.23.0",
     "date-fns-timezone": "^0.1.4",
     "express": "^4.17.1",
+    "googleapis": "^76.0.0",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.1"
   },

@@ -3,6 +3,7 @@ const router = express.Router();
 
 const get_youtube_activities = require('../controllers/youtube/get_youtube_activities');
 const get_videoinfo = require("../controllers/youtube/get_youtube_videos");
+const get_youtube_search = require("../controllers/youtube/get_search");
 const select_videos = require("../controllers/youtube/select_youtube_videos");
 const { get_time, toUTC } = require("../controllers/get_times");
 
@@ -45,7 +46,7 @@ router.get("/videos", async function (req, res) {
   }
 
   // 歌ってみた動画か判断する
-  const result_select_videos = select_videos(
+  const result_select_videos = await select_videos(
     result_getVideoInfo
   );
 
@@ -55,6 +56,17 @@ router.get("/videos", async function (req, res) {
     unsongConfirm: result_select_videos.unsongConfirm
   });
 
+});
+
+router.get('/search', async function(req,res){
+  // datetime "1970-01-01T00:00:00Z"
+  const query = req.query || {};
+  const result_search = await get_youtube_search({
+    publishedAfter: query.publishedAfter || null,
+    publishedBefore: query.publishedBefore || null,
+  })
+  //console.log(result_search);
+  res.json(result_search);
 });
   
 
