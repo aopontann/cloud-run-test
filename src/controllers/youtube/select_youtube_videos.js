@@ -10,6 +10,7 @@ module.exports = async function (all_videoInfo) {
   };
   const result_get_vtuber = await get_vtuber();
   const all_channelId = result_get_vtuber.map((vtuber) => vtuber.id);
+  const all_name = result_get_vtuber.map((vtuber) => vtuber.name);
   //console.log(all_channelId);
 
   for (const videoInfo of all_videoInfo) {
@@ -20,7 +21,7 @@ module.exports = async function (all_videoInfo) {
       // 動画の長さが9分59秒以下の場合
       const checktitle = videoInfo.snippet.title;
       const checkDesc = videoInfo.snippet.description;
-      const NG_match = ["まいにち動画", "【アニメ】", "マリオカート", "Apex", "APEX", "ARK", "Ark"];
+      const NG_match = ["まいにち動画", "【アニメ】", "マリオカート", "Apex", "APEX", "ARK", "Ark", "切り抜き"];
       const match_strings_1 = ["試聴", "short", "Short"];
       const match_strings_2 = [
         "歌ってみた",
@@ -53,7 +54,8 @@ module.exports = async function (all_videoInfo) {
         return_data.songConfirm.push(videoInfo);
       } else if (
         select_video(checktitle, match_strings_3) ||
-        select_video(checkDesc, match_strings_3)
+        select_video(checktitle, match_strings_2) || 
+        select_video(checktitle, all_name)
       ) {
         //videoInfo.songConfirm = false;
         return_data.unsongConfirm.push(videoInfo);
