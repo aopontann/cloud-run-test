@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
+const get_youtube_videos = require("../controllers/youtube/get_youtube_videos");
 const DB_add_videos = require("../controllers/video/DB_add_video");
 const DB_get_videos = require("../controllers/video/DB_get_video");
 const DB_delete_videos = require("../controllers/video/DB_delete_video");
 const DB_update_videos = require("../controllers/video/DB_update_video");
 const search_songVtuber = require("../controllers/songVtuber/get_search_songVtuber");
+const update_viewCount = require("../controllers/update_statistics");
 const DB_add_songVtuber = require("../controllers/songVtuber/DB_add_songVtuber");
 const delete_songVtuber = require("../controllers/songVtuber/delete_songVtuber");
 
@@ -94,6 +96,25 @@ router.put("/", async function (req, res) {
   });
 });
 
+router.post("/updateViewCount", async function (req, res) {
+  // DB から動画情報を取得
+  const result_DB_get_videos = await DB_get_videos({
+    songConfirm: "true"
+  });
+
+  const target_videoId = result_DB_get_videos.map(videoInfo => videoInfo.id);
+  // 動画の詳細データ(視聴回数や評価数など)を取得する
+  const result_get_youtube_videos = await get_youtube_videos({
+    videoId: target_videoId,
+    part: "statistics"
+  });
+
+  const result = await update_viewCount({
+    all_videoInfo: [...result_get_youtube_videos]
+  });
+  res.json(result);
+})
+
 // http://localhost:8080/DB/videos?id="videoId, ..."
 router.delete("/", async function (req, res) {
   console.log("delete start");
@@ -133,6 +154,8 @@ router.delete("/songVtuber", async function (req, res) {
     message: "success",
   });
 });
+
+
 
 /* req.body
   [

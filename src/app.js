@@ -22,9 +22,6 @@ app.use('/videos', DB_videos_router);
 const DB_vtuber_router = require('./routes/vtuber');
 app.use('/vtuber', DB_vtuber_router);
 
-const routin_router = require('./routes/routine');
-app.use('/routine', routin_router);
-
 //サーバ起動
 app.listen(port);
 console.log('niji-song-server port ' + port);
