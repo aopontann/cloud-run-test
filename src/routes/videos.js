@@ -7,6 +7,7 @@ const DB_get_videos = require("../controllers/video/DB_get_video");
 const DB_delete_videos = require("../controllers/video/DB_delete_video");
 const DB_update_videos = require("../controllers/video/DB_update_video");
 const search_songVtuber = require("../controllers/songVtuber/get_search_songVtuber");
+const update_viewCount = require("../controllers/update_statistics");
 const DB_add_songVtuber = require("../controllers/songVtuber/DB_add_songVtuber");
 const delete_songVtuber = require("../controllers/songVtuber/delete_songVtuber");
 
