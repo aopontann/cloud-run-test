@@ -25,6 +25,7 @@ module.exports = async function (all_videoInfo) {
       const match_strings_1 = ["試聴", "short", "Short"];
       const match_strings_2 = [
         "歌ってみた",
+        "歌わせていただきました",
         "歌って踊ってみた",
         "cover",
         "Cover",
