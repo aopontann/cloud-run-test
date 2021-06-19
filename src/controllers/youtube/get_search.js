@@ -21,42 +21,26 @@ module.exports = async function (q) {
     });
   console.log(`探索期間 ${publishedAfter} >--< ${publishedBefore}`);
 
-  //  期間分全ての動画情報を入れる
-  let return_data = [];
-  let cnt = 0;
-  const cntMax = 10;
-  let pageToken = "";
+  let errorFlag = false;
   const service = google.youtube("v3");
 
-  // 回数制限する
-  while (cnt++ < cntMax) {
-    const res = await service.search
-      .list({
-        part: "snippet",
-        maxResults: 50,
-        pageToken: pageToken,
-        publishedAfter,
-        publishedBefore,
-        q: "にじさんじ歌",
-        type: "video",
-        videoDuration: "medium",
-        key: Key,
-      })
-      .catch((e) => {
-        console.log("youtube_search_error", e);
-        return return_data;
-      });
-    
-    return_data.push(...res.data.items);
-
-    if (!res.data.nextPageToken) {
-      break;
-    }
-    pageToken = res.data.nextPageToken;
-  }
-
-  //console.log("値返すよ");
-  return return_data.map((dt) => dt.id.videoId);
+  // 関連性の高いデータから取得するため、1ページのみのデータを取得
+  const res = await service.search
+    .list({
+      part: "snippet",
+      maxResults: 50,
+      publishedAfter,
+      publishedBefore,
+      q: "にじさんじcover",
+      type: "video",
+      key: Key,
+    })
+    .catch((e) => {
+      console.log("youtube_search_error", e);
+      errorFlag = true;
+    });
+  
+  return errorFlag ? [] : res.data.items.map((items) => items.id.videoId);
 };
 
 /* youtube から返ってくるデータ
