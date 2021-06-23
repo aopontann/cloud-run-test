@@ -96,7 +96,7 @@ router.put("/", async function (req, res) {
   });
 });
 
-router.post("/updateViewCount", async function (req, res) {
+router.put("/viewCount", async function (req, res) {
   // DB から動画情報を取得
   const result_DB_get_videos = await DB_get_videos({
     songConfirm: "true"

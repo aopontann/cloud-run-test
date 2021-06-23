@@ -7,7 +7,6 @@
 - postgreSQL
 - prisma
 - Docker
-- Jest
 ## 機能一覧
 [swagger-ui](https://storage.googleapis.com/nijisongs-swagger-ui/dist/index.html) をみてください
 ## インフラ構成図
