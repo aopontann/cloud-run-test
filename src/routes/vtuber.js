@@ -15,13 +15,11 @@ router.get("/", async function (req, res) {
   const affi = req.query.affiliation ? req.query.affiliation.split(",") : null;
   const names = req.query.name ? req.query.name.split(",") : null;
   const channelId = req.query.channelId ? req.query.channelId.split(",") : null;
-  const include = req.query.include ? req.query.include.split(",") : []; // ["songVtuber", "vtuberImage"]
 
   const result = await DB_get_vtuber({
     affiliation: affi,
     name: names,
     channelId: channelId,
-    include: include,
   });
 
   console.log(result);
