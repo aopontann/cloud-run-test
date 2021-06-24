@@ -2,11 +2,10 @@
   "name": "nijisanji-songs-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node -r dotenv/config src/app.js",
-    "dev2": "node -r dotenv/config mySQL.js",
     "start": "node src/app.js",
     "prisma:seed": "node -r dotenv/config prisma/seed.js",
     "prisma:generate": "npx prisma generate",
@@ -20,12 +19,12 @@
     "date-fns-timezone": "^0.1.4",
     "express": "^4.17.1",
     "googleapis": "^76.0.0",
-    "mysql": "^2.18.1",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "eslint": "^7.29.0",
     "prisma": "^2.24.1"
   }
 }
