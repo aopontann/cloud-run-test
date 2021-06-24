@@ -7,12 +7,49 @@ servers:
   - url: http://localhost:8081
     description: Development server
 paths:
+  /youtube/search:
+    get:
+      tags:
+        - youtube
+      summary: 動画ID取得
+      description: Youtube Data API を使って、にじさんじの歌動画に関連する動画IDを取得する<br> publishedは動画がアップロードされた時間(公開日ではない)<br>
+        publishedの形式は(2021-01-01T00:00:00Z)<br>
+        publishedを指定しない場合、実行したその日の(JST)0:00~23:59の時間帯にアップロードされた動画IDを取得する
+      parameters:
+        - name: publishedAfter
+          in: query
+          description: 指定された日時より後にアップロードされた動画を取得
+          schema:
+            type: string
+        - name: publishedBefore
+          in: query
+          description: 指定された日時より前にアップロードされた動画を取得
+          schema:
+            type: string
+      responses:
+        '200':
+          description:
+            publishedAfter=2021-01-01T00:00:00Z<br>
+            publishedBefore=2021-01-02T06:00:00Z の場合
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - 8lWZpNjntU8
+                  - yBU8FDYR3_Q
+          
   /youtube/activities:
     get:
       tags:
         - youtube
-      summary: get videoId
-      description: 指定されたチャンネルと期間から投稿された動画を取得する
+      summary: 動画ID取得
+      description: 
+        指定されたチャンネルと期間から投稿された動画IDを取得する<br>
+        datetimeを両方指定しない場合、現在から7時間前の期間を取得する<br>
+        原因が分からないが、プレミアム公開(公開予約)の動画IDの取得ができないため、既に公開された動画IDを取得する際に使用した方が良い
       parameters: 
         - name: channelId
           in: query
@@ -22,13 +59,11 @@ paths:
             type: string
         - name: datetimeAfter
           in: query
-          required: true
           description: データ形式(2021-01-01T00:00:00Z)
           schema:
             type: string
         - name: datetimeBefore
           in: query
-          required: true
           description: データ形式(2021-01-01T00:00:00Z)
           schema:
             type: string
@@ -49,8 +84,10 @@ paths:
     get:
       tags:
         - youtube
-      summary: get videoInfo
-      description: videoIdから動画の詳細データを取得する　また歌動画か判定された(& 歌動画かもしれない)データだけ取得することも可能
+      summary: 動画詳細データを取得
+      description:
+        動画IDから動画の詳細データを取得する<br>
+        また、歌動画か判定されたデータ(songConfirm)と歌動画かもしれないデータ(unSongConfirm)だけ取得することも可能<br>
       parameters: 
         - name: videoId
           in: query
@@ -69,7 +106,9 @@ paths:
             type: string
       responses:
         '200':
-          description: select=trueにするとsongConfirm[], unSongConfirm[]が取得できる　select=false(or 指定しない)とresultのみ取得できる
+          description: 
+            select=trueにするとsongConfirm[], unSongConfirm[]が取得できる<br>
+            select=false(or 指定しない)とresultのみ取得できる
           content:
             application/json:
               schema:
@@ -90,16 +129,18 @@ paths:
                     items:
                       $ref: '#/components/schemas/youtube'
                       
-  /video:
+  /videos:
     get:
       tags:
         - video
-      summary: get videoInfo
+      summary: 動画詳細データを取得
+      description:
+        DBに保存されている動画詳細データを取得する<br>
+        データの順番は再生回数が多い順に取得される
       parameters:
         - name: id
           in: query
-          required: true
-          description: 取得したい動画のIDを指定　コンマ区切りで複数指定できる
+          description: 取得したい動画IDを指定　コンマ区切りで複数指定できる
           schema:
             type: string
         - name: songConfirm
@@ -117,14 +158,23 @@ paths:
           description: 取得するデータの数を指定できる　指定しない場合、全てのデータを返す
           schema:
             type: integer
+        - name: page
+          in: query
+          description: 取得するデータのページを指定できる　指定しない場合、最初のページのデータを返す
+          schema:
+            type: integer
         - name: createdAtAfter
           in: query
-          description: データ形式(2021-01-01T00:00:00Z)
+          description:
+            指定された時間より後に公開するデータを取得<br>
+            データ形式(2021-01-01T00:00:00Z)
           schema:
             type: string
         - name: createdAtBefore
           in: query
-          description: データ形式(2021-01-01T00:00:00Z)
+          description:
+            指定された時間より前に公開するデータを取得<br>
+            データ形式(2021-01-01T00:00:00Z)
           schema:
             type: string
       responses:
@@ -139,9 +189,12 @@ paths:
     post:
       tags:
         - video
-      summary: save video
+      summary: 動画詳細データを保存
+      description:
+        動画詳細データをDBに保存する<br>
+        保存する際、動画詳細データから出演Vライバーを抽出し、そのデータもDBに保存する
       requestBody: # リクエストボディ
-        description: user to create
+        description: youtube/videosから取得したデータ
         content:
           application/json:
             schema:
@@ -163,14 +216,17 @@ paths:
                     $ref: '#/components/schemas/youtube'
       responses:
         '201':
-          description: CREATED
+          description: success
     
     put:
       tags:
         - video
-      summary: update videoInfo
+      summary: 動画詳細データの更新
+      description:
+        動画詳細データが、歌ってみた動画であることが確定した時、songConfirmをTrueに更新する<br>
+        また、その動画に出演しているVライバーを編集し、出演一覧が確定した時、checkSongVtuberをTrueに変更する
       requestBody:
-        description: aaaaa
+        description: videoIdは動画ID
         content:
           application/json:
             schema:
@@ -184,12 +240,31 @@ paths:
                   type: boolean
       responses:
         '201':
-          description: UPDATED
+          description: 更新に成功すると、動画詳細データの一部を返す
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  startTime:
+                    type: string
+                  createdAt:
+                    type: string
+                  songConfirm:
+                    type: boolean
+                  checkSongVtuber:
+                    type: boolean
     
     delete:
       tags:
         - video
-      summary: delete videoInfo
+      summary: 動画詳細データの削除
       parameters:
         - name: id
           in: query
@@ -200,13 +275,26 @@ paths:
       responses:
         '201':
           description: DELETED
-          
+  
+  /videos/viewCount:
+    put:
+      tags:
+        - video
+      summary: 動画の視聴回数を更新
+      description:
+        歌動画の視聴回数をYoutube APIから取得し、DBに保存されている動画詳細データの視聴回数を上書きする
+      responses:
+        '201':
+          description: updated
+  
   /video/songVtuber:
     put:
       tags:
         - video
       summary: 歌動画に出演しているVtuber一覧を編集
-      description: typeに指定するinitは歌動画に出演しているVtuber一覧を削除しリクエスト内容を上書き保存する updateは上書きせず、リクエスト内容を追加し保存する
+      description: 
+        typeに指定するinitは歌動画に出演しているVtuber一覧を削除しリクエスト内容を上書き保存する<br>
+        updateは上書きせず、リクエスト内容を追加し保存する
       parameters:
         - name: type
           in: query
@@ -262,8 +350,11 @@ paths:
     get:
       tags:
         - vtuber
-      summary: get vtuberInfo
-      description: DBに保存してあるVtuberデータを取得できる　パラメータを指定することで、その条件に合ったデータのみ取得することができる　指定しない場合、全てのデータを返す
+      summary: Vtuber情報を取得
+      description:
+        DBに保存してあるVtuberデータを取得<br>
+        パラメータを指定することで、その条件に合ったデータのみ取得することができる<br>
+        指定しない場合、全てのデータを返す
       parameters:
         - name: affiliation
           in: query
@@ -280,11 +371,6 @@ paths:
           description: チャンネルIDを指定
           schema:
             type: string
-        - name: include
-          in: query
-          description: 取得するデータの部分を指定できる(songVtuber,vtuberImage)
-          schema:
-            type: string
       responses:
         '200':
           description: 取得結果
@@ -298,8 +384,10 @@ paths:
     post:
       tags:
         - vtuber
-      summary: save vtuberInfo
-      description: aaa
+      summary: 動画詳細データを保存
+      description:
+        動画詳細データをDBに保存する<br>
+        保存する際、動画詳細データから出演Vライバーを抽出し、そのデータもDBに保存する
       requestBody:
         description: user to create
         content:
@@ -316,6 +404,8 @@ paths:
                 affiliation:
                   type: string
                 birthday:
+                  type: string
+                image:
                   type: string
       responses:
         '201':
@@ -343,28 +433,13 @@ paths:
                   type: string
                 birthday:
                   type: string
+                image:
+                  type: string
+                  
       responses:
         '201':
           description: UPDATED
           
-  /vtuber/image:
-    post:
-      tags:
-        - vtuber
-      summary: vtuberの画像を保存
-      description: aaa
-      requestBody:
-        description: aaa
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/vtuberImage'
-      responses:
-        '201':
-          description: CREATED
-  
 components:
   schemas:
     youtube:
@@ -385,16 +460,14 @@ components:
         liveStreamingDetails:
           type: object
             
-    count:
+    statistic:
       type: object
-      required:
-        - id
       properties:
         id:
-          type: integer
+          type: string
         createdAt:
           type: string
-        videoId:
+        updatedAt:
           type: string
         viewCount:
           type: integer
@@ -421,18 +494,6 @@ components:
         maxres:
           type: string
           
-    time:
-      type: object
-      properties:
-        id:
-          type: string
-        createdAt:
-          type: string
-        videoLength:
-          type: string
-        startTime:
-          type: string
-          
     songVtuber:
       type: object
       properties:
@@ -445,10 +506,8 @@ components:
               type: string
             name:
               type: string
-            vtuberImage:
-              type: array
-              items:
-                type: string
+            image:
+              type: string
         
     video:
       type: object
@@ -457,18 +516,20 @@ components:
           type: string
         title:
           type: string
+        description:
+          type: string
+        startTime:
+          type: string
+        createdAt:
+          type: string
         songConfirm:
           type: boolean
         checkSongVtuber:
           type: boolean
         thumbnail:
           $ref: '#/components/schemas/thumbnail'
-        time:
-          $ref: '#/components/schemas/time'
-        dayCount:
-          type: array
-          items:
-            $ref: '#/components/schemas/count'
+        statistic:
+          $ref: '#/components/schemas/statistic'
         songVtuber:
           type: array
           items:
@@ -487,14 +548,26 @@ components:
           type: string
         birthday:
           type: string
+        image:
+          type: string
         songVtuber:
           type: array
           items:
             type: object
-        vtuberImage:
-          type: array
-          items:
-            type: object
+            properties:
+              videoId:
+                type: string
+              role:
+                type: string
+              videos:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  startTime:
+                    type: string
+                  thumbnail:
+                    $ref: '#/components/schemas/thumbnail'
             
     vtuberImage:
       type: object
