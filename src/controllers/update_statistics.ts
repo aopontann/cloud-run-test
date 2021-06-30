@@ -1,42 +1,45 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-const { get_time } = require("./get_times");
+import { youtube_v3 } from "googleapis";
+import prisma from "../../prisma/client";
+import { get_time2 } from "./get_times";
 
-module.exports = async function (query) {
+interface Query {
+  kind: string;
+  etag: string;
+  id: string;
+  statistics: youtube_v3.Schema$VideoStatistics
+}
+
+export default async function (query: Query[]): Promise<void> {
   console.log("update_viewCount");
-  const all_videoInfo = query.all_videoInfo || [];
-  let errorFlag = false; 
   let cnt = 1;
-  for await (const videoInfo of all_videoInfo) {
-    const count = videoInfo.statistics;
-    console.log(`(${cnt++}/${all_videoInfo.length}) id = ${videoInfo.id}`)
+  for await (const video of query) {
+    const count = video.statistics;
+    console.log(`(${cnt++}/${query.length}) id = ${video.id}`)
     await prisma.statistics.upsert({
-      where: { id: videoInfo.id },
+      where: { id: video.id },
       update: {
-        updatedAt: get_time("Asia/Tokyo", 0),
+        updatedAt: get_time2({}),
         viewCount: count.viewCount ? Number(count.viewCount) : null,
         likeCount: count.likeCount ? Number(count.likeCount) : null,
         dislikeCount: count.dislikeCount ? Number(count.dislikeCount) : null,
         commentCount: count.commentCount ? Number(count.commentCount) : null,
       },
       create: {
-        id: videoInfo.id,
-        createdAt: get_time("Asia/Tokyo", 0),
-        updatedAt: get_time("Asia/Tokyo", 0),
+        id: video.id,
+        createdAt: get_time2({}),
+        updatedAt: get_time2({}),
         viewCount: count.viewCount ? Number(count.viewCount) : null,
         likeCount: count.likeCount ? Number(count.likeCount) : null,
         dislikeCount: count.dislikeCount ? Number(count.dislikeCount) : null,
         commentCount: count.commentCount ? Number(count.commentCount) : null,
       },
     }).catch((e) => {
-      errorFlag = true;
-      console.error("add dayCount error!", "videoId =", videoInfo.id);
+      console.error("update_statistics error!");
+      throw e;
     })
   }
-    
-  prisma.$disconnect();
-  return errorFlag ? "error" : "success";
-};
+  //prisma.$disconnect();
+}
 
 /* result_youtube_videos
 [
