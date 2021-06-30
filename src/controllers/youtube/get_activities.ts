@@ -1,65 +1,76 @@
 // fetchをnode.jsで使う
-const fetch = require("node-fetch");
-const { get_time } = require("../get_times");
-const get_vtuber = require("../vtuber/DB_get_vtuber");
+import { get_time } from "../get_times";
+import { google } from "googleapis";
+//const get_vtuber = require("../vtuber/DB_get_vtuber");
 //Youtube Data API を叩くためのプロパティ
-const YoutubeApiSearch = "https://www.googleapis.com/youtube/v3/activities";
-const Key = process.env.YOUTUBE_DATA_API_KEY;
-const part = "contentDetails";
+const key: string = process.env.YOUTUBE_DATA_API_KEY || "";
+const part = ["contentDetails"];
+
+interface Query {
+  all_channelId?: string[];
+  publishedAfter?: string;
+  publishedBefore?: string;
+}
 
 //指定した期間と指定したチャンネルの全ての動画URLを取得する
-module.exports = async function (query) {
+export default async function (query: Query): Promise<string[]> {
   //引数datetime は ISO 8601（YYYY-MM-DDThh:mm:ss.sZ）形式データを使用する(UTC)
-  const datetimeAfter = query.datetimeAfter || get_time("UTC", -7);
-  const datetimeBefore = query.datetimeBefore || get_time("UTC", 0);
+  const publishedAfter: string = query.publishedAfter || get_time("UTC", -7);
+  const publishedBefore: string = query.publishedBefore || get_time("UTC", 0);
 
-  let all_channelId;
+  // 後で変更↓
+  const all_channelId = query.all_channelId || [];
+  /*
   if (query.all_channelId[0] == "all") {
     const result_DB_get_vtuber = await get_vtuber();
     all_channelId = result_DB_get_vtuber.map((vtuber) => vtuber.id);
   } else {
     all_channelId = query.all_channelId || [];
   }
-  console.log(`探索期間(UTC) ${datetimeAfter} <--> ${datetimeBefore}`);
+  */
+
+  console.log(`探索期間(UTC) ${publishedAfter} <--> ${publishedBefore}`);
 
   //  期間分全ての動画情報を入れる
-  let return_data = [];
+  const result_videoId: string[] = [];
+
+  const service = google.youtube("v3");
 
   for await (const channelId of all_channelId) {
     let cnt = 0;
     const cntMax = 50;
     let pageToken = "";
     console.log("channelId=", channelId);
-    // なんかのバグで無限ループになったら怖いから回数制限する
-    // 長期間の探索はやめた方がいいかも
+    
     while (cnt++ < cntMax) {
-      const res = await fetch(
-        `${YoutubeApiSearch}?part=${part}&pageToken=${pageToken}&maxResults=50&channelId=${channelId}&publishedAfter=${datetimeAfter}&publishedBefore=${datetimeBefore}&key=${Key}`
-      );
-      const data = await res.json();
+      const res = await service.activities
+        .list({
+          part,
+          pageToken,
+          maxResults: 50,
+          channelId,
+          publishedAfter,
+          publishedBefore,
+          key,
+        })
+        .catch((e) => {
+          console.error("youtube_activities error!");
+          throw e;
+        });
+      res.data.items?.forEach(item => {
+        const content = item.contentDetails?.upload?.videoId || null;
+        content ? result_videoId.push(content) : "";
+      })
 
-      // 取得失敗した場合
-      if (data.error) {
-        console.error("search error!");
-        return return_data.join(",");
-      }
-
-      data.items.forEach((item) => {
-        const content = item.contentDetails.upload || null;
-        if (content && content.videoId) {
-          return_data.push(content.videoId);
-        }
-      });
-
-      if (!data.nextPageToken) {
+      if (!res.data.nextPageToken) {
         break;
       }
 
-      pageToken = data.nextPageToken;
+      pageToken = res.data.nextPageToken;
     }
   }
-  return return_data.join(","); // videoId,videoId,...
-};
+  return result_videoId; // videoId,videoId,...
+}
 
 /* youtube から返ってくるデータ
 {
