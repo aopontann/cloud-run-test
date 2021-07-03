@@ -6,7 +6,7 @@ interface Query {
 }
 
 // serachVideoで取得したvideoIdを使ってYoutube Data Api Videosを叩いて動画の詳細データを取得する
-module.exports = async function (query: Query) {
+export default async function (query: Query) {
   const key: string = process.env.YOUTUBE_DATA_API_KEY || "";
   const part: string[] = query.part || ["statistics","contentDetails","snippet","liveStreamingDetails"];
   let all_videoId: string[] = query.videoId || [];
