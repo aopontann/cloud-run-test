@@ -13,15 +13,7 @@ interface GetVideo {
 
 interface Include {
   thumbnail: Thumbnails | null;
-    statistic: Statistics | null;
-    joinVtuber: {
-        role: string;
-        vtuber: {
-            id: string;
-            name: string;
-            image: string | null;
-        };
-    }[];
+  statistic: Statistics | null;
 }
 
 export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
@@ -53,17 +45,15 @@ export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
     include: {
       thumbnail: true,
       statistic: true,
-      joinVtuber: {
+      tags: {
         select: {
-          role: true,
-          vtuber: {
+          description: true,
+          tag: {
             select: {
-              id: true,
-              name: true,
-              image: true,
-            },
-          },
-        },
+              name: true
+            }
+          }
+        }
       },
     },
   });
