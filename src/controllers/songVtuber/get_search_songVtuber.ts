@@ -1,7 +1,17 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+import { youtube_v3 } from "googleapis";
+import prisma from "../../../prisma/client";
 
-module.exports = async function (query) {
+interface YoutubeVideo {
+  kind?: string;
+  etag?: string;
+  id: string;
+  snippet: youtube_v3.Schema$VideoSnippet;
+  contentDetails?: youtube_v3.Schema$VideoContentDetails;
+  statistics?: youtube_v3.Schema$VideoStatistics;
+  liveStreamingDetails?: youtube_v3.Schema$VideoLiveStreamingDetails;
+}
+
+export default async function (query: YoutubeVideo[]) {
   const all_videoInfo = query.all_videoInfo;
   const all_search_vtuber = await prisma.vtuber.findMany({
     where: {
@@ -104,6 +114,5 @@ module.exports = async function (query) {
             "actualEndTime": "2020-03-01T09:31:03Z",
             "scheduledStartTime": "2020-03-01T08:30:00Z"
         },
-        "songConfirm": true
     }
 */
