@@ -1,7 +1,15 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+import prisma from '../../../prisma/client';
 
-module.exports = async function (body) {
+interface NewVtuber {
+  channelId: string;
+  name: string;
+  readname: string;
+  affiliation: string;
+  birthday?: string;
+  image?: string;
+}
+
+export default async function (body: NewVtuber[]): Promise<void> {
   for await (const vtuberInfo of body) {
     await prisma.vtuber.upsert({
       where: { id: vtuberInfo.channelId },
@@ -13,7 +21,7 @@ module.exports = async function (body) {
         birthday: vtuberInfo.birthday || null,
         image: vtuberInfo.image || null,
       },
+      update: {},
     });
   }
-  await prisma.$disconnect();
-};
+}
