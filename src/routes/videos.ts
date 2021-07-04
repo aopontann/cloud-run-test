@@ -13,7 +13,6 @@ const router = express.Router();
 router.get("/", async function (req: express.Request, res: express.Response) {
   const videoId = req.query.id as string | undefined;
   const songConfirm = req.query.songConfirm as string | undefined;
-  const checkSongVtuber = req.query.checkSongVtuber as string | undefined;
   const startAtAfter = req.query.startAtAfteras as string | undefined;
   const startAtBefore = req.query.startAtBefore as string | undefined;
   const maxResults = Number(req.query.maxResults) || undefined;
@@ -23,10 +22,6 @@ router.get("/", async function (req: express.Request, res: express.Response) {
     songConfirm:
       songConfirm == "true" || songConfirm == "false"
         ? JSON.parse(songConfirm.toLowerCase())
-        : undefined,
-    checkSongVtuber:
-      checkSongVtuber == "true" || checkSongVtuber == "false"
-        ? JSON.parse(checkSongVtuber.toLowerCase())
         : undefined,
     startAtAfter,
     startAtBefore,
