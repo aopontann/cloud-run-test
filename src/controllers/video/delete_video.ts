@@ -7,11 +7,6 @@ export default async function (all_delete_id: string[]): Promise<void> {
         id: deleteId,
       },
     });
-    const deleteJoin = prisma.join.deleteMany({
-      where: {
-        videoId: deleteId,
-      },
-    });
     const deleteTagVideo = prisma.tagVideo.deleteMany({
       where: {
         videoId: deleteId,
@@ -28,7 +23,6 @@ export default async function (all_delete_id: string[]): Promise<void> {
       },
     });
     await prisma.$transaction([
-      deleteJoin,
       deleteTagVideo,
       deleteStatistics,
       thumbnails,
