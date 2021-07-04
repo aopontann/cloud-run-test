@@ -7,19 +7,8 @@ interface Query {
   channelId?: string[];
 }
 
-interface joinVideo {
-  joinVideo: {
-    videoId: string;
-    role: string;
-    videos: {
-      title: string;
-      startTime: Date;
-      thumbnail: Thumbnails | null;
-    };
-  }[];
-}
 
-export default async function (query?: Query): Promise<(Vtuber & joinVideo)[]> {
+export default async function (query?: Query): Promise<Vtuber[]> {
   const affi = query?.affiliation || null;
   const names = query?.name || null;
   const channelId = query?.channelId || null;
@@ -39,24 +28,6 @@ export default async function (query?: Query): Promise<(Vtuber & joinVideo)[]> {
           { name: names ? { in: names } : undefined },
           { id: channelId ? { in: channelId } : undefined },
         ],
-      },
-      include: {
-        joinVideo: {
-          where: {
-            videos: { songConfirm: true },
-          },
-          select: {
-            videoId: true,
-            role: true,
-            videos: {
-              select: {
-                title: true,
-                startTime: true,
-                thumbnail: true,
-              },
-            },
-          },
-        },
       },
     })
     .catch((e) => {
