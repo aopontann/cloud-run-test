@@ -4,7 +4,6 @@ import prisma from "../../../prisma/client";
 interface GetVideo {
   videoId?: string[];
   songConfirm?: boolean;
-  checkSongVtuber?: boolean;
   startAtAfter?: string;
   startAtBefore?: string;
   maxResults?: number;
@@ -19,7 +18,6 @@ interface Include {
 export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
   const all_videoId = query?.videoId || null;
   const songConfirm = query?.songConfirm || null;
-  const checkSongVtuber = query?.checkSongVtuber || null;
   const startAtAfter = query?.startAtAfter || null;
   const startAtBefore = query?.startAtBefore || null;
   const maxResults = query?.maxResults || 9999;
@@ -30,7 +28,6 @@ export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
       AND: [
         { id: all_videoId ? { in: all_videoId } : undefined },
         { songConfirm: songConfirm != null ? songConfirm : undefined },
-        { checkSongVtuber: checkSongVtuber != null ? checkSongVtuber : undefined },
         { startTime: startAtAfter ? { gte: startAtAfter } : undefined },
         { startTime: startAtBefore ? { lte: startAtBefore } : undefined },
       ],
