@@ -14,7 +14,6 @@ export default async function (body: Query): Promise<Videos> {
   }
   const videoId = body.videoId;
   const songConfirm = body.songConfirm || null;
-  const checkSongVtuber = body.checkSongVtuber || null;
   
   // 出演Vtuberを確認したら自分で確認済みチェックを入れることができる checkSongVtuber
   const updateSongConfirm = await prisma.videos.update({
@@ -23,7 +22,6 @@ export default async function (body: Query): Promise<Videos> {
     },
     data: {
       songConfirm: songConfirm != null ? songConfirm : undefined,
-      checkSongVtuber: checkSongVtuber != null ? checkSongVtuber : undefined
     },
   }).catch((e) => {
     console.log("update_video error");
