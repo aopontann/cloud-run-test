@@ -4,7 +4,8 @@ import prisma from "../../../prisma/client";
 interface Query {
   videoId: string;
   songConfirm?: boolean;
-  checkSongVtuber?: boolean;
+  title?: string;
+  description?: string;
 }
 
 export default async function (body: Query): Promise<Videos> {
@@ -22,6 +23,8 @@ export default async function (body: Query): Promise<Videos> {
     },
     data: {
       songConfirm: songConfirm != null ? songConfirm : undefined,
+      title: body.title,
+      description: body.description
     },
   }).catch((e) => {
     console.log("update_video error");
