@@ -5,13 +5,12 @@ import youtube_router from "./routes/youtube"
 import video_router from "./routes/videos"
 import vtuber_router from "./routes/vtuber"
 import tags_router from "./routes/tags"
+import cros from "cors"
 
-const Router = express.Router();
-// const cors = require('cors');
 const app = express();
 
 // ローカルのクライアントからフェッチできるように
-// app.use(cors());
+app.use(cros());
 
 //app.use(express.urlencoded({ extended: true }));
 // ↓これがないと(POST)bodyが受け取れなくなる
