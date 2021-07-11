@@ -2,16 +2,12 @@ import prisma from "../../../prisma/client";
 
 // namesだけの場合、指定したタグを消す
 // videoIdも指定した場合、指定した動画のタグだけ消す
-interface Query {
-  names: string[];
-  videoId?: string;
-}
 
-export default async function (query: {names: string[], videoId?: string}): Promise<void> {
+export default async function (query: {names?: string[], videoId?: string}): Promise<void> {
   const delete_tagVideo = prisma.tagVideo.deleteMany({
     where: {
       AND: [
-        { tag: { name: { in: query.names } } },
+        { tag: query.names ? { name: { in: query.names } } : undefined },
         { videoId: query.videoId || undefined },
       ],
     },
