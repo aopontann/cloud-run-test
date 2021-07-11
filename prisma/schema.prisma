@@ -3,10 +3,8 @@ generator client {
   previewFeatures = ["orderByRelation"]
 }
 
-// 3↑関係による並び替えをするため
-
 datasource db {
-  provider = "postgres"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -24,45 +22,46 @@ model Statistics {
   id           String   @id @db.VarChar(20)
   createdAt    DateTime @default(now()) @db.Timestamp(0)
   updatedAt    DateTime @default(now()) @db.Timestamp(0)
-  viewCount    Int?     @db.Integer
-  likeCount    Int?     @db.Integer
-  dislikeCount Int?     @db.Integer
-  commentCount Int?     @db.Integer
+  viewCount    Int?
+  likeCount    Int?
+  dislikeCount Int?
+  commentCount Int?
   video        Videos   @relation(fields: [id], references: [id])
 }
 
 model Videos {
-  id              String       @id @db.VarChar(20)
-  title           String       @db.VarChar(255)
-  description     String       @db.Text
-  startTime       DateTime     @db.Timestamp(0)
-  createdAt       DateTime     @default(now()) @db.Timestamp(0)
-  songConfirm     Boolean      @default(false)
-  checkSongVtuber Boolean      @default(false)
-  songVtuber      SongVtuber[]
-  thumbnail       Thumbnails?
-  statistic       Statistics?
+  id          String      @id @db.VarChar(20)
+  title       String      @db.VarChar(255)
+  description String
+  startTime   DateTime    @db.Timestamp(0)
+  createdAt   DateTime    @default(now()) @db.Timestamp(0)
+  songConfirm Boolean     @default(false)
+  statistic   Statistics?
+  tags        TagVideo[]
+  thumbnail   Thumbnails?
 }
 
 model Vtuber {
-  id          String       @id @db.VarChar(30)
-  name        String       @db.VarChar(255)
-  readname    String       @db.VarChar(255)
-  affiliation String       @db.VarChar(255)
-  birthday    String?      @db.Char(4)
-  image       String?      @db.VarChar(255)
-  songVtuber  SongVtuber[]
+  id          String  @id @db.VarChar(30)
+  name        String  @db.VarChar(255)
+  readname    String  @db.VarChar(255)
+  affiliation String  @db.VarChar(255)
+  birthday    String? @db.Char(4)
+  image       String? @db.VarChar(255)
 }
 
-model SongVtuber {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @db.Timestamp(0)
-  videoId   String   @db.VarChar(20)
-  channelId String   @db.VarChar(30)
-  role      String   @db.VarChar(20)
-  vtuber    Vtuber   @relation(fields: [channelId], references: [id])
-  videos    Videos   @relation(fields: [videoId], references: [id])
+model Tag {
+  id       Int        @id @default(autoincrement())
+  name     String     @unique @db.VarChar(255)
+  publish  Boolean    @default(true)
+  tagVideo TagVideo[]
+}
 
-  @@index([channelId], name: "channelId")
-  @@index([videoId], name: "videoId")
+model TagVideo {
+  id          Int     @id @default(autoincrement())
+  tagId       Int
+  videoId     String  @db.VarChar(20)
+  description String? @db.VarChar(255)
+  tag         Tag     @relation(fields: [tagId], references: [id])
+  videos      Videos  @relation(fields: [videoId], references: [id])
 }

@@ -1,9 +1,21 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+import { youtube_v3 } from "googleapis";
+import prisma from "../../../prisma/client";
 
-module.exports = async function (query) {
-  const all_videoInfo = query.all_videoInfo;
-  const all_search_vtuber = await prisma.vtuber.findMany({
+interface ReturnType {
+  videoId: string;
+  tags: Tags[];
+}
+
+interface Tags {
+  name: string;
+  description: string;
+}
+
+export default async function (
+  query: youtube_v3.Schema$Video[]
+): Promise<ReturnType[]> {
+  //const all_videoInfo = query.all_videoInfo;
+  const all_vtuberInfo = await prisma.vtuber.findMany({
     where: {
       NOT: {
         name: "にじさんじ",
@@ -14,29 +26,36 @@ module.exports = async function (query) {
       name: true,
     },
   });
+  const search_vtuberName: string[] = all_vtuberInfo.map(
+    (vtuber) => vtuber.name
+  );
   //const all_search_vtuber = result_findMany.map(vtuber => vtuber.name);
   //let result_search_vtuber = [];
 
-  const return_data = all_videoInfo.map((videoInfo) => {
-    let joinVtuber = [];
-    all_search_vtuber.forEach((vtuber) => {
-      const reg = new RegExp(vtuber.name);
-      const snippet = videoInfo.snippet;
-      if (snippet.description.match(reg) || snippet.title.match(reg)) {
-        joinVtuber.push({
-          channelId: vtuber.id,
-          role: "歌",
-        });
-      }
-    });
-    return {
-      videoId: videoInfo.id,
-      joinVtuber: joinVtuber,
-    };
+  const return_data: ReturnType[] = [];
+  query.forEach((videoInfo: youtube_v3.Schema$Video) => {
+    if (videoInfo.id) {
+      const tags: Tags[] = [];
+      search_vtuberName.forEach((vtuberName: string) => {
+        const reg = new RegExp(vtuberName);
+        const snippet = videoInfo.snippet;
+        if (snippet?.title?.match(reg)) {
+          tags.push({
+            name: vtuberName,
+            description: "歌",
+          });
+        }
+      });
+      return_data.push({
+        videoId: videoInfo.id,
+        tags,
+      });
+    }
   });
-  await prisma.$disconnect();
+  //await prisma.$disconnect();
+  console.log("search_vtuberName", return_data);
   return return_data;
-};
+}
 
 /* videoInfo (sample)
     {
@@ -104,6 +123,5 @@ module.exports = async function (query) {
             "actualEndTime": "2020-03-01T09:31:03Z",
             "scheduledStartTime": "2020-03-01T08:30:00Z"
         },
-        "songConfirm": true
     }
 */

@@ -1,0 +1,36 @@
+import { Videos } from "@prisma/client";
+import prisma from "../../../prisma/client";
+
+interface Query {
+  videoId: string;
+  songConfirm?: boolean;
+  title?: string;
+  description?: string;
+}
+
+export default async function (body: Query): Promise<Videos> {
+  if (!body || !body.videoId) {
+    console.log("update_video body error");
+    throw "update_video body error";
+  }
+  const videoId = body.videoId;
+  const songConfirm = body.songConfirm || null;
+  
+  // 出演Vtuberを確認したら自分で確認済みチェックを入れることができる checkSongVtuber
+  const updateSongConfirm = await prisma.videos.update({
+    where: {
+      id: videoId,
+    },
+    data: {
+      songConfirm: songConfirm != null ? songConfirm : undefined,
+      title: body.title,
+      description: body.description
+    },
+  }).catch((e) => {
+    console.log("update_video error");
+    throw e;
+  });
+  
+  //await prisma.$disconnect();
+  return updateSongConfirm;
+}

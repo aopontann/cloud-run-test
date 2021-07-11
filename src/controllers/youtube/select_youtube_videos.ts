@@ -1,12 +1,27 @@
-const get_vtuber = require("../vtuber/DB_get_vtuber");
+import { youtube_v3 } from "googleapis";
+import get_vtuber from "../vtuber/get_vtuber";
+
+interface YoutubeVideo {
+  kind?: string;
+  etag?: string;
+  id: string;
+  snippet: youtube_v3.Schema$VideoSnippet;
+  contentDetails?: youtube_v3.Schema$VideoContentDetails;
+  statistics?: youtube_v3.Schema$VideoStatistics;
+  liveStreamingDetails?: youtube_v3.Schema$VideoLiveStreamingDetails;
+}
+
 //getVideoInfoが取得した動画詳細データを使って、動画が歌ってみた系なのか判別する
 // all_videoInfo はどのようなデータなのか一番下に記載
-module.exports = async function (all_videoInfo) {
+export default async function (all_videoInfo: youtube_v3.Schema$Video[]) {
   //  条件にあった全ての動画データを入れる
   // songConfirm 歌ってみた動画確定 // unsongConfirm 不確定
-  let return_data = {
+  const return_data: {
+    songConfirm: youtube_v3.Schema$Video[];
+    unsongConfirm: youtube_v3.Schema$Video[];
+  } = {
     songConfirm: [],
-    unsongConfirm: []
+    unsongConfirm: [],
   };
   const result_get_vtuber = await get_vtuber();
   const all_channelId = result_get_vtuber.map((vtuber) => vtuber.id);
@@ -14,14 +29,26 @@ module.exports = async function (all_videoInfo) {
   //console.log(all_channelId);
 
   for (const videoInfo of all_videoInfo) {
-    const videotime = videoInfo.contentDetails.duration; // 例 "PT1H33M45S"
+    const videotime = videoInfo.contentDetails?.duration || "PT99H99M499S"; // 例 "PT1H33M45S"
     const comptime = "PT9M59S"; // 9分59秒
 
-    if (videotime.search(/\d\dM/) === -1 && comptime.length >= videotime.length) {
+    if (
+      videotime.search(/\d\dM/) === -1 &&
+      comptime.length >= videotime.length
+    ) {
       // 動画の長さが9分59秒以下の場合
-      const checktitle = videoInfo.snippet.title;
-      const checkDesc = videoInfo.snippet.description;
-      const NG_match = ["まいにち動画", "【アニメ】", "マリオカート", "Apex", "APEX", "ARK", "Ark", "切り抜き"];
+      const checktitle = videoInfo.snippet?.title || "";
+      // const checkDesc = videoInfo.snippet.description;
+      const NG_match = [
+        "まいにち動画",
+        "【アニメ】",
+        "マリオカート",
+        "Apex",
+        "APEX",
+        "ARK",
+        "Ark",
+        "切り抜き",
+      ];
       const match_strings_1 = ["試聴", "short", "Short"];
       const match_strings_2 = [
         "歌ってみた",
@@ -46,16 +73,20 @@ module.exports = async function (all_videoInfo) {
       ];
 
       if (select_video(checktitle, NG_match)) {
-        ""
+        ("");
       } else if (select_video(checktitle, match_strings_1)) {
         //videoInfo.songConfirm = false;
         return_data.unsongConfirm.push(videoInfo);
-      } else if (select_video(checktitle, match_strings_2) && all_channelId.includes(videoInfo.snippet.channelId)) {
+      } else if (
+        select_video(checktitle, match_strings_2) &&
+        videoInfo.snippet?.channelId &&
+        all_channelId.includes(videoInfo.snippet.channelId)
+      ) {
         //videoInfo.songConfirm = true;
         return_data.songConfirm.push(videoInfo);
       } else if (
         select_video(checktitle, match_strings_3) ||
-        select_video(checktitle, match_strings_2) || 
+        select_video(checktitle, match_strings_2) ||
         select_video(checktitle, all_name)
       ) {
         //videoInfo.songConfirm = false;
@@ -64,12 +95,12 @@ module.exports = async function (all_videoInfo) {
     }
   }
   return return_data;
-};
+}
 
-function select_video(search, all_match_data) {
+function select_video(search: string, all_match_data: string[]) {
   for (const match_data of all_match_data) {
     const reg = new RegExp(match_data);
-    if (search.match(reg)) {
+    if (reg.test(search)) {
       return true;
     }
   }

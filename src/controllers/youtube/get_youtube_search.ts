@@ -1,19 +1,26 @@
 // fetchをnode.jsで使う
-const { google } = require("googleapis");
-const { get_time2 } = require("../get_times");
-const Key = process.env.YOUTUBE_DATA_API_KEY;
+
+import { google, youtube_v3 } from "googleapis";
+import { get_time2 } from "../get_times";
+//const { get_time2 } = require("../get_times");
+const Key: string = process.env.YOUTUBE_DATA_API_KEY || "";
+
+interface Query {
+  publishedAfter?: string;
+  publishedBefore?: string;
+}
 
 //指定した期間と指定したチャンネルの全ての動画URLを取得する
-module.exports = async function (q) {
-  const query = q || {};
+export default async function (q: Query): Promise<youtube_v3.Schema$SearchResult[]> {
+  const query: Query = q || {};
 
-  const publishedAfter =
+  const publishedAfter: string =
     query.publishedAfter ||
     get_time2({
       format: "YYYY-MM-DDT00:00:00",
       timezone: "Asia/Tokyo",
     });
-  const publishedBefore =
+  const publishedBefore: string =
     query.publishedBefore ||
     get_time2({
       format: "YYYY-MM-DDT23:59:59",
@@ -21,27 +28,26 @@ module.exports = async function (q) {
     });
   console.log(`探索期間 ${publishedAfter} >--< ${publishedBefore}`);
 
-  let errorFlag = false;
   const service = google.youtube("v3");
 
   // 関連性の高いデータから取得するため、1ページのみのデータを取得
-  const res = await service.search
-    .list({
-      part: "snippet",
-      maxResults: 50,
-      publishedAfter,
-      publishedBefore,
-      q: "にじさんじcover",
-      type: "video",
-      key: Key,
-    })
-    .catch((e) => {
-      console.log("youtube_search_error", e);
-      errorFlag = true;
-    });
-  
-  return errorFlag ? [] : res.data.items.map((items) => items.id.videoId);
-};
+  const res = await service.search.list({
+    part: ["snippet"],
+    maxResults: 50,
+    publishedAfter,
+    publishedBefore,
+    q: "にじさんじcover",
+    type: ["video"],
+    key: Key,
+  });
+  const items = res?.data?.items || [];
+  const result = items.filter(
+    (item): item is youtube_v3.Schema$SearchResult =>
+      typeof item.id?.videoId == "string"
+  );
+
+  return result;
+}
 
 /* youtube から返ってくるデータ
 {
