@@ -13,7 +13,7 @@ const router = express.Router();
 router.get("/", async function (req: express.Request, res: express.Response) {
   const videoId = req.query.id as string | undefined;
   const songConfirm = req.query.songConfirm as string | undefined;
-  const startAtAfter = req.query.startAtAfteras as string | undefined;
+  const startAtAfter = req.query.startAtAfter as string | undefined;
   const startAtBefore = req.query.startAtBefore as string | undefined;
   const maxResults = Number(req.query.maxResults) || undefined;
   const page = Number(req.query.page) || undefined;
@@ -101,7 +101,8 @@ router.put("/", async function (req: express.Request, res: express.Response) {
   const result = await update_video({
     videoId: req.body.videoId || "",
     songConfirm: req.body.songConfirm,
-    checkSongVtuber: req.body.checkSongVtuber,
+    title: req.body.title,
+    description: req.body.description
   }).catch((e) => {
     console.log("update_video error", e);
     res.status(500).json({
