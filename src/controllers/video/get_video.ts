@@ -17,7 +17,7 @@ interface Include {
 
 export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
   const all_videoId = query?.videoId || null;
-  const songConfirm = query?.songConfirm || null;
+  const songConfirm = typeof query?.songConfirm == "boolean" ? query.songConfirm : null;
   const startAtAfter = query?.startAtAfter || null;
   const startAtBefore = query?.startAtBefore || null;
   const maxResults = query?.maxResults || 9999;
