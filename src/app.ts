@@ -7,6 +7,11 @@ import vtuber_router from "./routes/vtuber"
 import tags_router from "./routes/tags"
 import cros from "cors"
 
+if (process.env.NODE_ENV === "development") {
+  require("dotenv").config();
+  console.log()
+}
+
 const app = express();
 
 // ローカルのクライアントからフェッチできるように

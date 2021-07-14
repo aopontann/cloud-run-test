@@ -3,7 +3,7 @@ import { get_time } from "../get_times";
 import { google } from "googleapis";
 //const get_vtuber = require("../vtuber/DB_get_vtuber");
 //Youtube Data API を叩くためのプロパティ
-const key: string = process.env.YOUTUBE_DATA_API_KEY || "";
+// const key: string = process.env.YOUTUBE_DATA_API_KEY || "";
 const part = ["contentDetails"];
 
 interface Query {
@@ -51,7 +51,7 @@ export default async function (query: Query): Promise<string[]> {
           channelId,
           publishedAfter,
           publishedBefore,
-          key,
+          key: process.env.YOUTUBE_DATA_API_KEY
         })
         .catch((e) => {
           console.error("youtube_activities error!");
