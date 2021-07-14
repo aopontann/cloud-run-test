@@ -1,9 +1,6 @@
-// fetchをnode.jsで使う
-
 import { google, youtube_v3 } from "googleapis";
 import { get_time2 } from "../get_times";
-//const { get_time2 } = require("../get_times");
-const Key: string = process.env.YOUTUBE_DATA_API_KEY || "";
+
 
 interface Query {
   publishedAfter?: string;
@@ -11,7 +8,8 @@ interface Query {
 }
 
 //指定した期間と指定したチャンネルの全ての動画URLを取得する
-export default async function (q: Query): Promise<youtube_v3.Schema$SearchResult[]> {
+export default async function (q: Query): Promise<string[]> {
+  //const Key: string = process.env.YOUTUBE_DATA_API_KEY || "none";
   const query: Query = q || {};
 
   const publishedAfter: string =
@@ -30,23 +28,27 @@ export default async function (q: Query): Promise<youtube_v3.Schema$SearchResult
 
   const service = google.youtube("v3");
 
-  // 関連性の高いデータから取得するため、1ページのみのデータを取得
-  const res = await service.search.list({
-    part: ["snippet"],
-    maxResults: 50,
-    publishedAfter,
-    publishedBefore,
-    q: "にじさんじcover",
-    type: ["video"],
-    key: Key,
-  });
-  const items = res?.data?.items || [];
-  const result = items.filter(
-    (item): item is youtube_v3.Schema$SearchResult =>
-      typeof item.id?.videoId == "string"
-  );
-
-  return result;
+  const all_items: youtube_v3.Schema$SearchResult[] = [];
+  // 関連性の高いデータだけ取得するため、1ページのみのデータを取得
+  for await (const q_search of ["にじさんじcover", "にじさんじ歌ってみた", "にじさんじ歌"]) {
+    const res = await service.search.list({
+      part: ["id"],
+      maxResults: 50,
+      publishedAfter,
+      publishedBefore,
+      q: q_search,
+      type: ["video"],
+      key: process.env.YOUTUBE_DATA_API_KEY,
+    });
+    const items = res?.data?.items || [];
+    all_items.push(...items);
+  }
+  
+  const all_videoId = all_items.map(item => item.id?.videoId);
+  // null undefined を除外
+  const result = all_videoId.filter(videoId => typeof videoId == "string") as string[]
+  // videoIdの重複を除外
+  return Array.from(new Set(result));
 }
 
 /* youtube から返ってくるデータ
