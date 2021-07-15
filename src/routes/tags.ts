@@ -31,7 +31,7 @@ router.get("/", async (req: express.Request, res: express.Response) => {
     throw e;
   });
 
-  res.status(500).json(Result);
+  res.status(200).json(Result);
 });
 
 router.get("/videos", async (req: express.Request, res: express.Response) => {
@@ -67,7 +67,7 @@ router.get("/videos", async (req: express.Request, res: express.Response) => {
     throw e;
   });
 
-  res.status(500).json(Result);
+  res.status(200).json(Result);
 });
 
 router.post("/", async (req: express.Request, res: express.Response) => {

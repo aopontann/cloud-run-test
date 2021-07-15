@@ -70,7 +70,11 @@ export default async function (query: Query): Promise<void> {
             },
           },
         },
-        update: {},
+        update: {
+          title: videoInfo.snippet?.title || undefined,
+          description: videoInfo.snippet?.description || undefined,
+          songConfirm: songConfirm,
+        },
       })
       .catch((e) => {
         console.log("add_video error!");
