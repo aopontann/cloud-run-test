@@ -1,32 +1,22 @@
 import { Vtuber, Thumbnails } from "@prisma/client";
-import prisma from '../../../prisma/client';
+import prisma from "../../client";
 
-interface Query {
+export default async function (query?: {
   affiliation?: string[];
   name?: string[];
-  channelId?: string[];
-}
-
-
-export default async function (query?: Query): Promise<Vtuber[]> {
+  id?: string[];
+}): Promise<Vtuber[]> {
   const affi = query?.affiliation || null;
   const names = query?.name || null;
-  const channelId = query?.channelId || null;
-  /*
-  const whereAND = [];
-  affi ? whereAND.push({ affiliation: { in: affi } }) : ""
-  names ? whereAND.push({ name: { in: names } }) : ""
-  channelId ? whereAND.push({ id: { in: channelId } }) : ""
-  */
-
-  //await prisma.$connect();
+  const id = query?.id || null;
+ 
   const getVtuber = await prisma.vtuber
     .findMany({
       where: {
         AND: [
           { affiliation: affi ? { in: affi } : undefined },
           { name: names ? { in: names } : undefined },
-          { id: channelId ? { in: channelId } : undefined },
+          { id: id ? { in: id } : undefined },
         ],
       },
     })
