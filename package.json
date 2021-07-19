@@ -4,12 +4,12 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "ts-node src/index.ts",
-    "dev:watch": "ts-node-dev --respawn src/index.ts",
+    "dev": "NODE_ENV=development ts-node src/app.ts",
     "clean": "rimraf dist/*",
     "tsc": "tsc",
     "build": "npm-run-all clean tsc",
-    "start": "node dist/src/app.js",
+    "start": "node dist/app.js",
+    "start-2": "node dist/src/app.js",
     "check-types": "tsc --noEmit",
     "eslint": "eslint src/**/*.ts",
     "eslint:fix": "eslint src/**/*.ts --fix",
@@ -25,24 +25,25 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^2.23.0",
-    "@types/node": "^15.12.4",
     "date-fns-timezone": "^0.1.4",
     "express": "^4.17.1",
-    "googleapis": "^76.0.0"
+    "cors": "^2.8.5",
+    "googleapis": "^76.0.0",
+    "@types/node": "^15.12.4",
+    "@types/express": "^4.17.12",
+    "@types/cors": "^2.8.10",
+    "typescript": "^4.3.4"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.10",
-    "@types/express": "^4.17.12",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
-    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "8.3.0",
     "npm-run-all": "^4.1.5",
     "prettier": "2.3.1",
     "prisma": "^2.26.0",
     "ts-node": "^10.0.0",
-    "ts-node-dev": "^1.1.6",
-    "typescript": "^4.3.4"
+    "ts-node-dev": "^1.1.6"
   }
 }
