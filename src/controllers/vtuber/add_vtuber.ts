@@ -1,20 +1,20 @@
-import prisma from '../../../prisma/client';
+import prisma from "../../client";
 
-interface NewVtuber {
-  channelId: string;
-  name: string;
-  readname: string;
-  affiliation: string;
-  birthday?: string;
-  image?: string;
-}
-
-export default async function (body: NewVtuber[]): Promise<void> {
+export default async function (
+  body: {
+    id: string;
+    name: string;
+    readname: string;
+    affiliation: string;
+    birthday?: string;
+    image?: string;
+  }[]
+): Promise<void> {
   for await (const vtuberInfo of body) {
     await prisma.vtuber.upsert({
-      where: { id: vtuberInfo.channelId },
+      where: { id: vtuberInfo.id },
       create: {
-        id: vtuberInfo.channelId,
+        id: vtuberInfo.id,
         name: vtuberInfo.name,
         readname: vtuberInfo.readname,
         affiliation: vtuberInfo.affiliation,

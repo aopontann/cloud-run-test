@@ -1,5 +1,5 @@
 import { Thumbnails, Statistics, Videos } from "@prisma/client";
-import prisma from "../../../prisma/client";
+import prisma from "../../client";
 
 interface GetVideo {
   videoId?: string[];

@@ -1,5 +1,5 @@
 import { youtube_v3 } from "googleapis";
-import prisma from "../../../prisma/client";
+import prisma from "../../client";
 
 interface ReturnType {
   videoId: string;
@@ -13,7 +13,14 @@ interface Tags {
 
 export default async function (
   query: youtube_v3.Schema$Video[]
-): Promise<ReturnType[]> {
+): Promise<
+  { videoId: string;
+    tags: {
+      name: string; 
+      description: string
+    }[]
+  }[]
+> {
   //const all_videoInfo = query.all_videoInfo;
   const all_vtuberInfo = await prisma.vtuber.findMany({
     where: {

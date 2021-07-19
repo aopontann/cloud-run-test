@@ -78,6 +78,7 @@ router.post("/", async (req: express.Request, res: express.Response) => {
     ? await search_vtuberName(youtube_video)
     : null;
   const video_tags = req.body.video_tags as TagBody[] | undefined;
+  // console.log("video_tags", video_tags);
 
   result_search
     ? await add_tag(result_search).catch((e) => {
@@ -103,8 +104,8 @@ router.post("/", async (req: express.Request, res: express.Response) => {
 });
 
 router.delete("/", async (req: express.Request, res: express.Response) => {
-  const tagName = req.query.name
-    ? (req.query.name as string).split(",")
+  const tagName = req.query.names
+    ? (req.query.names as string).split(",")
     : undefined; //errorになるかも
   const videoId = req.query.videoId as string | undefined;
 
