@@ -11,16 +11,18 @@ const router = express.Router();
 router.get("/", async function (req: express.Request, res: express.Response): Promise<void> {
   console.log("query", req.query);
   const affi = (req.query?.affiliation as string) || null;
-  const names = (req.query?.name as string) || null;
-  const channelId = (req.query?.channelId as string) || null;
+  const names = (req.query?.names as string) || null;
+  const id = (req.query?.id as string) || null;
 
   const result = await get_vtuber({
     affiliation: affi?.split(","),
     name: names?.split(","),
-    channelId: channelId?.split(","),
+    id: id?.split(","),
   }).catch((e) => {
     console.log("get_vtuber error!");
-    res.status(500).json("error!");
+    res.status(500).json({
+      error: "get_vtuber error",
+    });
     throw e;
   });
   //console.log(result);
@@ -30,7 +32,9 @@ router.get("/", async function (req: express.Request, res: express.Response): Pr
 router.post("/", async function (req: express.Request, res: express.Response): Promise<void> {
   await add_vtuber([...req.body]).catch((e) => {
     console.log("add_vtuber error!", e);
-    res.status(500).json("error");
+    res.status(500).json({
+      error: "add_vtuber error",
+    });
     throw e;
   });
   res.status(201).json("success");
@@ -46,7 +50,9 @@ router.put("/", async function (req: express.Request, res: express.Response): Pr
     image: req.body.image || null,
   }).catch((e) => {
     console.log("update_vtuber error!", e);
-    res.status(500).json("error!");
+    res.status(500).json({
+      error: "update_vtuber error",
+    });
     throw e;
   });
   res.status(201).json("success!");
