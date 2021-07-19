@@ -1,11 +1,13 @@
 import express from "express";
-import { youtube_v3 } from "googleapis";
 import get_video from "../controllers/video/get_video";
 import add_video from "../controllers/video/add_video";
 import update_video from "../controllers/video/update_video";
 import delete_video from "../controllers/video/delete_video";
 import update_statistics from "../controllers/update_statistics";
 import get_youtube_videos from "../controllers/youtube/get_youtube_videos";
+
+import search_vtuberName from "../controllers/tag/search_vtuberName";
+import add_tag from "../controllers/tag/add_tag";
 
 const router = express.Router();
 
@@ -17,6 +19,7 @@ router.get("/", async function (req: express.Request, res: express.Response) {
   const startAtBefore = req.query.startAtBefore as string | undefined;
   const maxResults = Number(req.query.maxResults) || undefined;
   const page = Number(req.query.page) || undefined;
+
   const result = await get_video({
     videoId: videoId ? videoId.split(",") : undefined,
     songConfirm:
@@ -59,42 +62,12 @@ router.post("/", async function (req: express.Request, res: express.Response) {
     });
     throw e;
   });
-
-  res.status(201).json("success");
   /*
-  // 動画情報から出演しているVtuberを取得する
-  const result_search_songVtuber = {};
-  result_search_songVtuber.confirm = await search_songVtuber({
-    all_videoInfo: req.body.songConfirm || req.body.result || [],
-  });
-  result_search_songVtuber.unconfirm = await search_songVtuber({
-    all_videoInfo: req.body.unsongConfirm,
-  });
-  // 取得したVtuber情報をDBに保存する
-  const result_add_songVtuber = {}
-  result_add_songVtuber.confirm = await DB_add_songVtuber({
-    type: "init",
-    data: result_search_songVtuber.confirm
-  });
-  result_add_songVtuber.unconfirm = await DB_add_songVtuber({
-    type: "init",
-    data: result_search_songVtuber.unconfirm
-  });
+  const result_search = await search_vtuberName(req.body.songConfirm || req.body.result);
+  add_tag(result_search);
   */
+  res.status(201).json("success");
 });
-/* result_search_songVtuber_*
-  [
-    {
-        "videoId": "_-Qmg1nN5P0",
-        "joinVtuber": [
-            {
-                "channelId": "UCt5-0i4AVHXaWJrL8Wql3mw",
-                "role": "歌"
-            }
-        ]
-    }
-  ]
-*/
 
 router.put("/", async function (req: express.Request, res: express.Response) {
   //console.log("update body", req.body);
@@ -156,50 +129,6 @@ router.delete(
     res.status(201).json("success");
   }
 );
-
-/*
-router.put("/songVtuber", async function(req: express.Request, res: express.Response) {
-  console.log("update songVtuber body", req.body);
-  const type = req.query.type === "update" ? "update" : "init"; // or update
-  const result = await DB_add_songVtuber({
-    type: type,
-    videoId: req.body.videoId || "",
-    joinVtuber: req.body.joinVtuber || []
-  }); // data: も使えるよ
-
-  res.json({
-    result: result
-  });
-});
-
-router.delete("/songVtuber", async function (req, res) {
-  // channelId = "id, id, ...", delete_videoId = "videoId"
-  // or channelId = "id", delete_videoId = "videoId, videoId, ..."
-  const channelId = req.query.channelId;
-  const delete_videoId = req.query.videoId;
-  await delete_songVtuber({
-    channelId: channelId,
-    deleteId: delete_videoId,
-  });
-  res.json({
-    message: "success",
-  });
-});
-*/
-
-/* req.body
-  [
-    {
-        "videoId": "_-Qmg1nN5P0",
-        "joinVtuber": [
-            {
-                "channelId": "UCt5-0i4AVHXaWJrL8Wql3mw",
-                "role": "歌"
-            }
-        ]
-    }
-  ]
-*/
 
 //routerをモジュールとして扱う準備
 export = router;
