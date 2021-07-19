@@ -20,6 +20,8 @@
 - Vtuber情報CRUD機能(DELETEは実装していない)
 - Tag情報CRUD機能(UPDATEは実装していない)
 - 詳細は [swagger-ui](https://storage.googleapis.com/nijisongs-swagger/dist/index.html) をみてください
+## アーキテクチャ図
+![](https://storage.googleapis.com/vtuber_image/niji-songs-architecture.png)
 ## ER図
 ![](https://storage.googleapis.com/vtuber_image/prisma-erd.svg)
 ## セットアップ
