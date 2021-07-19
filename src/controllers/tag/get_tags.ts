@@ -1,5 +1,5 @@
 import { Videos, Thumbnails, Statistics, Tag } from "@prisma/client";
-import prisma from "../../../prisma/client";
+import prisma from "../../client";
 
 interface Query {
   names?: string[];

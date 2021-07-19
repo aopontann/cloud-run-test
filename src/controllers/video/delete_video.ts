@@ -1,4 +1,4 @@
-import prisma from "../../../prisma/client";
+import prisma from "../../client";
 
 export default async function (all_delete_id: string[]): Promise<void> {  
   for await (const deleteId of all_delete_id) {

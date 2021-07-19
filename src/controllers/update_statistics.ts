@@ -1,5 +1,5 @@
 import { youtube_v3 } from "googleapis";
-import prisma from "../../prisma/client";
+import prisma from "../client";
 import { get_time2 } from "./get_times";
 
 export default async function (query: youtube_v3.Schema$Video[]): Promise<void> {
