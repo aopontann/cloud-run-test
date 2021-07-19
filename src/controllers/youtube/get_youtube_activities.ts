@@ -1,33 +1,21 @@
-// fetchをnode.jsで使う
 import { get_time } from "../get_times";
 import { google } from "googleapis";
-//const get_vtuber = require("../vtuber/DB_get_vtuber");
-//Youtube Data API を叩くためのプロパティ
-// const key: string = process.env.YOUTUBE_DATA_API_KEY || "";
+import get_vtuber from "../vtuber/get_vtuber";
+
 const part = ["contentDetails"];
 
-interface Query {
+//指定した期間と指定したチャンネルの全ての動画URLを取得する
+export default async function (query: {
   all_channelId?: string[];
   publishedAfter?: string;
   publishedBefore?: string;
-}
-
-//指定した期間と指定したチャンネルの全ての動画URLを取得する
-export default async function (query: Query): Promise<string[]> {
+}): Promise<string[]> {
   //引数datetime は ISO 8601（YYYY-MM-DDThh:mm:ss.sZ）形式データを使用する(UTC)
   const publishedAfter: string = query.publishedAfter || get_time("UTC", -7);
   const publishedBefore: string = query.publishedBefore || get_time("UTC", 0);
 
-  // 後で変更↓
-  const all_channelId = query.all_channelId || [];
-  /*
-  if (query.all_channelId[0] == "all") {
-    const result_DB_get_vtuber = await get_vtuber();
-    all_channelId = result_DB_get_vtuber.map((vtuber) => vtuber.id);
-  } else {
-    all_channelId = query.all_channelId || [];
-  }
-  */
+  // all_channelIdが指定されなかった場合、全てのにじさんじライバーのidを取得
+  const all_channelId = query.all_channelId || (await get_vtuber()).map(vtuber => vtuber.id);
 
   console.log(`探索期間(UTC) ${publishedAfter} <--> ${publishedBefore}`);
 
@@ -41,7 +29,7 @@ export default async function (query: Query): Promise<string[]> {
     const cntMax = 50;
     let pageToken = "";
     console.log("channelId=", channelId);
-    
+
     while (cnt++ < cntMax) {
       const res = await service.activities
         .list({
@@ -51,16 +39,16 @@ export default async function (query: Query): Promise<string[]> {
           channelId,
           publishedAfter,
           publishedBefore,
-          key: process.env.YOUTUBE_DATA_API_KEY
+          key: process.env.YOUTUBE_DATA_API_KEY,
         })
         .catch((e) => {
           console.error("youtube_activities error!");
           throw e;
         });
-      res.data.items?.forEach(item => {
+      res.data.items?.forEach((item) => {
         const content = item.contentDetails?.upload?.videoId || null;
         content ? result_videoId.push(content) : "";
-      })
+      });
 
       if (!res.data.nextPageToken) {
         break;
