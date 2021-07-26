@@ -1,4 +1,4 @@
-import { Videos, Thumbnails, Statistics, Tag } from "@prisma/client";
+import { Tag } from "@prisma/client";
 import prisma from "../../client";
 
 interface Query {
@@ -12,7 +12,14 @@ export default async function (query?: Query): Promise<Tag[]> {
   const get_tags = await prisma.tag
     .findMany({
       where: {
-        name: names ? { in: names } : undefined,
+        AND: [
+          {
+            name: names ? { in: names } : undefined,
+          },
+          {
+            publish: true,
+          },
+        ],
       },
     })
     .catch((e) => {
