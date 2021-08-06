@@ -38,59 +38,31 @@ export default async function (all_videoInfo: youtube_v3.Schema$Video[]) {
     ) {
       // 動画の長さが9分59秒以下の場合
       const checktitle = videoInfo.snippet?.title || "";
-      // const checkDesc = videoInfo.snippet.description;
-      const NG_match = [
-        "まいにち動画",
-        "【アニメ】",
-        "マリオカート",
-        "Apex",
-        "APEX",
-        "ARK",
-        "Ark",
-        "切り抜き",
-      ];
-      const match_strings_1 = ["試聴", "short", "Short"];
-      const match_strings_2 = [
-        "歌ってみた",
-        "歌わせていただきました",
-        "歌って踊ってみた",
-        "cover",
-        "Cover",
-        "MV",
-        "Music Video",
-        "ソング",
-        "song",
-        "オリジナル曲",
-      ];
-      const match_strings_3 = [
-        "feat",
-        "歌",
-        "うた",
-        "曲",
-        "vocal",
-        "Vocal",
-        "唄",
-      ];
+      const checkDesc = videoInfo.snippet?.description || "";
 
-      if (select_video(checktitle, NG_match)) {
-        ("");
-      } else if (select_video(checktitle, match_strings_1)) {
-        //videoInfo.songConfirm = false;
-        return_data.unsongConfirm.push(videoInfo);
-      } else if (
-        select_video(checktitle, match_strings_2) &&
-        videoInfo.snippet?.channelId &&
-        all_channelId.includes(videoInfo.snippet.channelId)
-      ) {
-        //videoInfo.songConfirm = true;
-        return_data.songConfirm.push(videoInfo);
-      } else if (
-        select_video(checktitle, match_strings_3) ||
-        select_video(checktitle, match_strings_2) ||
-        select_video(checktitle, all_name)
-      ) {
-        //videoInfo.songConfirm = false;
-        return_data.unsongConfirm.push(videoInfo);
+      // にじさんじ公式チャンネル、にじさんじ所属ライバーチャンネルからアップロードされた動画か
+      if (all_channelId.includes(videoInfo.snippet?.channelId || "error")) {
+        if (select_video(checktitle, match_list_ng)) {
+          (""); // ngワードを含む動画を除外
+        } else if (select_video(checktitle, match_list_ok)) {
+          return_data.songConfirm.push(videoInfo);
+        } else if (
+          select_video(checktitle, match_list_indeterminate) ||
+          select_video(checkDesc, match_list_indeterminate)
+        ) {
+          return_data.unsongConfirm.push(videoInfo);
+        }
+      }
+      // にじさんじ外部チャンネルからアップロードされた動画か(にじさんじとコラボの可能性)
+      else {
+        if (select_video(checktitle, [...match_list_ng, "切り抜き"])) {
+          (""); // ngワードを含む動画を除外
+        } else if (
+          select_video(checktitle, match_list_ok) &&
+          select_video(checktitle, all_name)
+        ) {
+          return_data.unsongConfirm.push(videoInfo);
+        }
       }
     }
   }
@@ -106,6 +78,53 @@ function select_video(search: string, all_match_data: string[]) {
   }
   return false;
 }
+
+const match_list_ng = [
+  "まいにち動画",
+  "漫画",
+  "【アニメ】",
+  "マリオカート",
+  "Apex",
+  "APEX",
+  "ARK",
+  "Ark",
+  "XFD",
+  "クロスフェード",
+  "メドレー",
+  "Reaction",
+];
+const match_list_ok = [
+  "歌ってみた",
+  "歌わせていただきました",
+  "歌って踊ってみた",
+  "cover",
+  "Cover",
+  "COVER",
+  "MV",
+  "Music Video",
+  "ソング",
+  "song",
+  "オリジナル曲",
+  "オリジナルMV",
+  "Official Lyric Video",
+];
+const match_list_indeterminate = [
+  "feat",
+  "歌",
+  "うた",
+  "曲",
+  "vocal",
+  "Vocal",
+  "song",
+  "Song",
+  "music",
+  "Music",
+  "唄",
+  "ワンコーラス",
+  "試聴",
+  "short",
+  "Short",
+];
 
 /* all_videoInfo データ
  [
