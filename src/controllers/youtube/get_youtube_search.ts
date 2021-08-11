@@ -30,14 +30,15 @@ export default async function (q: Query): Promise<string[]> {
 
   const all_items: youtube_v3.Schema$SearchResult[] = [];
   // 関連性の高いデータだけ取得するため、1ページのみのデータを取得
-  for await (const q_search of ["にじさんじcover", "にじさんじ歌ってみた", "にじさんじ歌"]) {
+  for await (const duration of ["short", "medium"]) {
     const res = await service.search.list({
       part: ["id"],
       maxResults: 50,
       publishedAfter,
       publishedBefore,
-      q: q_search,
+      q: "にじさんじ + 歌って|cover",
       type: ["video"],
+      videoDuration: duration,
       key: process.env.YOUTUBE_DATA_API_KEY,
     });
     const items = res?.data?.items || [];

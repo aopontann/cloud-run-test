@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["orderByRelation"]
+  previewFeatures = ["orderByRelation","orderByAggregateGroup"]
 }
 
 datasource db {
@@ -47,6 +47,7 @@ model Vtuber {
   readname    String  @db.VarChar(255)
   affiliation String  @db.VarChar(255)
   birthday    String? @db.Char(4)
+  type        String? @db.VarChar(255)
   image       String? @db.VarChar(255)
 }
 
