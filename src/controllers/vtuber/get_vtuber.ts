@@ -19,6 +19,7 @@ export default async function (query?: {
           { id: id ? { in: id } : undefined },
         ],
       },
+      orderBy: {readname: "asc"}
     })
     .catch((e) => {
       console.error("get_vtuber error");
