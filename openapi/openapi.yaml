@@ -40,6 +40,16 @@ paths:
                 example:
                   - 8lWZpNjntU8
                   - yBU8FDYR3_Q
+        '500':
+          description:
+            Youtube Data API の取得に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
           
   /youtube/activities:
     get:
@@ -79,6 +89,16 @@ paths:
                 example:
                   - IGvDbjMukdQ
                   - 0fLDi5tlYew
+        '500':
+          description:
+            Youtube Data API の取得に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
                   
   /youtube/videos:
     get:
@@ -128,6 +148,16 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/youtube'
+        '500':
+          description:
+            Youtube Data API の取得に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
                       
   /videos:
     get:
@@ -148,11 +178,6 @@ paths:
           description: 歌動画(true)か歌動画かもしれない(false)データのみ取得することができる　指定しない場合、全てのデータを返す
           schema:
             type: boolean
-        - name: checkSongVtuber
-          in: query
-          description: 出演しているVtuberライバーを確認したデータ(true)、確認していないデータ(false)のみ取得することができる　指定しない場合、全てのデータを返す
-          schema:
-            type: boolean
         - name: maxResult
           in: query
           description: 取得するデータの数を指定できる　指定しない場合、全てのデータを返す
@@ -163,14 +188,14 @@ paths:
           description: 取得するデータのページを指定できる　指定しない場合、最初のページのデータを返す
           schema:
             type: integer
-        - name: createdAtAfter
+        - name: startAtAfter
           in: query
           description:
             指定された時間より後に公開するデータを取得<br>
             データ形式(2021-01-01T00:00:00Z)
           schema:
             type: string
-        - name: createdAtBefore
+        - name: startAtBefore
           in: query
           description:
             指定された時間より前に公開するデータを取得<br>
@@ -186,13 +211,22 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/video'
+        '500':
+          description:
+            取得に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     post:
       tags:
         - video
       summary: 動画詳細データを保存
       description:
         動画詳細データをDBに保存する<br>
-        保存する際、動画詳細データから出演Vライバーを抽出し、そのデータもDBに保存する
       requestBody: # リクエストボディ
         description: youtube/videosから取得したデータ
         content:
@@ -217,14 +251,24 @@ paths:
       responses:
         '201':
           description: success
+        '500':
+          description:
+            保存に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     
     put:
       tags:
         - video
       summary: 動画詳細データの更新
       description:
-        動画詳細データが、歌ってみた動画であることが確定した時、songConfirmをTrueに更新する<br>
-        また、その動画に出演しているVライバーを編集し、出演一覧が確定した時、checkSongVtuberをTrueに変更する
+        動画詳細データが、歌ってみた動画であることが確定した時、songConfirmをTrueに更新できる<br>
+        また、動画のタイトル、概要欄を更新できる
       requestBody:
         description: videoIdは動画ID
         content:
@@ -236,8 +280,10 @@ paths:
                   type: string
                 songConfirm:
                   type: boolean
-                checkSongVtuber:
-                  type: boolean
+                title:
+                  type: string
+                description:
+                  type: string
       responses:
         '201':
           description: 更新に成功すると、動画詳細データの一部を返す
@@ -258,8 +304,16 @@ paths:
                     type: string
                   songConfirm:
                     type: boolean
-                  checkSongVtuber:
-                    type: boolean
+        '500':
+          description:
+            更新に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     
     delete:
       tags:
@@ -275,6 +329,16 @@ paths:
       responses:
         '201':
           description: DELETED
+        '500':
+          description:
+            削除に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
   
   /videos/viewCount:
     put:
@@ -286,65 +350,6 @@ paths:
       responses:
         '201':
           description: updated
-  
-  /video/songVtuber:
-    put:
-      tags:
-        - video
-      summary: 歌動画に出演しているVtuber一覧を編集
-      description: 
-        typeに指定するinitは歌動画に出演しているVtuber一覧を削除しリクエスト内容を上書き保存する<br>
-        updateは上書きせず、リクエスト内容を追加し保存する
-      parameters:
-        - name: type
-          in: query
-          required: true
-          description: init or update を指定する 
-          schema:
-            type: string
-      requestBody:
-        description: user to create
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                videoId:
-                  type: string
-                joinVtuber:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      channelId:
-                        type: string
-                      role:
-                        type: string
-      responses:
-        '201':
-          description: UPDATED
-    
-    delete:
-      tags:
-        - video
-      summary: 歌動画に出演しているVtuber一覧を削除
-      description: チャンネルIDと動画IDを指定することで、動画に出演しているVtuber一覧の一部を削除することができる
-      parameters:
-        - name: channelId
-          in: query
-          required: true
-          description: コンマ区切りで複数指定可能
-          schema:
-            type: string
-        - name: videoId
-          in: query
-          required: true
-          description: コンマ区切りで複数指定可能
-          schema:
-            type: string
-      responses:
-        '201':
-          description: DELETED
           
   /vtuber:
     get:
@@ -366,7 +371,7 @@ paths:
           description: 名前を指定できる(完全一致な名前)
           schema:
             type: string
-        - name: channelId
+        - name: id
           in: query
           description: チャンネルIDを指定
           schema:
@@ -380,6 +385,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/vtuber'
+        '500':
+          description:
+            取得に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
                   
     post:
       tags:
@@ -387,7 +402,6 @@ paths:
       summary: 動画詳細データを保存
       description:
         動画詳細データをDBに保存する<br>
-        保存する際、動画詳細データから出演Vライバーを抽出し、そのデータもDBに保存する
       requestBody:
         description: user to create
         content:
@@ -395,7 +409,7 @@ paths:
             schema:
               type: object
               properties:
-                channelId:
+                id:
                   type: string
                 name:
                   type: string
@@ -409,15 +423,24 @@ paths:
                   type: string
       responses:
         '201':
-          description: CREATED
+          description: success
+        '500':
+          description:
+            保存に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     
     put:
       tags:
         - vtuber
       summary: vtuber情報を編集
-      description: aaa
+      description: 編集したい部分のみ指定できる
       requestBody:
-        description: user to create
         content:
           application/json:
             schema:
@@ -439,6 +462,121 @@ paths:
       responses:
         '201':
           description: UPDATED
+        '500':
+          description:
+            更新に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+          
+  /tags:
+    get:
+      tags: 
+        - tags
+      summary: tag情報を取得
+      description:
+        DBに保存してあるTagデータを取得<br>
+      parameters:
+        - name: names
+          in: query
+          description: 取得したいtag名を指定(コンマ区切りで複数指定できる)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 取得結果
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GETtags'
+        '500':
+          description:
+            取得に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  
+    post:
+      tags:
+        - tags
+      summary: tag情報を保存
+      description:
+        videoIdに関連するtag情報を保存する<br>
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                video_tags:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      videoId:
+                        type: string
+                      tags:
+                        type: object
+                        properties:
+                          name: 
+                            type: string
+                          description:
+                            type: string
+      responses:
+        '201':
+          description: success
+        '500':
+          description:
+            保存に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      
+    delete:
+      tags: 
+        - tags
+      summary: tag情報を削除
+      description:
+        DBに保存してあるTagデータを削除<br>videoIdのみ指定した場合、指定された動画の全てのタグが削除される
+      parameters:
+        - name: names
+          in: query
+          description: 削除したいtag名を指定(コンマ区切りで複数指定できる)
+          schema:
+            type: string
+        - name: videoId
+          in: query
+          description: videoIdから削除したいtag名を指定できる
+          
+          schema:
+            type: string
+      responses:
+        '201':
+          description: success
+        '500':
+          description:
+            削除に失敗した時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
           
 components:
   schemas:
@@ -494,19 +632,15 @@ components:
         maxres:
           type: string
           
-    songVtuber:
+    tags:
       type: object
       properties:
-        role:
+        description:
           type: string
-        vtuber:
+        tag:
           type: object
           properties:
-            id:
-              type: string
             name:
-              type: string
-            image:
               type: string
         
     video:
@@ -524,16 +658,14 @@ components:
           type: string
         songConfirm:
           type: boolean
-        checkSongVtuber:
-          type: boolean
         thumbnail:
           $ref: '#/components/schemas/thumbnail'
         statistic:
           $ref: '#/components/schemas/statistic'
-        songVtuber:
+        tags:
           type: array
           items:
-            $ref: '#/components/schemas/songVtuber'
+            $ref: '#/components/schemas/tags'
     
     vtuber:
       type: object
@@ -550,38 +682,16 @@ components:
           type: string
         image:
           type: string
-        songVtuber:
-          type: array
-          items:
-            type: object
-            properties:
-              videoId:
-                type: string
-              role:
-                type: string
-              videos:
-                type: object
-                properties:
-                  title:
-                    type: string
-                  startTime:
-                    type: string
-                  thumbnail:
-                    $ref: '#/components/schemas/thumbnail'
-            
-    vtuberImage:
+    
+    GETtags:
       type: object
       properties:
-        channelId:
+        id: 
+          type: integer
+        name:
           type: string
-        poster:
-          type: string
-        type:
-          type: string
-        url:
-          type: string
-        
-            
+        publish:
+          type: boolean
         
 tags:
   - name: youtube
@@ -590,3 +700,5 @@ tags:
     description: Access to video
   - name: vtuber
     description: Access to vtuber
+  - name: tags
+    description: Access to tags
