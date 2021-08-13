@@ -21,6 +21,7 @@ export default async function (query?: Query): Promise<Tag[]> {
           },
         ],
       },
+      orderBy: {name: "asc"},
     })
     .catch((e) => {
       console.error("get_tag error");
