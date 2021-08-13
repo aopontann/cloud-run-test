@@ -1,4 +1,4 @@
-import prisma from "./client";
+import prisma from "../src/client";
 import add_video from "../src/controllers/video/add_video";
 
 const all_vtuberInfo = require("../jsonFolder/vtuber.json");
@@ -17,9 +17,16 @@ async function main() {
           name: vtuberInfo.name,
           readname: vtuberInfo.readname,
           affiliation: vtuberInfo.affiliation,
-          birthday: vtuberInfo.birthday,
+          birthday: vtuberInfo.birthday || null,
+          type: vtuberInfo.type || null
         },
-        update: {}
+        update: {
+          name: vtuberInfo.name,
+          readname: vtuberInfo.readname,
+          affiliation: vtuberInfo.affiliation,
+          birthday: vtuberInfo.birthday || null,
+          type: vtuberInfo.type || null
+        }
       })
       .catch((e) => {
         errorFlag = true;
@@ -30,12 +37,16 @@ async function main() {
   }
 
   // video test data
-  
-  const result_add = await add_video({
-    all_videoInfo: [videoInfo],
+  /*
+  await add_video({
+    all_videoInfo: [videoInfo.songConfirm],
     songConfirm: true
   });
-  console.log(result_add);
+  await add_video({
+    all_videoInfo: [videoInfo.unSongConfirm],
+    songConfirm: false
+  });
+  */
   /*
   const thumb = videoInfo.snippet.thumbnails;
   const statistics = videoInfo.statistics;
