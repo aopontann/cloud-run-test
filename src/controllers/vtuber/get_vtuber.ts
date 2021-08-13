@@ -1,4 +1,4 @@
-import { Vtuber, Thumbnails } from "@prisma/client";
+import { Vtuber } from "@prisma/client";
 import prisma from "../../client";
 
 export default async function (query?: {
