@@ -8,6 +8,7 @@ interface GetVideo {
   startAtBefore?: string;
   maxResults?: number;
   page?: number;
+  tags?: string[];
 }
 
 interface Include {
@@ -23,6 +24,8 @@ export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
   const startAtBefore = query?.startAtBefore || null;
   const maxResults = query?.maxResults || 9999;
   const page = query?.page && query.page > 0 ? query.page : 1;
+  const tags = query?.tags || null;
+  const NG_tags = ["test"];
 
   const getVideo = await prisma.videos.findMany({
     where: {
@@ -31,6 +34,7 @@ export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
         { songConfirm: songConfirm != null ? songConfirm : undefined },
         { startTime: startAtAfter ? { gte: startAtAfter } : undefined },
         { startTime: startAtBefore ? { lte: startAtBefore } : undefined },
+        { tags: tags ? {some: {name: {in: tags} }} : undefined},
       ],
     },
     orderBy: {
@@ -44,15 +48,13 @@ export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
       thumbnail: true,
       statistic: true,
       tags: {
-        where: { tag: { publish: true } },
-        select: {
-          description: true,
-          tag: {
-            select: {
-              name: true,
-            },
-          },
+        where: {
+          name: {notIn: NG_tags}
         },
+        select: {
+          name: true,
+          type: true,
+        }
       },
     },
   });

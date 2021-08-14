@@ -5,371 +5,424 @@
       "name": "椎名唯華",
       "readname": "しいなゆいか",
       "affiliation": "にじさんじ",
-      "birthday": "0417"
+      "birthday": "0417",
+      "type": null
     },
     {
       "id": "UC_82HBGtvwN1hcGeOGHzUBQ",
       "name": "空星きらめ",
       "readname": "そらほしきらめ",
       "affiliation": "にじさんじ",
-      "birthday": "0430"
+      "birthday": "0430",
+      "type": null
     },
     {
       "id": "UC_a1ZYZ8ZTXpjg9xUY9sj8w",
       "name": "鈴原るる",
       "readname": "すずはらるる",
       "affiliation": "にじさんじ",
-      "birthday": "0624"
+      "birthday": "0624",
+      "type": "卒業"
     },
     {
       "id": "UC_GCs6GARLxEHxy1w40d6VQ",
       "name": "家長むぎ",
       "readname": "いえながむぎ",
       "affiliation": "にじさんじ",
-      "birthday": "1107"
+      "birthday": "1107",
+      "type": null
     },
     {
       "id": "UC-o-E6I3IC2q8sAoAuM6Umg",
       "name": "奈羅花",
       "readname": "ならか",
       "affiliation": "にじさんじ",
-      "birthday": "0710"
+      "birthday": "0710",
+      "type": null
     },
     {
       "id": "UC0g1AE0DOjBYnLhkgoRWN1w",
       "name": "本間ひまわり",
       "readname": "ほんまひまわり",
       "affiliation": "にじさんじ",
-      "birthday": "0810"
+      "birthday": "0810",
+      "type": null
     },
     {
       "id": "UC0WwEfE-jOM2rzjpdfhTzZA",
       "name": "愛園愛美",
       "readname": "あいぞのまなみ",
       "affiliation": "にじさんじ",
-      "birthday": "1108"
+      "birthday": "1108",
+      "type": null
     },
     {
       "id": "UC1QgXt46-GEvtNjEC1paHnw",
       "name": "グウェル・オス・ガール",
       "readname": "ぐうぇるおすがーる",
       "affiliation": "にじさんじ",
-      "birthday": "0422"
+      "birthday": "0422",
+      "type": null
     },
     {
       "id": "UC1zFJrfEKvCixhsjNSb1toQ",
       "name": "シスター・クレア",
       "readname": "しすたーくれあ",
       "affiliation": "にじさんじ",
-      "birthday": "1004"
+      "birthday": "1004",
+      "type": null
     },
     {
       "id": "UC2OacIzd2UxGHRGhdHl1Rhw",
       "name": "早瀬走",
       "readname": "はやせそう",
       "affiliation": "にじさんじ",
-      "birthday": "0320"
+      "birthday": "0320",
+      "type": null
     },
     {
       "id": "UC3lNFeJiTq6L3UWoz4g1e-A",
       "name": "卯月コウ",
       "readname": "うづきこう",
       "affiliation": "にじさんじ",
-      "birthday": "0202"
+      "birthday": "0202",
+      "type": null
     },
     {
       "id": "UC48jH1ul-6HOrcSSfoR02fQ",
       "name": "夕陽リリ",
       "readname": "ゆうひりり",
       "affiliation": "にじさんじ",
-      "birthday": "0121"
+      "birthday": "0121",
+      "type": null
     },
     {
       "id": "UC53UDnhAAYwvNO7j_2Ju1cQ",
       "name": "ドーラ",
       "readname": "どーら",
       "affiliation": "にじさんじ",
-      "birthday": "0819"
+      "birthday": "0819",
+      "type": null
     },
     {
       "id": "UC69URn8iP4u8D_zUp-IJ1sg",
       "name": "金魚坂めいろ",
       "readname": "きんぎょざかめいろ",
-      "affiliation": "にじさんじ卒業",
-      "birthday": "0331"
+      "affiliation": "にじさんじ",
+      "birthday": "0331",
+      "type": "卒業"
     },
     {
       "id": "UC6oDys1BGgBsIC3WhG1BovQ",
       "name": "静凛",
       "readname": "しずかりん",
       "affiliation": "にじさんじ",
-      "birthday": "0828"
+      "birthday": "0828",
+      "type": null
     },
     {
       "id": "UC6TfqY40Xt1Y0J-N18c85qQ",
       "name": "安土桃",
       "readname": "あづちもも",
       "affiliation": "にじさんじ",
-      "birthday": "0303"
+      "birthday": "0303",
+      "type": null
     },
     {
       "id": "UC6wvdADTJ88OfIbJYIpAaDA",
       "name": "不破湊",
       "readname": "ふわみなと",
       "affiliation": "にじさんじ",
-      "birthday": "0418"
+      "birthday": "0418",
+      "type": null
     },
     {
       "id": "UC8C1LLhBhf_E2IBPLSDJXlQ",
       "name": "健屋花那",
       "readname": "すこやかな",
       "affiliation": "にじさんじ",
-      "birthday": "0514"
+      "birthday": "0514",
+      "type": null
     },
     {
       "id": "UC9EjSJ8pvxtvPdxLOElv73w",
       "name": "魔界ノりりむ",
       "readname": "まかいのりりむ",
       "affiliation": "にじさんじ",
-      "birthday": "0115"
+      "birthday": "0115",
+      "type": null
     },
     {
       "id": "UC9V3Y3_uzU5e-usObb6IE1w",
       "name": "星川サラ",
       "readname": "ほしかわさら",
       "affiliation": "にじさんじ",
-      "birthday": "0807"
+      "birthday": "0807",
+      "type": null
     },
     {
       "id": "UCb5JxV6vKlYVknoJB8TnyYg",
       "name": "黛灰",
       "readname": "まゆずみかい",
       "affiliation": "にじさんじ",
-      "birthday": "0928"
+      "birthday": "0928",
+      "type": null
     },
     {
       "id": "UCb6ObE-XGCctO3WrjRZC-cw",
       "name": "ルイス・キャミー",
       "readname": "るいすきゃみー",
       "affiliation": "にじさんじ",
-      "birthday": "0222"
+      "birthday": "0222",
+      "type": null
     },
     {
       "id": "UCbc8fwhdUNlqi-J99ISYu4A",
       "name": "ベルモンド・バンデラス",
       "readname": "べるもんどばんでらす",
       "affiliation": "にじさんじ",
-      "birthday": "1103"
+      "birthday": "1103",
+      "type": null
     },
     {
       "id": "UCBi8YaVyZpiKWN3_Z0dCTfQ",
       "name": "赤羽葉子",
       "readname": "あかばねようこ",
       "affiliation": "にじさんじ",
-      "birthday": "0405"
+      "birthday": "0405",
+      "type": null
     },
     {
       "id": "UCBiqkFJljoxAj10SoP2w2Cg",
       "name": "文野環",
       "readname": "ふみのたまき",
       "affiliation": "にじさんじ",
-      "birthday": "eday"
+      "birthday": "eday",
+      "type": null
     },
     {
       "id": "UCCVwhI5trmaSxfcze_Ovzfw",
       "name": "夢月ロア",
       "readname": "ゆづきろあ",
       "affiliation": "にじさんじ",
-      "birthday": "0704"
+      "birthday": "0704",
+      "type": null
     },
     {
       "id": "UCD-miitqNY3nyukJ4Fnf4_A",
       "name": "月ノ美兎",
       "readname": "つきのみと",
       "affiliation": "にじさんじ",
-      "birthday": "0924"
+      "birthday": "0924",
+      "type": null
     },
     {
       "id": "UCdpUojq0KWZCN9bxXnZwz5w",
       "name": "アルス・アルマル",
       "readname": "あるすあるまる",
       "affiliation": "にじさんじ",
-      "birthday": "0321"
+      "birthday": "0321",
+      "type": null
     },
     {
       "id": "UCe_p3YEuYJb8Np0Ip9dk-FQ",
       "name": "朝日南アカネ",
       "readname": "あさひなあかね",
       "affiliation": "にじさんじ",
-      "birthday": "1215"
+      "birthday": "1215",
+      "type": null
     },
     {
       "id": "UCebT4Aq-3XWb5je1S1FvR_A",
       "name": "東堂コハク",
       "readname": "とうどうこはく",
       "affiliation": "にじさんじ",
-      "birthday": "0929"
+      "birthday": "0929",
+      "type": null
     },
     {
       "id": "UCeK9HFcRZoTrvqcUCtccMoQ",
       "name": "渋谷ハジメ",
       "readname": "しぶやはじめ",
       "affiliation": "にじさんじ",
-      "birthday": "0505"
+      "birthday": "0505",
+      "type": null
     },
     {
       "id": "UCerkculBD7YLc_vOGrF7tKg",
       "name": "魔使マオ",
       "readname": "まつかいまお",
       "affiliation": "にじさんじ",
-      "birthday": "0531"
+      "birthday": "0531",
+      "type": null
     },
     {
       "id": "UCeShTCVgZyq2lsBW9QwIJcw",
       "name": "郡道美玲",
       "readname": "ぐんどうみれい",
       "affiliation": "にじさんじ",
-      "birthday": "0614"
+      "birthday": "0614",
+      "type": null
     },
     {
       "id": "UCF1JdALrXgub24weQpqDy9Q",
       "name": "鳴門こがね",
       "readname": "なるとこがね",
-      "affiliation": "にじさんじ卒業",
-      "birthday": null
+      "affiliation": "にじさんじ",
+      "birthday": null,
+      "type": "卒業"
     },
     {
       "id": "UCFaDvgez8USXHiKidt0NtZg",
       "name": "八朔ゆず",
       "readname": "はっさくゆず",
-      "affiliation": "にじさんじ卒業",
-      "birthday": "0904"
+      "affiliation": "にじさんじ",
+      "birthday": "0904",
+      "type": "卒業"
     },
     {
       "id": "UCfipDDn7wY-C-SoUChgxCQQ",
       "name": "葉山舞鈴",
       "readname": "はやままりん",
       "affiliation": "にじさんじ",
-      "birthday": "0324"
+      "birthday": "0324",
+      "type": null
     },
     {
       "id": "UCfki3lMEF6SGBFiFfo9kvUA",
       "name": "ましろ",
       "readname": "ましろ",
       "affiliation": "にじさんじ",
-      "birthday": "0427"
+      "birthday": "0427",
+      "type": null
     },
     {
       "id": "UCfM_A7lE6LkGrzx6_mOtI4g",
       "name": "雪汝",
       "readname": "せつな",
-      "affiliation": "にじさんじ卒業",
-      "birthday": "1023"
+      "affiliation": "にじさんじ",
+      "birthday": "1023",
+      "type": "卒業"
     },
     {
       "id": "UCfQVs_KuXeNAlGa3fb8rlnQ",
       "name": "桜凛月",
       "readname": "さくらりつき",
       "affiliation": "にじさんじ",
-      "birthday": "0401"
+      "birthday": "0401",
+      "type": null
     },
     {
       "id": "UCg63a3lk6PNeWhVvMRM_mrQ",
       "name": "小野町春香",
       "readname": "おのまちはるか",
       "affiliation": "にじさんじ",
-      "birthday": "0408"
+      "birthday": "0408",
+      "type": null
     },
     {
       "id": "UCGw7lrT-rVZCWHfdG9Frcgg",
       "name": "弦月藤士郎",
       "readname": "げんづきとうじろう",
       "affiliation": "にじさんじ",
-      "birthday": "0730"
+      "birthday": "0730",
+      "type": null
     },
     {
       "id": "UCGYAYLDE7TZiiC8U6teciDQ",
       "name": "葉加瀬冬雪",
       "readname": "はかせふゆき",
       "affiliation": "にじさんじ",
-      "birthday": "0219"
+      "birthday": "0219",
+      "type": null
     },
     {
       "id": "UCHBhnG2G-qN0JrrWmMO2FTA",
       "name": "シェリン・バーガンディ",
       "readname": "しぇりんばーがんでぃ",
       "affiliation": "にじさんじ",
-      "birthday": "0106"
+      "birthday": "0106",
+      "type": null
     },
     {
       "id": "UCHK5wkevfaGrPr7j3g56Jmw",
       "name": "瀬戸美夜子",
       "readname": "せとみやこ",
       "affiliation": "にじさんじ",
-      "birthday": "0803"
+      "birthday": "0803",
+      "type": null
     },
     {
       "id": "UChUJbHiTVeGrSkTdBzVfNCQ",
       "name": "ジョー・力一",
       "readname": "じょーりきいち",
       "affiliation": "にじさんじ",
-      "birthday": "1001"
+      "birthday": "1001",
+      "type": null
     },
     {
       "id": "UCHVXbQzkl3rDfsXWo8xi2qw",
       "name": "アンジュ・カトリーナ",
       "readname": "あんじゅかとりーな",
       "affiliation": "にじさんじ",
-      "birthday": "0930"
+      "birthday": "0930",
+      "type": null
     },
     {
       "id": "UCHX7YpFG8rVwhsHCx34xt7w",
       "name": "雪城眞尋",
       "readname": "ゆきしろまひろ",
       "affiliation": "にじさんじ",
-      "birthday": "0926"
+      "birthday": "0926",
+      "type": null
     },
     {
       "id": "UCIG9rDtgR45VCZmYnd-4DUw",
       "name": "ラトナ・プティ",
       "readname": "らとなぷてぃ",
       "affiliation": "にじさんじ",
-      "birthday": "1014"
+      "birthday": "1014",
+      "type": null
     },
     {
       "id": "UCiSRx1a2k-0tOg-fs6gAolQ",
       "name": "飛鳥ひな",
       "readname": "あすかひな",
       "affiliation": "にじさんじ",
-      "birthday": "0303"
+      "birthday": "0303",
+      "type": null
     },
     {
       "id": "UCIytNcoz4pWzXfLda0DoULQ",
       "name": "エクス・アルビオ",
       "readname": "えくすあるびお",
       "affiliation": "にじさんじ",
-      "birthday": "0801"
+      "birthday": "0801",
+      "type": null
     },
     {
       "id": "UCjlmCrq4TP1I4xguOtJ-31w",
       "name": "でびでび・でびる",
       "readname": "でびでびでびる",
       "affiliation": "にじさんじ",
-      "birthday": "1218"
+      "birthday": "1218",
+      "type": null
     },
     {
       "id": "UCJubINhCcFXlsBwnHp0wl_g",
       "name": "舞元啓介",
       "readname": "まいもとけいすけ",
       "affiliation": "にじさんじ",
-      "birthday": "1109"
+      "birthday": "1109",
+      "type": null
     },
     {
       "id": "UCkIimWZ9gBJRamKF0rmPU8w",
       "name": "天宮こころ",
       "readname": "あまみやこころ",
       "affiliation": "にじさんじ",
-      "birthday": "0701"
+      "birthday": "0701",
+      "type": null
     },
     {
       "id": "UCKMYISTJAQ8xTplUPHiABlA",
@@ -383,217 +436,248 @@
       "name": "西園チグサ",
       "readname": "にしぞのちぐさ",
       "affiliation": "にじさんじ",
-      "birthday": "0720"
+      "birthday": "0720",
+      "type": null
     },
     {
       "id": "UCks41vQN-hN-1KHmpZyPY3A",
       "name": "名伽尾アズマ",
       "readname": "なかおあずま",
-      "affiliation": "にじさんじ卒業",
-      "birthday": "0822"
+      "affiliation": "にじさんじ",
+      "birthday": "0822",
+      "type": "卒業"
     },
     {
       "id": "UCL_O_HXgLJx3Auteer0n0pA",
       "name": "周央サンゴ",
       "readname": "すおうさんご",
       "affiliation": "にじさんじ",
-      "birthday": "0306"
+      "birthday": "0306",
+      "type": null
     },
     {
       "id": "UCl1oLKcAq93p-pwKfDGhiYQ",
       "name": "えま★おうがすと",
       "readname": "えまおうがすと",
       "affiliation": "にじさんじ",
-      "birthday": "0808"
+      "birthday": "0808",
+      "type": null
     },
     {
       "id": "UCL34fAoFim9oHLbVzMKFavQ",
       "name": "夜見れな",
       "readname": "よるみれな",
       "affiliation": "にじさんじ",
-      "birthday": "0227"
+      "birthday": "0227",
+      "type": null
     },
     {
       "id": "UCllKI7VjyANuS1RXatizfLQ",
       "name": "山神カルタ",
       "readname": "やまがみかるた",
       "affiliation": "にじさんじ",
-      "birthday": "0811"
+      "birthday": "0811",
+      "type": null
     },
     {
       "id": "UCLO9QDxVL4bnvRRsz6K4bsQ",
       "name": "勇気ちひろ",
       "readname": "ゆうきちひろ",
       "affiliation": "にじさんじ",
-      "birthday": "0716"
+      "birthday": "0716",
+      "type": null
     },
     {
       "id": "UCLpYMk5h1bq8_GAFVBgXhPQ",
       "name": "出雲霞",
       "readname": "いずもかすみ",
-      "affiliation": "にじさんじ卒業",
-      "birthday": "1013"
+      "affiliation": "にじさんじ",
+      "birthday": "1013",
+      "type": "卒業"
     },
     {
       "id": "UCmeyo5pRj_6PXG-CsGUuWWg",
       "name": "黒井しば",
       "readname": "くろいしば",
       "affiliation": "にじさんじ",
-      "birthday": "0111"
+      "birthday": "0111",
+      "type": null
     },
     {
       "id": "UCmovZ2th3Sqpd00F5RdeigQ",
       "name": "加賀美ハヤト",
       "readname": "かがみはやと",
       "affiliation": "にじさんじ",
-      "birthday": "1202"
+      "birthday": "1202",
+      "type": null
     },
     {
       "id": "UCmUjjW5zF1MMOhYUwwwQv9Q",
       "name": "宇志海いちご",
       "readname": "うしみいちご",
       "affiliation": "にじさんじ",
-      "birthday": "0415"
+      "birthday": "0415",
+      "type": null
     },
     {
       "id": "UCmZ1Rbthn-6Jm_qOGjYsh5A",
       "name": "イブラヒム",
       "readname": "いぶらひむ",
       "affiliation": "にじさんじ",
-      "birthday": "0725"
+      "birthday": "0725",
+      "type": null
     },
     {
       "id": "UCnRQYHTnRLSF0cLJwMnedCg",
       "name": "相羽ういは",
       "readname": "あいばういは",
       "affiliation": "にじさんじ",
-      "birthday": "1122"
+      "birthday": "1122",
+      "type": null
     },
     {
       "id": "UCNUgrFCo2Hr_VXc9bEwjcHQ",
       "name": "闇夜乃モルル",
       "readname": "やみよのもるる",
-      "affiliation": "にじさんじ卒業",
-      "birthday": null
+      "affiliation": "にじさんじ",
+      "birthday": null,
+      "type": "卒業"
     },
     {
       "id": "UCNW1Ex0r6HsWRD4LCtPwvoQ",
       "name": "三枝明那",
       "readname": "さえぐさあきな",
       "affiliation": "にじさんじ",
-      "birthday": "0901"
+      "birthday": "0901",
+      "type": null
     },
     {
       "id": "UCo2N7C-Z91waaR6lF3LL_jw",
       "name": "甲斐田晴",
       "readname": "かいだはる",
       "affiliation": "にじさんじ",
-      "birthday": "1025"
+      "birthday": "1025",
+      "type": null
     },
     {
       "id": "UCo7TRj3cS-f_1D9ZDmuTsjw",
       "name": "町田ちま",
       "readname": "まちたちま",
       "affiliation": "にじさんじ",
-      "birthday": "0805"
+      "birthday": "0805",
+      "type": null
     },
     {
       "id": "UCoM_XmK45j504hfUWvN06Qg",
       "name": "成瀬鳴",
       "readname": "なるせなる",
       "affiliation": "にじさんじ",
-      "birthday": "0608"
+      "birthday": "0608",
+      "type": null
     },
     {
       "id": "UCoztvTULBYd3WmStqYeoHcA",
       "name": "笹木咲",
       "readname": "ささきさく",
       "affiliation": "にじさんじ",
-      "birthday": "1111"
+      "birthday": "1111",
+      "type": null
     },
     {
       "id": "UCP2o-o6u4uX3uq1hXspl0rg",
       "name": "久遠千歳",
       "readname": "くどうちとせ",
-      "affiliation": "にじさんじ卒業",
-      "birthday": "0304"
+      "affiliation": "にじさんじ",
+      "birthday": "0304",
+      "type": "卒業"
     },
     {
       "id": "UCpNH2Zk2gw3JBjWAKSyZcQQ",
       "name": "エリー・コニファー",
       "readname": "えりーこにふぁー",
       "affiliation": "にじさんじ",
-      "birthday": "0927"
+      "birthday": "0927",
+      "type": null
     },
     {
       "id": "UCpnvhOIJ6BN-vPkYU9ls-Eg",
       "name": "鈴谷アキ",
       "readname": "すずやあき",
       "affiliation": "にじさんじ",
-      "birthday": "1128"
+      "birthday": "1128",
+      "type": null
     },
     {
       "id": "UCPvGypSgfDkVe7JG2KygK7A",
       "name": "竜胆尊",
       "readname": "りんどうみこと",
       "affiliation": "にじさんじ",
-      "birthday": "1020"
+      "birthday": "1020",
+      "type": null
     },
     {
       "id": "UCqEp6RdtsMbUNrCdCswr6pA",
       "name": "海夜叉神",
       "readname": "うみやしゃのかみ",
-      "affiliation": "にじさんじ卒業",
-      "birthday": "0604"
+      "affiliation": "にじさんじ",
+      "birthday": "0604",
+      "type": "卒業"
     },
     {
       "id": "UCqQV8xEBWd5SVZBLlYrS_5Q",
       "name": "月見しずく",
       "readname": "つきみしずく",
       "affiliation": "にじさんじ",
-      "birthday": "0815"
+      "birthday": "0815",
+      "type": "卒業"
     },
     {
       "id": "UCRcLAVTbmx2-iNcXSsupdNA",
       "name": "来栖夏芽",
       "readname": "くるすなつめ",
       "affiliation": "にじさんじ",
-      "birthday": "0907"
+      "birthday": "0907",
+      "type": null
     },
     {
       "id": "UCRqBKoKuX30ruKAq05pCeRQ",
       "name": "北小路ヒスイ",
       "readname": "きたこうじひすい",
       "affiliation": "にじさんじ",
-      "birthday": "0413"
+      "birthday": "0413",
+      "type": null
     },
     {
       "id": "UCRV9d6YCYIMUszK-83TwxVA",
       "name": "轟京子",
       "readname": "とどろききょうこ",
       "affiliation": "にじさんじ",
-      "birthday": "1222"
+      "birthday": "1222",
+      "type": null
     },
     {
       "id": "UCRWOdwLRsenx2jLaiCAIU4A",
       "name": "雨森小夜",
       "readname": "あめもりさよ",
       "affiliation": "にじさんじ",
-      "birthday": "0611"
+      "birthday": "0611",
+      "type": null
     },
     {
       "id": "UCryOPk2GZ1meIDt53tL30Tw",
       "name": "鈴木勝",
       "readname": "すずきまさる",
       "affiliation": "にじさんじ",
-      "birthday": "0809"
+      "birthday": "0809",
+      "type": null
     },
     {
       "id": "UCSFCh5NL4qXrAy9u-u2lX3g",
       "name": "葛葉",
       "readname": "くずは",
       "affiliation": "にじさんじ",
-      "birthday": "1110"
+      "birthday": "1110",
+      "type": null
     },
     {
       "id": "UCsFn_ueskBkMCEyzCEqAOvg",
@@ -607,217 +691,736 @@
       "name": "樋口楓",
       "readname": "ひぐちかえで",
       "affiliation": "にじさんじ",
-      "birthday": null
+      "birthday": null,
+      "type": null
     },
     {
       "id": "UCspv01oxUFf_MTSipURRhkA",
       "name": "叶",
       "readname": "かなえ",
       "affiliation": "にじさんじ",
-      "birthday": "0707"
+      "birthday": "0707",
+      "type": null
     },
     {
       "id": "UCt0clH12Xk1-Ej5PXKGfdPA",
       "name": "物述有栖",
       "readname": "もののべありす",
       "affiliation": "にじさんじ",
-      "birthday": "1116"
+      "birthday": "1116",
+      "type": null
     },
     {
       "id": "UCt5-0i4AVHXaWJrL8Wql3mw",
       "name": "緑仙",
       "readname": "りゅーしぇん",
       "affiliation": "にじさんじ",
-      "birthday": "0416"
+      "birthday": "0416",
+      "type": null
     },
     {
       "id": "UCtAvQ5U0aXyKwm2i4GqFgJg",
       "name": "春崎エアル",
       "readname": "はるさきえある",
       "affiliation": "にじさんじ",
-      "birthday": "0403"
+      "birthday": "0403",
+      "type": null
     },
     {
       "id": "UCTIE7LM5X15NVugV7Krp9Hw",
       "name": "夢追翔",
       "readname": "ゆめおいかける",
       "affiliation": "にじさんじ",
-      "birthday": "0628"
+      "birthday": "0628",
+      "type": null
     },
     {
       "id": "UCtnO2N4kPTXmyvedjGWdx3Q",
       "name": "レヴィ・エリファ",
       "readname": "れゔぃえりふぁ",
       "affiliation": "にじさんじ",
-      "birthday": "0818"
+      "birthday": "0818",
+      "type": null
     },
     {
       "id": "UCtpB6Bvhs1Um93ziEDACQ8g",
       "name": "森中花咲",
       "readname": "もりなかかざき",
       "affiliation": "にじさんじ",
-      "birthday": "0523"
+      "birthday": "0523",
+      "type": null
     },
     {
       "id": "UCUc8GZfFxtmk7ZwSO7ccQ0g",
       "name": "ニュイ・ソシエール",
       "readname": "にゅいそしえーる",
       "affiliation": "にじさんじ",
-      "birthday": "1031"
+      "birthday": "1031",
+      "type": null
     },
     {
       "id": "UCuep1JCrMvSxOGgGhBfJuYw",
       "name": "フレン・E・ルスタリオ",
       "readname": "ふれんいーるすたりお",
       "affiliation": "にじさんじ",
-      "birthday": "0310"
+      "birthday": "0310",
+      "type": null
     },
     {
       "id": "UCufQu4q65z63IgE4cfKs1BQ",
       "name": "語部紡",
       "readname": "かたりべつむぐ",
       "affiliation": "にじさんじ",
-      "birthday": "0815"
+      "birthday": "0815",
+      "type": null
     },
     {
       "id": "UCuvk5PilcvDECU7dDZhQiEw",
       "name": "白雪巴",
       "readname": "しらゆきともえ",
       "affiliation": "にじさんじ",
-      "birthday": "0208"
+      "birthday": "0208",
+      "type": null
     },
     {
       "id": "UCuz0vzQgC8LRdS6lVV0UkUg",
       "name": "遠北千南",
       "readname": "あちきたちなみ",
-      "affiliation": "にじさんじ卒業",
-      "birthday": "1030"
+      "affiliation": "にじさんじ",
+      "birthday": "1030",
+      "type": "卒業"
     },
     {
       "id": "UCUzJ90o1EjqUbk2pBAy0_aw",
       "name": "ギルザレンⅢ世",
       "readname": "ぎるざれんさんせい",
       "affiliation": "にじさんじ",
-      "birthday": "0606"
+      "birthday": "0606",
+      "type": null
     },
     {
       "id": "UCv1fFr156jc65EMiLbaLImw",
       "name": "剣持刀也",
       "readname": "けんもちとうや",
       "affiliation": "にじさんじ",
-      "birthday": "0822"
+      "birthday": "0822",
+      "type": null
     },
     {
       "id": "UCV5ZZlLjk5MKGg3L0n0vbzw",
       "name": "鷹宮リオン",
       "readname": "たかみやりおん",
       "affiliation": "にじさんじ",
-      "birthday": "0107"
+      "birthday": "0107",
+      "type": null
     },
     {
       "id": "UCveZ9Ic1VtcXbsyaBgxPMvg",
       "name": "童田明治",
       "readname": "わらべだめいじー",
       "affiliation": "にじさんじ",
-      "birthday": "0504"
+      "birthday": "0504",
+      "type": null
     },
     {
       "id": "UCvmppcdYf4HOv-tFQhHHJMA",
       "name": "モイラ",
       "readname": "もいら",
       "affiliation": "にじさんじ",
-      "birthday": "0210"
+      "birthday": "0210",
+      "type": null
     },
     {
       "id": "UCvzVB-EYuHFXHZrObB8a_Og",
       "name": "矢車りね",
       "readname": "やぐるまりね",
       "affiliation": "にじさんじ",
-      "birthday": "0802"
+      "birthday": "0802",
+      "type": null
     },
     {
       "id": "UCwcyyxn6h9ex4sMXGtpQE_g",
       "name": "メリッサ・キンレンカ",
       "readname": "めりっさきんれんか",
       "affiliation": "にじさんじ",
-      "birthday": "0511"
+      "birthday": "0511",
+      "type": null
     },
     {
       "id": "UCwokZsOK_uEre70XayaFnzA",
       "name": "鈴鹿詩子",
       "readname": "すずかうたこ",
       "affiliation": "にじさんじ",
-      "birthday": "0224"
+      "birthday": "0224",
+      "type": null
     },
     {
       "id": "UCwQ9Uv-m8xkE5PzRc7Bqx3Q",
       "name": "御伽原江良",
       "readname": "おとぎばらえら",
-      "affiliation": "にじさんじ卒業",
-      "birthday": "0728"
+      "affiliation": "にじさんじ",
+      "birthday": "0728",
+      "type": "卒業"
     },
     {
       "id": "UCwrjITPwG4q71HzihV2C7Nw",
       "name": "フミ",
       "readname": "ふみ",
       "affiliation": "にじさんじ",
-      "birthday": "1010"
+      "birthday": "1010",
+      "type": null
     },
     {
       "id": "UCWz0CSYCxf4MhRKPDm220AQ",
       "name": "神田笑一",
       "readname": "かんだしょういち",
       "affiliation": "にじさんじ",
-      "birthday": "0305"
+      "birthday": "0305",
+      "type": null
     },
     {
       "id": "UCX7YkU9nEeaoZbkVLVajcMg",
       "name": "にじさんじ",
       "readname": "にじさんじ",
-      "affiliation": "にじさんじ公式",
-      "birthday": null
+      "affiliation": "にじさんじ",
+      "birthday": null,
+      "type": "公式"
     },
     {
       "id": "UCXRlIK3Cw_TJIQC5kSJJQMg",
       "name": "戌亥とこ",
       "readname": "いぬいとこ",
       "affiliation": "にじさんじ",
-      "birthday": "0909"
+      "birthday": "0909",
+      "type": null
     },
     {
       "id": "UCXU7YYxy_iQd3ulXyO-zC2w",
       "name": "伏見ガク",
       "readname": "ふしみがく",
       "affiliation": "にじさんじ",
-      "birthday": "1005"
+      "birthday": "1005",
+      "type": null
     },
     {
       "id": "UCXW4MqCQn-jCaxlX-nn-BYg",
       "name": "長尾景",
       "readname": "ながおけい",
       "affiliation": "にじさんじ",
-      "birthday": "0724"
+      "birthday": "0724",
+      "type": null
     },
     {
       "id": "UCYKP16oMX9KKPbrNgo_Kgag",
       "name": "える",
       "readname": "える",
       "affiliation": "にじさんじ",
-      "birthday": "0124"
+      "birthday": "0124",
+      "type": null
     },
     {
       "id": "UCZ1xuCK1kNmn5RzPYIZop3w",
       "name": "リゼ・ヘルエスタ",
       "readname": "りぜへるえすた",
       "affiliation": "にじさんじ",
-      "birthday": "0525"
+      "birthday": "0525",
+      "type": null
     },
     {
       "id": "UCz6vnIbgiqFT9xUcD6Bp65Q",
       "name": "ChroNoiR",
-      "readname": "クロノワール",
-      "affiliation": "にじさんじユニット",
-      "birthday": null
+      "readname": "くろのわーる",
+      "affiliation": "にじさんじ",
+      "birthday": null,
+      "type": "ユニット"
+    },
+    {
+      "id": "UC_D2DNy-KUNQJ_NGMppgmyg",
+      "name": "JuvveL",
+      "readname": "じゅえる",
+      "affiliation": "にじさんじ",
+      "birthday": null,
+      "type": "ユニット"
+    },
+    {
+      "id": "UCZ5dNZsqBjBzbBl0l_IdmXg",
+      "name": "Taka Radjiman",
+      "readname": "たか・らじまん",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCpJtk0myFr5WnyfsmnInP-w",
+      "name": "Hana Macchia",
+      "readname": "はな・まきあ",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCA3WE2WRSpoIvtnoVGq4VAw",
+      "name": "ZEA Cornelia",
+      "readname": "ぜあ・こるねりあ",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UC5qSx7KzdRwbsO1QmJc4d-w",
+      "name": "Siska Leontyne",
+      "readname": "しすか・れおんたいん",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCrR7JxkbeLY82e8gsj_I0pQ",
+      "name": "Amicia Michella",
+      "readname": "あみしあ・みしぇら",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCpJtk0myFr5WnyfsmnInP-w",
+      "name": "Hana Macchia",
+      "readname": "はな・まきあ",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCOmjciHZ8Au3iKMElKXCF_g",
+      "name": "Miyu Ottavia",
+      "readname": "みゆ・おったゔぃあ",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCHjeZylSgXDSnor8wUnwU_g",
+      "name": "Bonnivier Pranaja",
+      "readname": "ぼんにふぃえーる・ぷらなじゃ",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCyRkQSuhJILuGOuXk10voPg",
+      "name": "Layla Alstroemeria",
+      "readname": "らいら・あるすとろえめりあ",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCkL9OLKjIQbKk2CztbpOCFg",
+      "name": "Riksa Dhirendra",
+      "readname": "りくさ・でぃれんどら",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCjFu-9GHnabzSFRAYm1B9Dw",
+      "name": "Etna Crimson",
+      "readname": "えとな・くりむそん",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCoWH3sDpeXG1aXmOxveX4KA",
+      "name": "Nara Haramaung",
+      "readname": "なら・はらまうん",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCk5r533QVMgJUdWwqegH2TA",
+      "name": "Azura Cecillia",
+      "readname": "あずら・せしりあ",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UC8Snw5i4eOJXEQqURAK17hQ",
+      "name": "Rai Galilei",
+      "readname": "らい・がりれい",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UC5yckZliCkuaEFbqzLBD7hQ",
+      "name": "Reza Avanluna",
+      "readname": "れざ・あふぁんるな",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCMzVa7B8UEdrvUGsPmSgyjA",
+      "name": "Derem Kado",
+      "readname": "でれむ・かど",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCijNnZ-6m8g85UGaRAWuw7g",
+      "name": "Nagisa Arcinia",
+      "readname": "なぎさ・あるしにあ",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCbLgcjfsUaCUgJh9SVit8kw",
+      "name": "NIJISANJI ID",
+      "readname": "にじさんじ・いんどねしあ",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": "公式"
+    },
+    {
+      "id": "UC1ZV7KBscK0EMoJKFu1DnDg",
+      "name": "Nun Bora",
+      "readname": "ぬん・ぼら",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCClwIqTUn5LDpFucHyaAhHg",
+      "name": "Lee Roha",
+      "readname": "い・ろは",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCUtKkGKef8BYMs3h-3zQm9A",
+      "name": "Min Suha",
+      "readname": "みん・すぅーは",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UC7hffDQLKIEG-_zoAQkMIvg",
+      "name": "Akira Ray",
+      "readname": "あきら・れい",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCJ6LH4jMNy0JN9RSThz1mMQ",
+      "name": "Han Chiho",
+      "readname": "はん・ちほ",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UC5ek2GWKvUKFgnKSHuuCFrw",
+      "name": "So Nagi",
+      "readname": "そ・なぎ",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCmWqYB6y8gSfPONWGspuOWQ",
+      "name": "Chae Ara",
+      "readname": "ちぇ・あら",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCmWqYB6y8gSfPONWGspuOWQ",
+      "name": "Shin Yuya",
+      "readname": "しん・ゆや",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": "卒業"
+    },
+    {
+      "id": "UCSlv7Z-4q7_7NRkzJB10A5Q",
+      "name": "Lee Siu",
+      "readname": "い・しう",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCpRXCTyNNa-MnjhK6gisnRw",
+      "name": "Gaon",
+      "readname": "がおん",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCCHH0nWYXFZmtDS_4tvMxHQ",
+      "name": "Yang Nari",
+      "readname": "やん・なり",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UClS6k3w1sPwlVFqK3-yID5A",
+      "name": "Ryu Hari",
+      "readname": "りゅ・はり",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCi6nV5Z2dzFuXBzLG3P9zqQ",
+      "name": "Shin Kiru",
+      "readname": "しん・ぎる",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCyqzU2nq7eGNi4kN0uHx7TA",
+      "name": "Song Mia",
+      "readname": "そん・みあ",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCCHH0nWYXFZmtDS_4tvMxHQ",
+      "name": "Ban Hada",
+      "readname": "やん・なり",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCLjx3lqIkYkPCBJop8czJ2A",
+      "name": "Yang Nari",
+      "readname": "ばん・はだ",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCeGendL8CO5RkffB6IFwHow",
+      "name": "Seffyna",
+      "readname": "せふぃな",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCzMAP-oh5-pC8j6RlCPf26w",
+      "name": "Wiffy",
+      "readname": "うぃふぃ",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": "卒業"
+    },
+    {
+      "id": "UCIJ9zP6gIkT8BB4Lz4UYPhA",
+      "name": "Yu Ruri",
+      "readname": "ゆ・るり",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": "卒業"
+    },
+    {
+      "id": "UCZgRRTDMYwHpQ7sCl0aCp2Q",
+      "name": "Kaen",
+      "readname": "かえん",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": "卒業"
+    },
+    {
+      "id": "UCLSzgV37Dt24T8p3-TNiSLg",
+      "name": "Lorou",
+      "readname": "ろーろー",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": "卒業"
+    },
+    {
+      "id": "UC6WU2SrnG019ucm_bdY6qxQ",
+      "name": "Hakuren",
+      "readname": "はくれん",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": "卒業"
+    },
+    {
+      "id": "UCStzBFfjwFYb0qSYHnzFZvw",
+      "name": "NIJISANJI KR",
+      "readname": "にじさんじ・これあ",
+      "affiliation": "NIJISANJI KR",
+      "birthday": null,
+      "type": "公式"
+    },
+    {
+      "id": "UCIeSUTOTkF9Hs7q3SGcO-Ow",
+      "name": "Elira Pendora",
+      "readname": "えりーら・ぺんどら",
+      "affiliation": "NIJISANJI EN",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCu-J8uIXuLZh16gG-cT1naw",
+      "name": "Finana Ryugu",
+      "readname": "ふぃなーな・りゅうぐう",
+      "affiliation": "NIJISANJI EN",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCP4nMSTdwU1KqYWu3UH5DHQ",
+      "name": "Pomu Rainpuff",
+      "readname": "ぽむ・れいんぱふ",
+      "affiliation": "NIJISANJI EN",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UC4WvIIAo89_AzGUh1AZ6Dkg",
+      "name": "Rosemi Lovelock",
+      "readname": "ろぜみ・らぶろっく",
+      "affiliation": "NIJISANJI EN",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCV1xUwfM2v2oBtT3JNvic3w",
+      "name": "Selen Tatsuki",
+      "readname": "せれん・たつき",
+      "affiliation": "NIJISANJI EN",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCgA2jKRkqpY_8eysPUs8sjw",
+      "name": "Petra Gurin",
+      "readname": "ぺとら・ぐりん",
+      "affiliation": "NIJISANJI EN",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UC-JSeFfovhNsEhftt1WHMvg",
+      "name": "NIJISANJI EN",
+      "readname": "にじさんじ・いんぐりっしゅ",
+      "affiliation": "NIJISANJI EN",
+      "birthday": null,
+      "type": "公式"
+    },
+    {
+      "id": "UC8oPnditPSp5lZu45fnXWCA",
+      "name": "アクシア・クローネ",
+      "readname": "あくしあ・くろーね",
+      "affiliation": "にじさんじ",
+      "birthday": "1027",
+      "type": null
+    },
+    {
+      "id": "UCgmFrRcyH7d1zR9sIVQhFow",
+      "name": "ローレン・イロアス",
+      "readname": "ろーれん・いろあす",
+      "affiliation": "にじさんじ",
+      "birthday": "0906",
+      "type": null
+    },
+    {
+      "id": "UC-6rZgmxZSIbq786j3RD5ow",
+      "name": "レオス・ヴィンセント",
+      "readname": "れおす・ゔぃんせんと",
+      "affiliation": "にじさんじ",
+      "birthday": "0308",
+      "type": null
+    },
+    {
+      "id": "UCRm6lqtdxs_Qo6HeL-SRQ-w",
+      "name": "レイン・パターソン",
+      "readname": "れいん・ぱたーそん",
+      "affiliation": "にじさんじ",
+      "birthday": "0113",
+      "type": null
+    },
+    {
+      "id": "UCqjTqdVlvIipZXIKeCkHKUA",
+      "name": "オリバー・エバンス",
+      "readname": "おりばー・えばんす",
+      "affiliation": "にじさんじ",
+      "birthday": "0221",
+      "type": null
+    },
+    {
+      "id": "UC_aB_-PHLFHiP61djM0oOiQ",
+      "name": "Aadya",
+      "readname": "あでぃあ",
+      "affiliation": "NIJISANJI IN",
+      "birthday": "1031",
+      "type": "卒業"
+    },
+    {
+      "id": "UC0lik9pHju6ONgkBh7N5wHw",
+      "name": "Vihaan",
+      "readname": "びばん",
+      "affiliation": "NIJISANJI IN",
+      "birthday": "0321",
+      "type": "卒業"
+    },
+    {
+      "id": "UC6oW4FXETgEGOFTxWmI2h5Q",
+      "name": "Noor",
+      "readname": "ぬーる",
+      "affiliation": "NIJISANJI IN",
+      "birthday": "0424",
+      "type": "卒業"
+    },
+    {
+      "id": "UCGEMpMpll4otCdnnxQ9paFg",
+      "name": "さくゆい",
+      "readname": "さくゆい",
+      "affiliation": "にじさんじ",
+      "birthday": "1215",
+      "type": "ユニット"
+    },
+    {
+      "id": "UCoJ0Ct-jdas4cLPpSp06gZg",
+      "name": "Xia Ekavira",
+      "readname": "しあ・えかふぃら",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCahgMxSIQ2zIRrPKhM6Mjvg",
+      "name": "Mika Melatika",
+      "readname": "みか・めらてぃか",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
+    },
+    {
+      "id": "UCIBj1-d71vKjRftiauF50pg",
+      "name": "Hyona Elatiora",
+      "readname": "ひょな・えらてぃおら",
+      "affiliation": "NIJISANJI ID",
+      "birthday": null,
+      "type": null
     }
   ]
 }

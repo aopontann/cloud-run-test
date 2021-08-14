@@ -20,6 +20,8 @@ router.get("/", async function (req: express.Request, res: express.Response) {
   const maxResults = Number(req.query.maxResults) || undefined;
   const page = Number(req.query.page) || undefined;
 
+  const tags = req.query.tags as string[] | undefined;
+
   const result = await get_video({
     videoId: videoId ? videoId.split(",") : undefined,
     songConfirm:
@@ -30,6 +32,7 @@ router.get("/", async function (req: express.Request, res: express.Response) {
     startAtBefore,
     maxResults,
     page,
+    tags,
   }).catch((e) => {
     console.log("get_video error", e);
     res.status(500).json({

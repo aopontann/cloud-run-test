@@ -8,7 +8,7 @@ interface ReturnType {
 
 interface Tags {
   name: string;
-  description: string;
+  type: string | null;
 }
 
 export default async function (
@@ -17,7 +17,7 @@ export default async function (
   { videoId: string;
     tags: {
       name: string; 
-      description: string
+      type: string | null
     }[]
   }[]
 > {
@@ -36,6 +36,7 @@ export default async function (
   const search_vtuberName: string[] = all_vtuberInfo.map(
     (vtuber) => vtuber.name
   );
+  // console.log("search_vtuberName", search_vtuberName);
   //const all_search_vtuber = result_findMany.map(vtuber => vtuber.name);
   //let result_search_vtuber = [];
 
@@ -49,7 +50,7 @@ export default async function (
         if (snippet?.title?.match(reg)) {
           tags.push({
             name: vtuberName,
-            description: "歌",
+            type: null,
           });
         }
       });
@@ -60,7 +61,7 @@ export default async function (
     }
   });
   //await prisma.$disconnect();
-  console.log("search_vtuberName", return_data);
+  //console.log("search_vtuberName", return_data);
   return return_data;
 }
 

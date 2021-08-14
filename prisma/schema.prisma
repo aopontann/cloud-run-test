@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["orderByRelation","orderByAggregateGroup"]
+  previewFeatures = ["orderByRelation", "orderByAggregateGroup"]
 }
 
 datasource db {
@@ -37,7 +37,7 @@ model Videos {
   createdAt   DateTime    @default(now()) @db.Timestamp(0)
   songConfirm Boolean     @default(false)
   statistic   Statistics?
-  tags        TagVideo[]
+  tags        Tags[]
   thumbnail   Thumbnails?
 }
 
@@ -51,18 +51,10 @@ model Vtuber {
   image       String? @db.VarChar(255)
 }
 
-model Tag {
-  id       Int        @id @default(autoincrement())
-  name     String     @unique @db.VarChar(255)
-  publish  Boolean    @default(true)
-  tagVideo TagVideo[]
-}
-
-model TagVideo {
+model Tags {
   id          Int     @id @default(autoincrement())
-  tagId       Int
   videoId     String  @db.VarChar(20)
-  description String? @db.VarChar(255)
-  tag         Tag     @relation(fields: [tagId], references: [id])
+  name        String  @db.VarChar(255)
+  type        String? @db.VarChar(255)
   videos      Videos  @relation(fields: [videoId], references: [id])
 }
