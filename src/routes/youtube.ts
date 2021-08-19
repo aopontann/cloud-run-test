@@ -5,6 +5,9 @@ import get_youtube_activities from "../controllers/youtube/get_youtube_activitie
 import get_youtube_videos from "../controllers/youtube/get_youtube_videos";
 import get_youtube_search from "../controllers/youtube/get_youtube_search";
 import select_youtube_videos from "../controllers/youtube/select_youtube_videos";
+import get_video from "../controllers/video/get_video";
+import { get_time2 } from "../controllers/get_times";
+import update_playlistItems from "../controllers/youtube/playlist/update_playlistItems";
 import { toUTC } from "../controllers/get_times";
 
 router.get(
@@ -39,7 +42,7 @@ router.get(
       : [];
     const part = req.query.part
       ? (req.query.part as string).split(",")
-      : ["statistics","contentDetails","snippet","liveStreamingDetails"];
+      : ["statistics", "contentDetails", "snippet", "liveStreamingDetails"];
     const songcheck = req.query.select === "true" ? true : false;
 
     if (songcheck && !part.includes("snippet")) {
@@ -88,15 +91,67 @@ router.get(
     const result_search = await get_youtube_search({
       publishedAfter: req.query.publishedAfter as string | undefined,
       publishedBefore: req.query.publishedBefore as string | undefined,
-    }).catch(e => {
+    }).catch((e) => {
       console.log("youtube_search error");
       res.status(500).json({
-        error: "youtube_search error"
+        error: "youtube_search error",
       });
       throw e;
     });
     //console.log(result_search);
     res.status(200).json(result_search);
+  }
+);
+
+router.put(
+  "/playlistItems/week",
+  async function (req: express.Request, res: express.Response): Promise<void> {
+    const startAtAfter =
+      (req.query.startAtAfter as string) ||
+      get_time2({ day_diff: -7, format: "YYYY-MM-DDT00:00:00" });
+    const startAtBefore =
+      (req.query.startAtBefore as string) ||
+      get_time2({ day_diff: -1, format: "YYYY-MM-DDT23:59:59" });
+    const result_get_video = await get_video({
+      songConfirm: true,
+      startAtAfter,
+      startAtBefore,
+      order: "startTime",
+    }).catch(e => {
+      res.status(500).json("error");
+      throw e;
+    });
+    const res_get_videoId = result_get_video.map((video) => video.id);
+    // MM/DD
+    const today = startAtBefore.slice(5, 7) + "/" + startAtBefore.slice(8, 10);
+    const sixDayAgo = startAtAfter.slice(5, 7) + "/" + startAtAfter.slice(8, 10);
+
+    await update_playlistItems({
+      playlistId: "PL_bYerfwKlGiQSckNm6G6D4e-UugXiZrG",
+      videoId: res_get_videoId,
+      title: `にじさんじ 歌動画リスト (${sixDayAgo} 〜 ${today})`,
+    }).catch(e => {
+      res.status(500).json("error");
+      throw e;
+    });
+
+    res.status(201).json("success");
+  }
+);
+
+router.put(
+  "/playlistItems/random",
+  async function (req: express.Request, res: express.Response): Promise<void> {
+    const result_get_video = await get_video({
+      songConfirm: true,
+      maxResults: 30,
+      order: "random",
+    });
+    const res_get_videoId = result_get_video.map((video) => video.id);
+    await update_playlistItems({
+      playlistId: "PL_bYerfwKlGiQSckNm6G6D4e-UugXiZrG",
+      videoId: res_get_videoId,
+    });
   }
 );
 
