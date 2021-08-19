@@ -25,7 +25,7 @@ export default async function (q: {videoId: string[], playlistId: string}): Prom
       auth: oAuth2Client,
       requestBody: {
         snippet: {
-          playlistId: "PL_bYerfwKlGiQSckNm6G6D4e-UugXiZrG",
+          playlistId,
           resourceId: {
             videoId,
             kind: "youtube#video",
