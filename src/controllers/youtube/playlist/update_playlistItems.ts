@@ -72,6 +72,7 @@ export default async function (q: {
           id: playlistId,
           snippet: {
             title: q.title,
+            description: "指定期間に公開されたにじさんじの歌動画リストです。毎日更新しています。"
           },
         },
       })
