@@ -8,6 +8,7 @@ interface GetVideo {
   startAtBefore?: string;
   maxResults?: number;
   page?: number;
+  order?: string;
   tags?: string[];
 }
 
@@ -22,6 +23,7 @@ export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
     typeof query?.songConfirm == "boolean" ? query.songConfirm : null;
   const startAtAfter = query?.startAtAfter || null;
   const startAtBefore = query?.startAtBefore || null;
+  const order = query?.order || "viewCount";
   const maxResults = query?.maxResults || 9999;
   const page = query?.page && query.page > 0 ? query.page : 1;
   const tags = query?.tags || null;
@@ -34,31 +36,40 @@ export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
         { songConfirm: songConfirm != null ? songConfirm : undefined },
         { startTime: startAtAfter ? { gte: startAtAfter } : undefined },
         { startTime: startAtBefore ? { lte: startAtBefore } : undefined },
-        { tags: tags ? {some: {name: {in: tags} }} : undefined},
+        { tags: tags ? { some: { name: { in: tags } } } : undefined },
       ],
     },
-    orderBy: {
-      statistic: {
-        viewCount: "desc",
-      },
-    },
+    orderBy:
+      order == "startTime"
+        ? { startTime: "desc" }
+        : {
+            statistic: {
+              viewCount: "desc",
+            },
+          },
     skip: maxResults * (page - 1),
-    take: maxResults,
+    take: order == "random" ? 9999 : maxResults,
     include: {
       thumbnail: true,
       statistic: true,
       tags: {
         where: {
-          name: {notIn: NG_tags}
+          name: { notIn: NG_tags },
         },
         select: {
           name: true,
           type: true,
-        }
+        },
       },
     },
   });
 
-  //await prisma.$disconnect();
-  return getVideo;
+  if(order == "random"){
+    for (let i = getVideo.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [getVideo[i], getVideo[j]] = [getVideo[j], getVideo[i]];
+    }
+  }
+
+  return getVideo.slice(0, maxResults);
 }

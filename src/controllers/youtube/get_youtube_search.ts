@@ -1,35 +1,39 @@
 import { google, youtube_v3 } from "googleapis";
 import { get_time2 } from "../get_times";
 
-
-interface Query {
+//指定した期間と指定したチャンネルの全ての動画URLを取得する
+export default async function (q: {
   publishedAfter?: string;
   publishedBefore?: string;
-}
-
-//指定した期間と指定したチャンネルの全ての動画URLを取得する
-export default async function (q: Query): Promise<string[]> {
-  //const Key: string = process.env.YOUTUBE_DATA_API_KEY || "none";
-  const query: Query = q || {};
-
+  hour_ago?: number;
+}): Promise<string[]> {
   const publishedAfter: string =
-    query.publishedAfter ||
+    q.publishedAfter ||
     get_time2({
-      format: "YYYY-MM-DDT00:00:00",
-      timezone: "Asia/Tokyo",
+      format: "YYYY-MM-DDTHH:00:00",
+      hour_ago: q.hour_ago,
     });
   const publishedBefore: string =
-    query.publishedBefore ||
-    get_time2({
-      format: "YYYY-MM-DDT23:59:59",
-      timezone: "Asia/Tokyo",
-    });
+    q.publishedBefore ||
+    get_time2();
   console.log(`探索期間 ${publishedAfter} >--< ${publishedBefore}`);
 
   const service = google.youtube("v3");
 
   const all_items: youtube_v3.Schema$SearchResult[] = [];
   // 関連性の高いデータだけ取得するため、1ページのみのデータを取得
+  const res = await service.search.list({
+    part: ["id"],
+    maxResults: 50,
+    publishedAfter,
+    publishedBefore,
+    q: "にじさんじ|vtuber + 歌って|cover|歌",
+    key: process.env.YOUTUBE_DATA_API_KEY,
+  }).catch(e => {
+    console.error("youtube search error!");
+    throw e;
+  });
+  /*
   for await (const duration of ["short", "medium"]) {
     const res = await service.search.list({
       part: ["id"],
@@ -46,10 +50,18 @@ export default async function (q: Query): Promise<string[]> {
   }
   
   const all_videoId = all_items.map(item => item.id?.videoId);
-  // null undefined を除外
-  const result = all_videoId.filter(videoId => typeof videoId == "string") as string[]
   // videoIdの重複を除外
+  const result = all_videoId.filter(videoId => typeof videoId == "string") as string[];
   return Array.from(new Set(result));
+  */
+ if (res.data.items) {
+   const all_videoId = res.data.items.map(item => item.id?.videoId);
+   // null undefined を除外
+   const result = all_videoId.filter(videoId => typeof videoId == "string") as string[];
+   return result;
+ } else {
+   throw "not found res.data.items";
+ }
 }
 
 /* youtube から返ってくるデータ
