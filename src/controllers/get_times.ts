@@ -18,16 +18,23 @@ export function get_time(TIME_ZONE: string, time_hour_diff: number): string {
   return formatted_time + "Z";
 }
 
-export function get_time2(q?: Query | null): string {
-  const query: Query = q || {};
-  const time: Date = new Date();
-  q?.hour_diff ? time.setHours(time.getHours() + q.hour_diff) : "";
-  const format: string = query.format || "YYYY-MM-DDTHH:mm:ss";
-  const timezone: string = query.timezone || "Asia/Tokyo";
+export function get_time2(q?: {
+  format?: string;
+  time?: string;
+  timezone?: string;
+  hour_ago?: number;
+  day_ago?: number;
+  addZ?: boolean;
+}): string {
+  const time: Date = q?.time ? new Date(q.time) : new Date();
+  q?.hour_ago ? time.setHours(time.getHours() - q.hour_ago) : "";
+  q?.day_ago ? time.setDate(time.getDate() - q.day_ago) : "";
+  const format: string = q?.format || "YYYY-MM-DDTHH:mm:ss";
+  const timezone: string = q?.timezone || "Asia/Tokyo";
   const formatted_time: string = formatToTimeZone(time, format, {
     timeZone: timezone,
   });
-  return formatted_time + "Z";
+  return q?.addZ == false ?  formatted_time : formatted_time + "Z";
 }
 
 // JST 2021-05-23T16:22:24Z

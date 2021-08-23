@@ -1,21 +1,33 @@
-import { get_time } from "../get_times";
+import { get_time, get_time2 } from "../get_times";
 import { google } from "googleapis";
 import get_vtuber from "../vtuber/get_vtuber";
 
 const part = ["contentDetails"];
 
 //指定した期間と指定したチャンネルの全ての動画URLを取得する
-export default async function (query: {
+export default async function (q: {
   all_channelId?: string[];
   publishedAfter?: string;
   publishedBefore?: string;
+  hour_ago?: number;
 }): Promise<string[]> {
   //引数datetime は ISO 8601（YYYY-MM-DDThh:mm:ss.sZ）形式データを使用する(UTC)
-  const publishedAfter: string = query.publishedAfter || get_time("UTC", -7);
-  const publishedBefore: string = query.publishedBefore || get_time("UTC", 0);
+  const publishedAfter: string =
+    q.publishedAfter ||
+    get_time2({
+      timezone: "UTC",
+      format: "YYYY-MM-DDTHH:00:00",
+      hour_ago: q.hour_ago,
+    });
+  const publishedBefore: string =
+    q.publishedBefore ||
+    get_time2({
+      timezone: "UTC",
+    });
 
   // all_channelIdが指定されなかった場合、全てのにじさんじライバーのidを取得
-  const all_channelId = query.all_channelId || (await get_vtuber()).map(vtuber => vtuber.id);
+  const all_channelId =
+    q.all_channelId || (await get_vtuber()).map((vtuber) => vtuber.id);
 
   console.log(`探索期間(UTC) ${publishedAfter} <--> ${publishedBefore}`);
 

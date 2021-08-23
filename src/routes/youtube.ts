@@ -17,11 +17,13 @@ router.get(
     const all_channelId = req.query.channel as string | undefined;
     const publishedAfter = req.query.publishedAfter as string | undefined;
     const publishedBefore = req.query.publishedBefore as string | undefined;
+    const hour_ago = Number(req.query.hour_ago) || undefined;
 
     const result_activities = await get_youtube_activities({
       all_channelId: all_channelId ? all_channelId.split(",") : undefined,
       publishedAfter: publishedAfter ? toUTC(publishedAfter) : undefined,
       publishedBefore: publishedBefore ? toUTC(publishedBefore) : undefined,
+      hour_ago,
     }).catch((e) => {
       console.log("youtube_activities error", e);
       res.status(500).json("youtube_activities error");
@@ -88,11 +90,13 @@ router.get(
   "/search",
   async function (req: express.Request, res: express.Response): Promise<void> {
     // datetime "1970-01-01T00:00:00Z"
+    const hour_ago = Number(req.query.hour_ago) || undefined;
     const result_search = await get_youtube_search({
       publishedAfter: req.query.publishedAfter as string | undefined,
       publishedBefore: req.query.publishedBefore as string | undefined,
+      hour_ago,
     }).catch((e) => {
-      console.log("youtube_search error");
+      console.error("youtube_search error");
       res.status(500).json({
         error: "youtube_search error",
       });
@@ -108,10 +112,10 @@ router.put(
   async function (req: express.Request, res: express.Response): Promise<void> {
     const startAtAfter =
       (req.query.startAtAfter as string) ||
-      get_time2({ day_diff: -7, format: "YYYY-MM-DDT00:00:00" });
+      get_time2({ day_ago: 7, format: "YYYY-MM-DDT00:00:00" });
     const startAtBefore =
       (req.query.startAtBefore as string) ||
-      get_time2({ day_diff: -1, format: "YYYY-MM-DDT23:59:59" });
+      get_time2({ day_ago: 1, format: "YYYY-MM-DDT23:59:59" });
     const result_get_video = await get_video({
       songConfirm: true,
       startAtAfter,
