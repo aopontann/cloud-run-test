@@ -39,6 +39,16 @@ async function main() {
   }
   
   // 動画データ
+  await add_video({
+    all_videoInfo: sample_videoList.songConfirm,
+    songConfirm: true,
+  });
+  await add_video({
+    all_videoInfo: sample_videoList.unsongConfirm,
+    songConfirm: false,
+  });
+
+  /*
   let cnt = 1;
   for await (const videoInfo of sample_videoList.result) {
     console.log(
@@ -93,6 +103,7 @@ async function main() {
         throw e;
       });
   }
+  */
   
   // タグデータ
   for await (const saveTags of sample_tags){
