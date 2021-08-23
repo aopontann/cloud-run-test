@@ -34,13 +34,15 @@ router.get("/", async (req: express.Request, res: express.Response) => {
 });
 
 router.post("/", async (req: express.Request, res: express.Response) => {
-  const video_tags = req.body as {
-    videoId: string;
-    tags: {
-      name: string;
-      type: string | undefined;
-    }[];
-  } | undefined;
+  const video_tags = req.body as
+    | {
+        videoId: string;
+        tags: {
+          name: string;
+          type: string | undefined;
+        }[];
+      }
+    | undefined;
 
   video_tags
     ? await add_tag(video_tags).catch((e) => {
@@ -51,30 +53,27 @@ router.post("/", async (req: express.Request, res: express.Response) => {
         throw e;
       })
     : "";
- 
+
   res.status(201).json("success");
+});
 
-  /*
-  const youtube_video = req.body.youtube_video as
-    | youtube_v3.Schema$Video[]
-    | undefined;
-  const result_search = youtube_video
-    ? await search_vtuberName(youtube_video)
-    : null;
-  */
-  // console.log("video_tags", video_tags);
+router.post("/youtube", async (req: express.Request, res: express.Response) => {
+  const youtube_video = req.body as youtube_v3.Schema$Video[];
 
-  /*
-  result_search
-    ? await add_tag(result_search).catch((e) => {
-        console.error("add_tag error");
-        res.status(500).json({
-          error: "add_tag error",
-        });
-        throw e;
-      })
-    : "";
-  */
+  const result_search = await search_vtuberName(youtube_video);
+  
+  for await (const tag of result_search) {
+    await add_tag(tag).catch((e) => {
+      console.error("add_tag error");
+      res.status(500).json({
+        error: "add_tag error",
+      });
+      throw e;
+    });
+  }
+  
+
+  res.status(201).json(result_search);
 });
 
 router.delete("/", async (req: express.Request, res: express.Response) => {

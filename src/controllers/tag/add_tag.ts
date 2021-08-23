@@ -5,7 +5,7 @@ export default async function (query: {
   videoId: string;
   tags: {
     name: string;
-    type?: string;
+    type?: string | null;
   }[];
 }): Promise<void> {
 
@@ -15,9 +15,9 @@ export default async function (query: {
     where: { videoId: query.videoId },
   });
   const already_names = res.map((tag) => tag.name);
-
+  
   //
-  const save_names: { name: string; videoId: string; type?: string }[] = [];
+  const save_names: { name: string; videoId: string; type?: string | null }[] = [];
   query.tags.forEach((tag) =>
     already_names.includes(tag.name)
       ? ""
