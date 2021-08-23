@@ -5,6 +5,7 @@ import youtube_router from "./routes/youtube"
 import video_router from "./routes/videos"
 import vtuber_router from "./routes/vtuber"
 import tags_router from "./routes/tags"
+import twitter_router from "./routes/twitter"
 import cros from "cors"
 
 if (process.env.NODE_ENV === "development") {
@@ -27,6 +28,7 @@ app.use('/youtube', youtube_router);
 app.use('/videos', video_router);
 app.use('/vtuber', vtuber_router);
 app.use('/tags', tags_router);
+app.use('/twitter', twitter_router);
 
 //サーバ起動
 app.listen(port);
