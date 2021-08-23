@@ -5,6 +5,8 @@ import update_video from "../controllers/video/update_video";
 import delete_video from "../controllers/video/delete_video";
 import update_statistics from "../controllers/update_statistics";
 import get_youtube_videos from "../controllers/youtube/get_youtube_videos";
+import search_vtuberName from "../controllers/tag/search_vtuberName";
+import add_tag from "../controllers/tag/add_tag";
 
 const router = express.Router();
 
@@ -64,6 +66,13 @@ router.post("/", async function (req: express.Request, res: express.Response) {
     });
     throw e;
   });
+  const result_search_name = await search_vtuberName(req.body.songConfirm || req.body.result || []);
+  for await (const name of result_search_name) {
+    await add_tag(name).catch(e => {
+      console.error("add tags error:", e);
+      throw e;
+    })
+  }
 
   res.status(201).json("success");
 });
