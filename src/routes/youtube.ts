@@ -107,6 +107,9 @@ router.get(
   }
 );
 
+// 本番環境上でtokenをどこに保存すればいいか分からない
+// 現時点では、ローカルのみで実行できる
+/*
 router.put(
   "/playlistItems/week",
   async function (req: express.Request, res: express.Response): Promise<void> {
@@ -158,6 +161,7 @@ router.put(
     });
   }
 );
+*/
 
 //routerをモジュールとして扱う準備
 export = router;
