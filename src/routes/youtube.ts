@@ -26,7 +26,7 @@ router.get(
       hour_ago,
     }).catch((e) => {
       console.log("youtube_activities error", e);
-      res.status(500).json("youtube_activities error");
+      res.status(500).json({error: "youtube_activities error"});
     });
     //console.log(result_activities);
 
@@ -48,7 +48,7 @@ router.get(
     const songcheck = req.query.select === "true" ? true : false;
 
     if (songcheck && !part.includes("snippet")) {
-      res.status(500).json({
+      res.status(400).json({
         error: "select するには snippet が必要です",
       });
       return;
@@ -122,7 +122,7 @@ router.put(
       startAtBefore,
       order: "startTime",
     }).catch(e => {
-      res.status(500).json("error");
+      res.status(500).json({error: "error"});
       throw e;
     });
     const res_get_videoId = result_get_video.map((video) => video.id);
@@ -135,11 +135,11 @@ router.put(
       videoId: res_get_videoId,
       title: `にじさんじ 歌動画リスト (${sixDayAgo} 〜 ${today})`,
     }).catch(e => {
-      res.status(500).json("error");
+      res.status(500).json({error: "error"});
       throw e;
     });
 
-    res.status(201).json("success");
+    res.json({result: "success"});
   }
 );
 
@@ -150,12 +150,19 @@ router.put(
       songConfirm: true,
       maxResults: 30,
       order: "random",
+    }).catch(e => {
+      res.status(500).json({error: "error"});
+      throw e;
     });
     const res_get_videoId = result_get_video.map((video) => video.id);
     await update_playlistItems({
-      playlistId: "PL_bYerfwKlGiQSckNm6G6D4e-UugXiZrG",
+      playlistId: "PL_bYerfwKlGiS7VkaBUmUBgoqGOGyt1TC",
       videoId: res_get_videoId,
+    }).catch(e => {
+      res.status(500).json({error: "error"});
+      throw e;
     });
+    res.json({result: "success"});
   }
 );
 
