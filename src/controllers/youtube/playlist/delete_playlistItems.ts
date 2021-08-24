@@ -1,5 +1,5 @@
 import { google, youtube_v3 } from "googleapis";
-import fs from "fs";
+import { getToken } from "../oauth2";
 
 export default async function (q: {
   videoId?: string[];
@@ -9,18 +9,7 @@ export default async function (q: {
   const delete_videoId = q.videoId || [];
   const delete_id = q.id || [];
   const playlistId = q.playlistId;
-  const CREDENTIALS_PATH = "./client_secret.json";
-  const TOKEN_PATH = "./token.json";
-  const credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH, "utf8"));
-  const token = JSON.parse(fs.readFileSync(TOKEN_PATH, "utf8"));
-
-  const { client_secret, client_id, redirect_uris } = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris[0]
-  );
-  oAuth2Client.setCredentials(token);
+  const oAuth2Client = getToken();
   const service = google.youtube("v3");
 
   const all_deleteId: string[] = [...delete_id];

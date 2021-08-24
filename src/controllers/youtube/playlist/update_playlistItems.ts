@@ -1,4 +1,5 @@
 import { google } from "googleapis";
+import { getToken } from "../oauth2";
 import fs from "fs";
 import { get_time2 } from "../../get_times";
 import get_video from "../../video/get_video";
@@ -13,18 +14,7 @@ export default async function (q: {
 }): Promise<void> {
   const playlistId = q.playlistId;
   const update_videoId = q.videoId;
-  const CREDENTIALS_PATH = "./client_secret.json";
-  const TOKEN_PATH = "./token.json";
-  const credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH, "utf8"));
-  const token = JSON.parse(fs.readFileSync(TOKEN_PATH, "utf8"));
-
-  const { client_secret, client_id, redirect_uris } = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris[0]
-  );
-  oAuth2Client.setCredentials(token);
+  const oAuth2Client = getToken();
   const service = google.youtube("v3");
 
   // プレイリストに保存されている動画データを取得 (プレイリスト動画データ)
