@@ -6,7 +6,6 @@ import get_video from "../../video/get_video";
 import insert_playlistItems from "./insert_playlistItems";
 import delete_playlistItems from "./delete_playlistItems";
 
-//指定した期間に公開された全ての動画URLを取得する
 export default async function (q: {
   playlistId: string;
   videoId: string[];
@@ -32,12 +31,12 @@ export default async function (q: {
     res.data?.items?.map(
       (item) => item.snippet?.resourceId?.videoId as string
     ) || [];
-
+  
   // 動画データに含まれていないプレイリスト動画データidを取得
   const delete_videoId = res_playlistItems_videoId.filter(
     (id) => !update_videoId.includes(id)
   );
-
+  
   // プレイリスト動画データに含まれていない動画データidを取得
   const insert_videoId = update_videoId.filter(
     (id) => !res_playlistItems_videoId.includes(id)

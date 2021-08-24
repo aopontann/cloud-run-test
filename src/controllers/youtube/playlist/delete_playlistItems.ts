@@ -14,10 +14,11 @@ export default async function (q: {
 
   const all_deleteId: string[] = [...delete_id];
 
-  if (delete_videoId) {
+  if (delete_videoId.length > 0) {
     const result_playlistItems = await service.playlistItems
       .list({
         part: ["id", "snippet"],
+        maxResults: 50,
         playlistId,
         auth: oAuth2Client,
       })
