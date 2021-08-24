@@ -1,59 +1,43 @@
 import { youtube_v3 } from "googleapis";
 import prisma from "../../client";
-
-interface ReturnType {
-  videoId: string;
-  tags: Tags[];
-}
+import get_tags from "./get_tags";
 
 interface Tags {
   name: string;
-  type: string | null;
+  type?: string | null;
 }
 
-export default async function (
-  query: youtube_v3.Schema$Video[]
-): Promise<
-  { videoId: string;
+export default async function (query: youtube_v3.Schema$Video[]): Promise<
+  {
+    videoId: string;
     tags: {
-      name: string; 
-      type: string | null
-    }[]
+      name: string;
+      type?: string | null;
+    }[];
   }[]
 > {
-  //const all_videoInfo = query.all_videoInfo;
-  const all_vtuberInfo = await prisma.vtuber.findMany({
-    where: {
-      NOT: {
-        name: "にじさんじ",
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-    },
-  });
-  const search_vtuberName: string[] = all_vtuberInfo.map(
-    (vtuber) => vtuber.name
-  );
-  // console.log("search_vtuberName", search_vtuberName);
-  //const all_search_vtuber = result_findMany.map(vtuber => vtuber.name);
-  //let result_search_vtuber = [];
+ 
+  const result_get_tags = await get_tags();
+  const return_data: {
+    videoId: string;
+    tags: Tags[];
+  }[] = [];
 
-  const return_data: ReturnType[] = [];
   query.forEach((videoInfo: youtube_v3.Schema$Video) => {
     if (videoInfo.id) {
       const tags: Tags[] = [];
-      search_vtuberName.forEach((vtuberName: string) => {
-        const reg = new RegExp(vtuberName);
-        const snippet = videoInfo.snippet;
-        if (snippet?.title?.match(reg)) {
-          tags.push({
-            name: vtuberName,
-            type: null,
-          });
-        }
-      });
+      result_get_tags
+        .map((tag) => tag.name)
+        .forEach((vtuberName: string) => {
+          const reg = new RegExp(vtuberName);
+          const snippet = videoInfo.snippet;
+          if (snippet?.title?.match(reg) || snippet?.description?.match(reg)) {
+            tags.push({
+              name: vtuberName,
+              type: null,
+            });
+          }
+        });
       return_data.push({
         videoId: videoInfo.id,
         tags,

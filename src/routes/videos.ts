@@ -5,13 +5,11 @@ import update_video from "../controllers/video/update_video";
 import delete_video from "../controllers/video/delete_video";
 import update_statistics from "../controllers/update_statistics";
 import get_youtube_videos from "../controllers/youtube/get_youtube_videos";
-
 import search_vtuberName from "../controllers/tag/search_vtuberName";
 import add_tag from "../controllers/tag/add_tag";
 
 const router = express.Router();
 
-// http://localhost:8080/DB/videos?
 router.get("/", async function (req: express.Request, res: express.Response) {
   const videoId = req.query.id as string | undefined;
   const songConfirm = req.query.songConfirm as string | undefined;
@@ -19,8 +17,10 @@ router.get("/", async function (req: express.Request, res: express.Response) {
   const startAtBefore = req.query.startAtBefore as string | undefined;
   const maxResults = Number(req.query.maxResults) || undefined;
   const page = Number(req.query.page) || undefined;
+  const order = req.query.order as string | undefined;
+  const tags = req.query.tags as string | undefined;
 
-  const tags = req.query.tags as string[] | undefined;
+  console.log("get_videos query", req.query);
 
   const result = await get_video({
     videoId: videoId ? videoId.split(",") : undefined,
@@ -32,7 +32,8 @@ router.get("/", async function (req: express.Request, res: express.Response) {
     startAtBefore,
     maxResults,
     page,
-    tags,
+    tags: tags ? tags.split(",") : undefined,
+    order,
   }).catch((e) => {
     console.log("get_video error", e);
     res.status(500).json({
@@ -40,14 +41,14 @@ router.get("/", async function (req: express.Request, res: express.Response) {
     });
     throw e;
   });
-  console.log(result);
 
-  res.status(200).json(result);
+  res.status(200).json({
+    videoId_str: result.map(video => video.id).join(","),
+    result
+  });
 });
 
-//http://localhost:3002/DB/videos
 router.post("/", async function (req: express.Request, res: express.Response) {
-  // 取得した動画情報をDBに保存する
   await add_video({
     all_videoInfo: req.body.songConfirm || req.body.result || [],
     songConfirm: true,
@@ -65,15 +66,19 @@ router.post("/", async function (req: express.Request, res: express.Response) {
     });
     throw e;
   });
-  /*
-  const result_search = await search_vtuberName(req.body.songConfirm || req.body.result);
-  add_tag(result_search);
-  */
+  const result_search_name = await search_vtuberName(req.body.songConfirm || req.body.result || []);
+  for await (const name of result_search_name) {
+    await add_tag(name).catch(e => {
+      console.error("add tags error:", e);
+      throw e;
+    })
+  }
+
   res.status(201).json("success");
 });
 
 router.put("/", async function (req: express.Request, res: express.Response) {
-  //console.log("update body", req.body);
+  console.log("update_videos body", req.body);
   const result = await update_video({
     videoId: req.body.videoId || "",
     songConfirm: req.body.songConfirm,
@@ -116,7 +121,6 @@ router.put("/viewCount", async function (req, res) {
   res.status(201).json(result);
 });
 
-// http://localhost:8080/DB/videos?id="videoId, ..."
 router.delete(
   "/",
   async function (req: express.Request, res: express.Response) {
