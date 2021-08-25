@@ -55,6 +55,5 @@ model Tags {
   id          Int     @id @default(autoincrement())
   videoId     String  @db.VarChar(20)
   name        String  @db.VarChar(255)
-  type        String? @db.VarChar(255)
   videos      Videos  @relation(fields: [videoId], references: [id])
 }

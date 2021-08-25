@@ -58,7 +58,6 @@ export default async function (query: GetVideo): Promise<(Videos & Include)[]> {
         },
         select: {
           name: true,
-          type: true,
         },
       },
     },

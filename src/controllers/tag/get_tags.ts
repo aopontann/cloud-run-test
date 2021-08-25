@@ -1,4 +1,3 @@
-import { Tags } from "@prisma/client";
 import prisma from "../../client";
 
 export default async function (query?: { names?: string[] }) {
@@ -12,7 +11,7 @@ export default async function (query?: { names?: string[] }) {
         { name: { notIn: NG_tags } },
       ],
     },
-    by: ["name", "type"],
+    by: ["name"],
     _count: {
       _all: true,
     },

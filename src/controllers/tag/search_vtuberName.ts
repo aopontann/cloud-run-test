@@ -1,46 +1,42 @@
 import { youtube_v3 } from "googleapis";
 import prisma from "../../client";
-import get_tags from "./get_tags";
 
-interface Tags {
-  name: string;
-  type?: string | null;
-}
+export default async function (
+  query: youtube_v3.Schema$Video[]
+): Promise<{ videoId: string; tagNames: string[] }[]> {
+  //const all_videoInfo = query.all_videoInfo;
+  const all_vtuberInfo = await prisma.vtuber.findMany({
+    where: {
+      NOT: {
+        name: "にじさんじ",
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+  const search_vtuberName: string[] = all_vtuberInfo.map(
+    (vtuber) => vtuber.name
+  );
+  // console.log("search_vtuberName", search_vtuberName);
+  //const all_search_vtuber = result_findMany.map(vtuber => vtuber.name);
+  //let result_search_vtuber = [];
 
-export default async function (query: youtube_v3.Schema$Video[]): Promise<
-  {
-    videoId: string;
-    tags: {
-      name: string;
-      type?: string | null;
-    }[];
-  }[]
-> {
- 
-  const result_get_tags = await get_tags();
-  const return_data: {
-    videoId: string;
-    tags: Tags[];
-  }[] = [];
-
+  const return_data: { videoId: string; tagNames: string[] }[] = [];
   query.forEach((videoInfo: youtube_v3.Schema$Video) => {
     if (videoInfo.id) {
-      const tags: Tags[] = [];
-      result_get_tags
-        .map((tag) => tag.name)
-        .forEach((vtuberName: string) => {
-          const reg = new RegExp(vtuberName);
-          const snippet = videoInfo.snippet;
-          if (snippet?.title?.match(reg) || snippet?.description?.match(reg)) {
-            tags.push({
-              name: vtuberName,
-              type: null,
-            });
-          }
-        });
+      const tagNames: string[] = [];
+      search_vtuberName.forEach((vtuberName: string) => {
+        const reg = new RegExp(vtuberName);
+        const snippet = videoInfo.snippet;
+        if (snippet?.title?.match(reg) || snippet?.description?.match(reg)) {
+          tagNames.push(vtuberName);
+        }
+      });
       return_data.push({
         videoId: videoInfo.id,
-        tags,
+        tagNames,
       });
     }
   });
