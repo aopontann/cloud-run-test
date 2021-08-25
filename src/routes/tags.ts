@@ -40,7 +40,7 @@ router.post("/", async (req: express.Request, res: express.Response) => {
         throw e;
       })
     : res.status(400).json("not exist body");
- 
+
   res.status(201).json("success");
 });
 
