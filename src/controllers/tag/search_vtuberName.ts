@@ -1,26 +1,9 @@
 import { youtube_v3 } from "googleapis";
 import prisma from "../../client";
 
-interface ReturnType {
-  videoId: string;
-  tags: Tags[];
-}
-
-interface Tags {
-  name: string;
-  type: string | null;
-}
-
 export default async function (
   query: youtube_v3.Schema$Video[]
-): Promise<
-  { videoId: string;
-    tags: {
-      name: string; 
-      type: string | null
-    }[]
-  }[]
-> {
+): Promise<{ videoId: string; tagNames: string[] }[]> {
   //const all_videoInfo = query.all_videoInfo;
   const all_vtuberInfo = await prisma.vtuber.findMany({
     where: {
@@ -40,23 +23,20 @@ export default async function (
   //const all_search_vtuber = result_findMany.map(vtuber => vtuber.name);
   //let result_search_vtuber = [];
 
-  const return_data: ReturnType[] = [];
+  const return_data: { videoId: string; tagNames: string[] }[] = [];
   query.forEach((videoInfo: youtube_v3.Schema$Video) => {
     if (videoInfo.id) {
-      const tags: Tags[] = [];
+      const tagNames: string[] = [];
       search_vtuberName.forEach((vtuberName: string) => {
         const reg = new RegExp(vtuberName);
         const snippet = videoInfo.snippet;
-        if (snippet?.title?.match(reg)) {
-          tags.push({
-            name: vtuberName,
-            type: null,
-          });
+        if (snippet?.title?.match(reg) || snippet?.description?.match(reg)) {
+          tagNames.push(vtuberName);
         }
       });
       return_data.push({
         videoId: videoInfo.id,
-        tags,
+        tagNames,
       });
     }
   });

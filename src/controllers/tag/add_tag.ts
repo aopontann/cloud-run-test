@@ -1,13 +1,6 @@
 import prisma from "../../client";
-import delete_tag from "./delete_tag";
 
-export default async function (query: {
-  videoId: string;
-  tags: {
-    name: string;
-    type?: string;
-  }[];
-}): Promise<void> {
+export default async function (query: { videoId: string; tagNames: string[] }): Promise<void> {
 
   console.log("add_tag videoId=", query.videoId);
   // 既に保存されているタグを取得
@@ -18,10 +11,10 @@ export default async function (query: {
 
   //
   const save_names: { name: string; videoId: string; type?: string }[] = [];
-  query.tags.forEach((tag) =>
-    already_names.includes(tag.name)
+  query.tagNames.forEach((name) =>
+    already_names.includes(name)
       ? ""
-      : save_names.push({ ...tag, videoId: query.videoId })
+      : save_names.push({ name, videoId: query.videoId })
   );
 
   await prisma.tags.createMany({
