@@ -2,17 +2,17 @@ import { Videos } from "@prisma/client";
 import prisma from "../../client";
 
 export default async function (body: {
-  videoId: string;
+  id: string;
   songConfirm?: boolean;
   title?: string;
   description?: string;
 }): Promise<Videos> {
-  if (!body || !body.videoId) {
+  if (!body || !body.id) {
     console.log("update_video body error");
     throw "update_video body error";
   }
-  const videoId = body.videoId;
-  const songConfirm = body.songConfirm || null;
+  const videoId = body.id;
+  const songConfirm = body.songConfirm;
 
   const updateSongConfirm = await prisma.videos
     .update({
@@ -20,7 +20,7 @@ export default async function (body: {
         id: videoId,
       },
       data: {
-        songConfirm: songConfirm != null ? songConfirm : undefined,
+        songConfirm,
         title: body.title,
         description: body.description,
       },
