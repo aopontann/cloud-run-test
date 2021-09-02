@@ -69,8 +69,9 @@ router.delete("/", async (req: express.Request, res: express.Response) => {
     : undefined; //errorになるかも
   const videoId = req.query.videoId as string | undefined;
 
-  if (typeof tagName == undefined && typeof videoId == undefined) {
-    res.status(500).json("error");
+  if (typeof tagName == "undefined" && typeof videoId == "undefined") {
+    res.status(400).json("error");
+    throw "not exist query";
   }
 
   await delete_tag({ names: tagName, videoId: videoId }).catch((e) => {
@@ -80,6 +81,7 @@ router.delete("/", async (req: express.Request, res: express.Response) => {
     });
     throw e;
   });
+  
   res.status(201).json("success");
 });
 
