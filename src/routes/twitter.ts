@@ -7,7 +7,7 @@ import { type } from "os";
 const router = express.Router();
 
 router.post(
-  "/week-video",
+  "/today-video",
   async (req: express.Request, res: express.Response) => {
     
     const startTimeAfter = get_time2({ format: "YYYY-MM-DDT00:00:00" });
