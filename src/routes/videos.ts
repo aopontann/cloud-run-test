@@ -66,6 +66,7 @@ router.post("/", async function (req: express.Request, res: express.Response) {
     });
     throw e;
   });
+
   const result_search_name = await search_vtuberName(req.body.songConfirm || req.body.result || []);
   for await (const name of result_search_name) {
     await add_tag(name).catch(e => {
@@ -80,7 +81,7 @@ router.post("/", async function (req: express.Request, res: express.Response) {
 router.put("/", async function (req: express.Request, res: express.Response) {
   console.log("update_videos body", req.body);
   const result = await update_video({
-    videoId: req.body.videoId || "",
+    id: req.body.id || "",
     songConfirm: req.body.songConfirm,
     title: req.body.title,
     description: req.body.description
@@ -131,6 +132,7 @@ router.delete(
       res.status(500).json({
         error: "delete_video error",
       });
+      throw e;
     });
     console.log("delete complete!");
     res.status(201).json("success");
