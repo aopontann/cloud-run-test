@@ -27,7 +27,7 @@ export default async function (q: {
     maxResults: 50,
     publishedAfter,
     publishedBefore,
-    q: "にじさんじ|vtuber + 歌って|cover|歌",
+    q: "にじさんじ + 歌って|cover|歌",
     key: process.env.YOUTUBE_DATA_API_KEY,
   }).catch(e => {
     console.error("youtube search error!");

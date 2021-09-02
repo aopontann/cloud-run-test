@@ -2,6 +2,7 @@ import prisma from "../../client";
 
 export default async function (all_delete_id: string[]): Promise<void> {  
   for await (const deleteId of all_delete_id) {
+    console.log("id=", deleteId);
     const deleteStatistics = prisma.statistics.deleteMany({
       where: {
         id: deleteId,
