@@ -1,7 +1,7 @@
 import Twitter from "twitter";
 import { Status } from "twitter-d";
 import { Videos } from ".prisma/client";
-
+import { get_time2 } from "../get_times";
 export default async function (q: { video: Videos[] }) {
   const client = new Twitter({
     consumer_key: process.env.TWITTER_API_KEY || "",
@@ -17,15 +17,22 @@ export default async function (q: { video: Videos[] }) {
   console.log("me", me);
   */
   // const videoId = "OroZzY9nRQk"; //t5nYpkLq0ZE
-  const hashTag = "#にじさんじ #歌ってみた #にじ歌";
+  const hashTag = "#にじさんじ #歌ってみた";
   let reply_id = "";
   let cnt = 1;
   console.log("----- video tweet -----");
   for await (const video of q.video) {
+    const startTime = get_time2({
+      time: video.startTime.toLocaleString(),
+      format: "MM/DD HH:mm 公開",
+      addZ: false,
+      hour_ago: 9,
+    });
     const msg = `
-     [今日公開予定歌動画(${cnt++}/${q.video.length})]\n${video.title}\nhttps://youtu.be/${video.id}\n${hashTag} 
+     [${startTime}]\n${video.title}\n${hashTag}\nhttps://youtu.be/${video.id}
    `;
     console.log("videoId=", video.id);
+    console.log(msg);
     const res = <Status>(
       await client.post("statuses/update", {
         status: msg,
@@ -35,7 +42,8 @@ export default async function (q: { video: Videos[] }) {
     );
     reply_id = res.id_str
   }
-  console.log("----- complete -----");1
+  console.log("----- complete -----");
+  1;
 }
 
 /*
