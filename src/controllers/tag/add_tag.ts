@@ -2,8 +2,9 @@ import prisma from "../../client";
 
 export default async function (query: { videoId: string; tagNames: string[] }): Promise<void> {
 
-
-  console.log("add_tag videoId=", query.videoId);
+  console.log("----- start add_tag -----");
+  console.log("videoId =", query.videoId);
+  console.log("names =", query.tagNames);
   // 既に保存されているタグを取得
   const res = await prisma.tags.findMany({
     where: { videoId: query.videoId },
@@ -21,4 +22,5 @@ export default async function (query: { videoId: string; tagNames: string[] }): 
   await prisma.tags.createMany({
     data: [...save_names],
   });
+  console.log("----- complete add_tag -----");
 }
