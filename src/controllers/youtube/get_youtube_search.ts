@@ -1,5 +1,5 @@
-import { google, youtube_v3 } from "googleapis";
-import { get_time2 } from "../get_times";
+import { google } from "googleapis";
+import { get_time } from "../get_times";
 
 //指定した期間と指定したチャンネルの全ての動画URLを取得する
 export default async function (q: {
@@ -7,61 +7,38 @@ export default async function (q: {
   publishedBefore?: string;
   hour_ago?: number;
 }): Promise<string[]> {
-  const publishedAfter: string =
-    q.publishedAfter ||
-    get_time2({
-      format: "YYYY-MM-DDTHH:00:00",
-      hour_ago: q.hour_ago,
-    });
-  const publishedBefore: string =
-    q.publishedBefore ||
-    get_time2();
+  // q.published YYYY-MM-DDTHH:mm:ssZ   get_time YYYY-MM-DDTHH:mm:ss+09:00 //
+  const publishedAfter: string = q.publishedAfter || get_time({ hour_ago: q.hour_ago, format: "YYYY-MM-DDTHH:00:00Z"});
+  const publishedBefore: string = q.publishedBefore || get_time();
   console.log(`探索期間 ${publishedAfter} >--< ${publishedBefore}`);
 
   const service = google.youtube("v3");
 
-  const all_items: youtube_v3.Schema$SearchResult[] = [];
   // 関連性の高いデータだけ取得するため、1ページのみのデータを取得
-  const res = await service.search.list({
-    part: ["id"],
-    maxResults: 50,
-    publishedAfter,
-    publishedBefore,
-    q: "にじさんじ + 歌って|cover|歌",
-    key: process.env.YOUTUBE_DATA_API_KEY,
-  }).catch(e => {
-    console.error("youtube search error!");
-    throw e;
-  });
-  /*
-  for await (const duration of ["short", "medium"]) {
-    const res = await service.search.list({
+  const res = await service.search
+    .list({
       part: ["id"],
       maxResults: 50,
       publishedAfter,
       publishedBefore,
-      q: "にじさんじ + 歌って|cover",
-      type: ["video"],
-      videoDuration: duration,
+      q: "にじさんじ + 歌って|cover|歌",
       key: process.env.YOUTUBE_DATA_API_KEY,
+    })
+    .catch((e) => {
+      console.error("youtube search error!");
+      throw e;
     });
-    const items = res?.data?.items || [];
-    all_items.push(...items);
-  }
   
-  const all_videoId = all_items.map(item => item.id?.videoId);
-  // videoIdの重複を除外
-  const result = all_videoId.filter(videoId => typeof videoId == "string") as string[];
-  return Array.from(new Set(result));
-  */
- if (res.data.items) {
-   const all_videoId = res.data.items.map(item => item.id?.videoId);
-   // null undefined を除外
-   const result = all_videoId.filter(videoId => typeof videoId == "string") as string[];
-   return result;
- } else {
-   throw "not found res.data.items";
- }
+  if (res.data.items) {
+    const all_videoId = res.data.items.map((item) => item.id?.videoId);
+    // null undefined を除外
+    const result = all_videoId.filter(
+      (videoId) => typeof videoId == "string"
+    ) as string[];
+    return result;
+  } else {
+    throw "not found res.data.items";
+  }
 }
 
 /* youtube から返ってくるデータ
