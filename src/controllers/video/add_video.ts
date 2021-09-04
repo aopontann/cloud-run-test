@@ -1,6 +1,6 @@
 import { youtube_v3 } from "googleapis";
 import prisma from "../../client";
-import { get_time2, toJST } from "../get_times";
+import { get_time, get_time2, toJST } from "../get_times";
 
 interface YoutubeVideo {
   kind?: string;
@@ -35,6 +35,7 @@ export default async function (query: Query): Promise<void> {
       videoInfo.liveStreamingDetails?.actualStartTime ||
       videoInfo.snippet.publishedAt ||
       "2000-01-01T00:00:00";
+    const createTime = get_time({format: "YYYY-MM-DDTHH:mm:ss"}) + "Z";
 
     await prisma.videos
       .upsert({
@@ -45,7 +46,7 @@ export default async function (query: Query): Promise<void> {
           description: videoInfo.snippet?.description || "",
           songConfirm: songConfirm,
           startTime: toJST(startTime),
-          createdAt: get_time2({}),
+          createdAt: createTime,
           thumbnail: {
             create: {
               defaultUrl: thumb?.default?.url || null,
@@ -57,8 +58,8 @@ export default async function (query: Query): Promise<void> {
           },
           statistic: {
             create: {
-              createdAt: get_time2({}),
-              updatedAt: get_time2({}),
+              createdAt: createTime,
+              updatedAt: createTime,
               viewCount: count?.viewCount ? Number(count.viewCount) : null,
               likeCount: count?.likeCount ? Number(count.likeCount) : null,
               dislikeCount: count?.dislikeCount
