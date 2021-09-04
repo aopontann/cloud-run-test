@@ -90,6 +90,7 @@ router.get(
   "/search",
   async function (req: express.Request, res: express.Response): Promise<void> {
     // datetime "1970-01-01T00:00:00Z"
+    console.log("youtube search query", req.query);
     const hour_ago = Number(req.query.hour_ago) || undefined;
     const result_search = await get_youtube_search({
       publishedAfter: req.query.publishedAfter as string | undefined,
@@ -103,7 +104,10 @@ router.get(
       throw e;
     });
     //console.log(result_search);
-    res.status(200).json(result_search);
+    res.status(200).json({
+      videoId_str: result_search.join(","),
+      videoId: result_search
+    });
   }
 );
 
