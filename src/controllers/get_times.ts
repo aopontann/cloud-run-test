@@ -1,7 +1,8 @@
 // タイムゾーンの時間を取得
 import { formatToTimeZone } from "date-fns-timezone";
 
-const FORMAT = "YYYY-MM-DDTHH:mm:ss";
+const FORMAT = "YYYY-MM-DDTHH:mm:ss"; 
+// timezone: "Asia/Tokyo" || "UTC"
 
 interface Query {
   format?: string;
@@ -9,13 +10,15 @@ interface Query {
   hour_diff?: number;
 }
 
-export function get_time(TIME_ZONE: string, time_hour_diff: number): string {
-  const time = new Date();
-  time.setHours(time.getHours() + time_hour_diff);
-  const formatted_time = formatToTimeZone(time, FORMAT, {
-    timeZone: TIME_ZONE,
+export function get_time(q?: {timezone?: string, time?: string, hour_ago?: number, format?: string}): string {
+  const time = q?.time ? new Date(q.time) : new Date()
+  q?.hour_ago ? time.setHours(time.getHours() - q?.hour_ago) : ""
+  const format: string = q?.format || "YYYY-MM-DDTHH:mm:ssZ";
+  const timezone: string = q?.timezone || "Asia/Tokyo";
+  const formatted_time: string = formatToTimeZone(time, format, {
+    timeZone: timezone,
   });
-  return formatted_time + "Z";
+  return formatted_time;
 }
 
 export function get_time2(q?: {
@@ -51,8 +54,9 @@ export function toUTC(JST: string): string {
 export function toJST(UTC: string): string {
   const time = Date.parse(UTC);
   const date = new Date(time);
+  const format = "YYYY-MM-DDTHH:mm:ss.sss";
   //date.setHours(date.getHours() + 9);
-  const formatted_time = formatToTimeZone(date, FORMAT, {
+  const formatted_time = formatToTimeZone(date, format, {
     timeZone: "Asia/Tokyo",
   });
   return formatted_time + "Z";
