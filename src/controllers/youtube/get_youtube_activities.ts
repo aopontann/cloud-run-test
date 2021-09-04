@@ -1,4 +1,4 @@
-import { get_time, get_time2 } from "../get_times";
+import { get_time } from "../get_times";
 import { google } from "googleapis";
 import get_vtuber from "../vtuber/get_vtuber";
 
@@ -11,19 +11,8 @@ export default async function (q: {
   publishedBefore?: string;
   hour_ago?: number;
 }): Promise<string[]> {
-  //引数datetime は ISO 8601（YYYY-MM-DDThh:mm:ss.sZ）形式データを使用する(UTC)
-  const publishedAfter: string =
-    q.publishedAfter ||
-    get_time2({
-      timezone: "UTC",
-      format: "YYYY-MM-DDTHH:00:00",
-      hour_ago: q.hour_ago,
-    });
-  const publishedBefore: string =
-    q.publishedBefore ||
-    get_time2({
-      timezone: "UTC",
-    });
+  const publishedAfter: string = q.publishedAfter || get_time({ hour_ago: q.hour_ago, format: "YYYY-MM-DDTHH:00:00Z"});
+  const publishedBefore: string = q.publishedBefore || get_time();
 
   // all_channelIdが指定されなかった場合、全てのにじさんじライバーのidを取得
   const all_channelId =
