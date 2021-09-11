@@ -1,9 +1,9 @@
 import express from "express";
 import { youtube_v3 } from "googleapis";
-import search_vtuberName from "../controllers/tag/search_vtuberName";
-import get_tags from "../controllers/tag/get_tags";
-import add_tag from "../controllers/tag/add_tag";
-import delete_tag from "../controllers/tag/delete_tag";
+import search_vtuberName from "../services/tag/search_vtuberName";
+import get_tags from "../services/tag/get_tags";
+import add_tag from "../services/tag/add_tag";
+import delete_tag from "../services/tag/delete_tag";
 
 const router = express.Router();
 

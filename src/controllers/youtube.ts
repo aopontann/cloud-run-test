@@ -1,14 +1,14 @@
 import express from "express";
 const router = express.Router();
 
-import get_youtube_activities from "../controllers/youtube/get_youtube_activities";
-import get_youtube_videos from "../controllers/youtube/get_youtube_videos";
-import get_youtube_search from "../controllers/youtube/get_youtube_search";
-import select_youtube_videos from "../controllers/youtube/select_youtube_videos";
-import get_video from "../controllers/video/get_video";
-import { get_time2 } from "../controllers/get_times";
-import update_playlistItems from "../controllers/youtube/playlist/update_playlistItems";
-import { toUTC } from "../controllers/get_times";
+import get_youtube_activities from "../services/youtube/get_youtube_activities";
+import get_youtube_videos from "../services/youtube/get_youtube_videos";
+import get_youtube_search from "../services/youtube/get_youtube_search";
+import select_youtube_videos from "../services/youtube/select_youtube_videos";
+import get_video from "../services/video/get_video";
+import { get_time } from "../services/get_times";
+import update_playlistItems from "../services/youtube/playlist/update_playlistItems";
+import { toUTC } from "../services/get_times";
 
 router.get(
   "/activities",
@@ -116,10 +116,10 @@ router.put(
   async function (req: express.Request, res: express.Response): Promise<void> {
     const startAtAfter =
       (req.query.startAtAfter as string) ||
-      get_time2({ day_ago: 7, format: "YYYY-MM-DDT00:00:00" });
+      get_time({ day_ago: 7, format: "YYYY-MM-DDT00:00:00" }) + "Z";
     const startAtBefore =
       (req.query.startAtBefore as string) ||
-      get_time2({ day_ago: 1, format: "YYYY-MM-DDT23:59:59" });
+      get_time({ day_ago: 1, format: "YYYY-MM-DDT23:59:59" }) + "Z";
     const result_get_video = await get_video({
       songConfirm: true,
       startAtAfter,

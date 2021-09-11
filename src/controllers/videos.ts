@@ -1,12 +1,12 @@
 import express from "express";
-import get_video from "../controllers/video/get_video";
-import add_video from "../controllers/video/add_video";
-import update_video from "../controllers/video/update_video";
-import delete_video from "../controllers/video/delete_video";
-import update_statistics from "../controllers/update_statistics";
-import get_youtube_videos from "../controllers/youtube/get_youtube_videos";
-import search_vtuberName from "../controllers/tag/search_vtuberName";
-import add_tag from "../controllers/tag/add_tag";
+import get_video from "../services/video/get_video";
+import add_video from "../services/video/add_video";
+import update_video from "../services/video/update_video";
+import delete_video from "../services/video/delete_video";
+import update_statistics from "../services/video/update_statistics";
+import get_youtube_videos from "../services/youtube/get_youtube_videos";
+import search_vtuberName from "../services/tag/search_vtuberName";
+import add_tag from "../services/tag/add_tag";
 
 const router = express.Router();
 

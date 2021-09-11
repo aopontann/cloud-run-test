@@ -1,7 +1,7 @@
 import express from "express";
-import get_vtuber from "../controllers/vtuber/get_vtuber";
-import add_vtuber from "../controllers/vtuber/add_vtuber";
-import update_vtuber from "../controllers/vtuber/update_vtuber";
+import get_vtuber from "../services/vtuber/get_vtuber";
+import add_vtuber from "../services/vtuber/add_vtuber";
+import update_vtuber from "../services/vtuber/update_vtuber";
 
 const router = express.Router();
 

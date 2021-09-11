@@ -1,7 +1,7 @@
 import express from "express";
-import { get_time } from "../controllers/get_times";
-import get_video from "../controllers/video/get_video";
-import tweet_videoId from "../controllers/twitter/tweet_video";
+import { get_time } from "../services/get_times";
+import get_video from "../services/video/get_video";
+import tweet_videoId from "../services/twitter/tweet_video";
 import { type } from "os";
 
 const router = express.Router();
