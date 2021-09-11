@@ -1,9 +1,10 @@
 import { youtube_v3 } from "googleapis";
-import prisma from "../client";
-import { get_time2 } from "./get_times";
+import prisma from "../../lib/client";
+import { get_time } from "../get_times";
 
 export default async function (query: youtube_v3.Schema$Video[]): Promise<void> {
   console.log("update_viewCount");
+  const updateTime = get_time({format: "YYYY-MM-DDTHH:mm:ss"}) + "Z";
   let cnt = 1;
   for await (const video of query) {
     const count = video.statistics;
@@ -11,7 +12,7 @@ export default async function (query: youtube_v3.Schema$Video[]): Promise<void> 
     await prisma.statistics.update({
       where: { id: video.id || "error" },
       data: {
-        updatedAt: get_time2({}),
+        updatedAt: updateTime,
         viewCount: count?.viewCount ? Number(count.viewCount) : undefined,
         likeCount: count?.likeCount ? Number(count.likeCount) : undefined,
         dislikeCount: count?.dislikeCount ? Number(count.dislikeCount) : undefined,

@@ -3,7 +3,9 @@ var readline = require("readline");
 var { google } = require("googleapis");
 var OAuth2 = google.auth.OAuth2;
 
-require("dotenv").config();
+if (process.env.NODE_ENV === "development") {
+  require("dotenv").config();
+}
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/youtube-nodejs-quickstart.json

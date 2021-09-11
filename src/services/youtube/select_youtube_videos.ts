@@ -1,16 +1,6 @@
 import { youtube_v3 } from "googleapis";
 import get_vtuber from "../vtuber/get_vtuber";
 
-interface YoutubeVideo {
-  kind?: string;
-  etag?: string;
-  id: string;
-  snippet: youtube_v3.Schema$VideoSnippet;
-  contentDetails?: youtube_v3.Schema$VideoContentDetails;
-  statistics?: youtube_v3.Schema$VideoStatistics;
-  liveStreamingDetails?: youtube_v3.Schema$VideoLiveStreamingDetails;
-}
-
 //getVideoInfoが取得した動画詳細データを使って、動画が歌ってみた系なのか判別する
 // all_videoInfo はどのようなデータなのか一番下に記載
 export default async function (all_videoInfo: youtube_v3.Schema$Video[]) {

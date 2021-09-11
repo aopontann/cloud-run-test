@@ -1,7 +1,7 @@
 import express from "express";
-import { get_time2 } from "../controllers/get_times";
-import get_video from "../controllers/video/get_video";
-import tweet_videoId from "../controllers/twitter/tweet_video";
+import { get_time } from "../services/get_times";
+import get_video from "../services/video/get_video";
+import tweet_videoId from "../services/twitter/tweet_video";
 import { type } from "os";
 
 const router = express.Router();
@@ -10,8 +10,8 @@ router.post(
   "/today-video",
   async (req: express.Request, res: express.Response) => {
     
-    const startTimeAfter = get_time2({ format: "YYYY-MM-DDT00:00:00" });
-    const startTimeBefore = get_time2({ format: "YYYY-MM-DDT23:59:59" });
+    const startTimeAfter = get_time({ format: "YYYY-MM-DDT00:00:00" }) + "Z";
+    const startTimeBefore = get_time({ format: "YYYY-MM-DDT23:59:59" }) + "Z";
     const res_video = await get_video({
       songConfirm: true,
       startAtAfter: startTimeAfter,

@@ -1,4 +1,4 @@
-import prisma from "../../client";
+import prisma from "../../lib/client";
 
 // namesだけの場合、指定したタグを消す
 // videoIdも指定した場合、指定した動画のタグだけ消す

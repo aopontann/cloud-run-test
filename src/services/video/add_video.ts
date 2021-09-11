@@ -1,6 +1,6 @@
 import { youtube_v3 } from "googleapis";
-import prisma from "../../client";
-import { get_time, get_time2, toJST } from "../get_times";
+import prisma from "../../lib/client";
+import { get_time, toJST } from "../get_times";
 
 interface YoutubeVideo {
   kind?: string;

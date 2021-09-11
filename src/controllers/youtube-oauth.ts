@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { getAuthUrl, storeNewToken } from "../controllers/youtube/oauth2";
+import { getAuthUrl, storeNewToken } from "../services/youtube/oauth2";
 
 router.get("/authUrl", async (req: express.Request, res: express.Response) => {
   try {
