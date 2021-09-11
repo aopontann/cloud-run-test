@@ -61,3 +61,12 @@ export function toJST(UTC: string): string {
   });
   return formatted_time + "Z";
 }
+
+export function format_date(q?: {date?: Date, format?: string}): string {
+  const time = q?.date || new Date();
+  const format: string = q?.format || "YYYY-MM-DDTHH:mm:ssZ";
+  const formatted_time: string = formatToTimeZone(time, format, {
+    timeZone: "UTC",
+  });
+  return formatted_time;
+}
