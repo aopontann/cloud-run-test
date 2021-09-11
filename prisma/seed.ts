@@ -1,8 +1,6 @@
-import prisma from "../src/client";
-import add_video from "../src/controllers/video/add_video";
-import add_tag from "../src/controllers/tag/add_tag";
-import search_vtuberName from "../src/controllers/tag/search_vtuberName";
-import { toJST, get_time2 } from "../src/controllers/get_times";
+import prisma from "../src/lib/client";
+import add_video from "../src/services/video/add_video";
+import add_tag from "../src/services/tag/add_tag";
 
 const all_vtuberInfo = require("../sample/sample_VtuberList.json");
 const sample_videoList = require("../sample/sample_VideoList.json");
@@ -106,12 +104,14 @@ async function main() {
   */
   
   // タグデータ
+  /*
   for await (const saveTags of sample_tags){
     await add_tag({
       videoId: saveTags.videoId,
       tags: [...saveTags.tags]
     })
   }
+  */
 }
 
 main()
