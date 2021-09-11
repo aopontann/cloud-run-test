@@ -1,8 +1,5 @@
 import { google } from "googleapis";
 import { getToken } from "../oauth2";
-import fs from "fs";
-import { get_time2 } from "../../get_times";
-import get_video from "../../video/get_video";
 import insert_playlistItems from "./insert_playlistItems";
 import delete_playlistItems from "./delete_playlistItems";
 
