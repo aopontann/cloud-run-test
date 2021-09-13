@@ -42,22 +42,23 @@
     ]
   },
   "dependencies": {
-    "prisma": "^2.29.0",
     "@prisma/client": "^2.28.0",
+    "cors": "^2.8.5",
     "date-fns-timezone": "^0.1.4",
     "express": "^4.17.1",
+    "express-validator": "^6.12.1",
     "google-auth-library": "^7.6.1",
     "googleapis": "^76.0.0",
     "node-fetch": "^2.6.1",
+    "prisma": "^2.29.0",
     "twitter": "^1.7.1",
-    "twitter-d": "^0.4.0",
-    "cors": "^2.8.5"
+    "twitter-d": "^0.4.0"
   },
   "devDependencies": {
-    "@types/express": "^4.17.12",
-    "@types/node": "^15.12.4",
     "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.12",
     "@types/jest": "^27.0.1",
+    "@types/node": "^15.12.4",
     "@types/twitter": "^1.7.1",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
