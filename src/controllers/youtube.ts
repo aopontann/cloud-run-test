@@ -1,4 +1,5 @@
 import express from "express";
+import { query, validationResult } from "express-validator";
 const router = express.Router();
 
 import get_youtube_activities from "../services/youtube/get_youtube_activities";
@@ -9,15 +10,34 @@ import get_video from "../services/video/get_video";
 import { get_time } from "../services/get_times";
 import update_playlistItems from "../services/youtube/playlist/update_playlistItems";
 import { toUTC } from "../services/get_times";
+import { checkQuery } from "../lib/checkQuery";
 
 router.get(
   "/activities",
+  // バリデーション
+  query("channelId").if(query("channelId").exists()).isAscii(),
+  query("publishedAfter").if(query("publishedAfter").exists()).isRFC3339(),
+  query("publishedBefore").if(query("publishedBefore").exists()).isRFC3339(),
+  query("hour_ago").if(query("hour_ago").exists()).isInt({min: 1}),
+  checkQuery(["channelId", "publishedAfter", "publishedBefore", "hour_ago"]), //指定したパラメーター以外きたら400返す
+
   async (req: express.Request, res: express.Response) => {
-    // datetime "1970-01-01T00:00:00Z"
-    const all_channelId = req.query.channel as string | undefined;
+    console.log("YouTube activities query", req.query);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const all_channelId = req.query.channelId as string | undefined;
     const publishedAfter = req.query.publishedAfter as string | undefined;
     const publishedBefore = req.query.publishedBefore as string | undefined;
     const hour_ago = Number(req.query.hour_ago) || undefined;
+
+    if(hour_ago && publishedAfter || publishedBefore) {
+      res.status(400).json({
+        error: "publishedAfter, publishedBefore指定時にhour_agoは指定できません",
+      });
+      return;
+    }
 
     const result_activities = await get_youtube_activities({
       all_channelId: all_channelId ? all_channelId.split(",") : undefined,
@@ -25,20 +45,35 @@ router.get(
       publishedBefore: publishedBefore ? toUTC(publishedBefore) : undefined,
       hour_ago,
     }).catch((e) => {
-      console.log("youtube_activities error", e);
+      console.error("youtube_activities error", e);
       res.status(500).json({error: "youtube_activities error"});
+      throw e;
     });
     //console.log(result_activities);
 
-    res.status(200).json(result_activities);
+    res.status(200).json({
+      videoId_str: result_activities.join(","),
+      videoId: result_activities,
+    });
   }
 );
 
-//http://localhost:3002/youtube/videos?select=(bool)&videoId=
 router.get(
   "/videos",
+  query("videoId").if(query("videoId").exists()).isAscii(),
+  query("part").if(query("part").exists()).isAscii(),
+  query("select").if(query("select").exists()).isBoolean(),
+  checkQuery(["videoId", "part", "select"]), //指定したパラメーター以外きたら400返す
+
   async function (req: express.Request, res: express.Response): Promise<void> {
     console.log("query", req.query);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return; 
+    }
+
+    // 文字列から文字型配列やboolean型に変換
     const all_videoId = req.query.videoId
       ? (req.query.videoId as string).split(",")
       : [];
@@ -47,6 +82,7 @@ router.get(
       : ["statistics", "contentDetails", "snippet", "liveStreamingDetails"];
     const songcheck = req.query.select === "true" ? true : false;
 
+    // 歌動画か判断するには, snippet.titleなどが必要なため
     if (songcheck && !part.includes("snippet")) {
       res.status(400).json({
         error: "select するには snippet が必要です",
@@ -54,6 +90,7 @@ router.get(
       return;
     }
 
+    // Youtube Data API で動画詳細データを取得
     const result_getVideoInfo = await get_youtube_videos({
       videoId: all_videoId,
       part: part,
@@ -65,6 +102,7 @@ router.get(
       throw e;
     });
 
+    // 歌ってみた動画か判断しないで返す
     if (!songcheck) {
       res.json({
         message: "Not songCheck",
@@ -77,7 +115,6 @@ router.get(
     const result_select_videos = await select_youtube_videos(
       result_getVideoInfo
     );
-
     res.json({
       message: "done songCheck",
       songConfirm: result_select_videos.songConfirm,
@@ -88,10 +125,20 @@ router.get(
 
 router.get(
   "/search",
-  async function (req: express.Request, res: express.Response): Promise<void> {
+  query("publishedAfter").if(query("publishedAfter").exists()).isRFC3339(),
+  query("publishedBefore").if(query("publishedBefore").exists()).isRFC3339(),
+  query("hour_ago").if(query("hour_ago").exists()).isInt({min: 1}),
+  checkQuery(["publishedAfter", "publishedBefore", "hour_ago"]), //指定したパラメーター以外きたら400返す
+
+  async function (req: express.Request, res: express.Response) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     // datetime "1970-01-01T00:00:00Z"
     console.log("youtube search query", req.query);
     const hour_ago = Number(req.query.hour_ago) || undefined;
+    
     const result_search = await get_youtube_search({
       publishedAfter: req.query.publishedAfter as string | undefined,
       publishedBefore: req.query.publishedBefore as string | undefined,
@@ -106,11 +153,13 @@ router.get(
     //console.log(result_search);
     res.status(200).json({
       videoId_str: result_search.join(","),
-      videoId: result_search
+      videoId: result_search,
     });
   }
 );
 
+// アクセストークンの管理でつまづいているから、保留中
+/*
 router.put(
   "/playlistItems/week",
   async function (req: express.Request, res: express.Response): Promise<void> {
@@ -125,25 +174,26 @@ router.put(
       startAtAfter,
       startAtBefore,
       order: "startTime",
-    }).catch(e => {
-      res.status(500).json({error: "error"});
+    }).catch((e) => {
+      res.status(500).json({ error: "error" });
       throw e;
     });
     const res_get_videoId = result_get_video.map((video) => video.id);
     // MM/DD
     const today = startAtBefore.slice(5, 7) + "/" + startAtBefore.slice(8, 10);
-    const sixDayAgo = startAtAfter.slice(5, 7) + "/" + startAtAfter.slice(8, 10);
+    const sixDayAgo =
+      startAtAfter.slice(5, 7) + "/" + startAtAfter.slice(8, 10);
 
     await update_playlistItems({
       playlistId: "PL_bYerfwKlGiQSckNm6G6D4e-UugXiZrG",
       videoId: res_get_videoId,
       title: `にじさんじ 歌動画リスト (${sixDayAgo} 〜 ${today})`,
-    }).catch(e => {
-      res.status(500).json({error: "error"});
+    }).catch((e) => {
+      res.status(500).json({ error: "error" });
       throw e;
     });
 
-    res.json({result: "success"});
+    res.json({ result: "success" });
   }
 );
 
@@ -154,21 +204,22 @@ router.put(
       songConfirm: true,
       maxResults: 30,
       order: "random",
-    }).catch(e => {
-      res.status(500).json({error: "error"});
+    }).catch((e) => {
+      res.status(500).json({ error: "error" });
       throw e;
     });
     const res_get_videoId = result_get_video.map((video) => video.id);
     await update_playlistItems({
       playlistId: "PL_bYerfwKlGiS7VkaBUmUBgoqGOGyt1TC",
       videoId: res_get_videoId,
-    }).catch(e => {
-      res.status(500).json({error: "error"});
+    }).catch((e) => {
+      res.status(500).json({ error: "error" });
       throw e;
     });
-    res.json({result: "success"});
+    res.json({ result: "success" });
   }
 );
+*/
 
 //routerをモジュールとして扱う準備
 export = router;
