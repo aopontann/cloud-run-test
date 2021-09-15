@@ -7,9 +7,9 @@ import get_youtube_videos from "../services/youtube/get_youtube_videos";
 import get_youtube_search from "../services/youtube/get_youtube_search";
 import select_youtube_videos from "../services/youtube/select_youtube_videos";
 import get_video from "../services/video/get_video";
-import { get_time } from "../services/get_times";
+import { get_time } from "../lib/get_times";
 import update_playlistItems from "../services/youtube/playlist/update_playlistItems";
-import { toUTC } from "../services/get_times";
+import { toUTC } from "../lib/get_times";
 import { checkQuery } from "../lib/checkQuery";
 
 router.get(
@@ -18,35 +18,38 @@ router.get(
   query("channelId").if(query("channelId").exists()).isAscii(),
   query("publishedAfter").if(query("publishedAfter").exists()).isRFC3339(),
   query("publishedBefore").if(query("publishedBefore").exists()).isRFC3339(),
-  query("hour_ago").if(query("hour_ago").exists()).isInt({min: 1}),
+  query("hour_ago").if(query("hour_ago").exists()).isInt({ min: 1 }),
+  query().custom((value) => {
+    if (value.hour_ago && (value.publishedAfter || value.publishedBefore)){
+      throw new Error("publishedAfter, publishedBefore指定時にhour_agoは指定できません");
+    }
+    if (!value.hour_ago && !value.publishedAfter && !value.publishedBefore){
+      throw new Error("publishedAfter, publishedBefore か hour_ago 指定してください");
+    }
+    return true;
+  }),
   checkQuery(["channelId", "publishedAfter", "publishedBefore", "hour_ago"]), //指定したパラメーター以外きたら400返す
 
   async (req: express.Request, res: express.Response) => {
     console.log("YouTube activities query", req.query);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      res.status(400).json({ errors: errors.array() });
+      return;
     }
     const all_channelId = req.query.channelId as string | undefined;
     const publishedAfter = req.query.publishedAfter as string | undefined;
     const publishedBefore = req.query.publishedBefore as string | undefined;
     const hour_ago = Number(req.query.hour_ago) || undefined;
 
-    if(hour_ago && publishedAfter || publishedBefore) {
-      res.status(400).json({
-        error: "publishedAfter, publishedBefore指定時にhour_agoは指定できません",
-      });
-      return;
-    }
-
     const result_activities = await get_youtube_activities({
       all_channelId: all_channelId ? all_channelId.split(",") : undefined,
-      publishedAfter: publishedAfter ? toUTC(publishedAfter) : undefined,
-      publishedBefore: publishedBefore ? toUTC(publishedBefore) : undefined,
+      publishedAfter,
+      publishedBefore,
       hour_ago,
     }).catch((e) => {
       console.error("youtube_activities error", e);
-      res.status(500).json({error: "youtube_activities error"});
+      res.status(500).json({ error: "youtube_activities error" });
       throw e;
     });
     //console.log(result_activities);
@@ -66,11 +69,11 @@ router.get(
   checkQuery(["videoId", "part", "select"]), //指定したパラメーター以外きたら400返す
 
   async function (req: express.Request, res: express.Response): Promise<void> {
-    console.log("query", req.query);
+    console.log("youtube videos query", req.query);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
-      return; 
+      return;
     }
 
     // 文字列から文字型配列やboolean型に変換
@@ -127,21 +130,32 @@ router.get(
   "/search",
   query("publishedAfter").if(query("publishedAfter").exists()).isRFC3339(),
   query("publishedBefore").if(query("publishedBefore").exists()).isRFC3339(),
-  query("hour_ago").if(query("hour_ago").exists()).isInt({min: 1}),
+  query("hour_ago").if(query("hour_ago").exists()).isInt({ min: 1 }),
+  query().custom((value) => {
+    if (value.hour_ago && (value.publishedAfter || value.publishedBefore)){
+      throw new Error("publishedAfter, publishedBefore指定時にhour_agoは指定できません");
+    }
+    if (!value.hour_ago && !value.publishedAfter && !value.publishedBefore){
+      throw new Error("publishedAfter, publishedBefore か hour_ago 指定してください");
+    }
+    return true;
+  }),
   checkQuery(["publishedAfter", "publishedBefore", "hour_ago"]), //指定したパラメーター以外きたら400返す
 
   async function (req: express.Request, res: express.Response) {
+    console.log("youtube search query", req.query);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      res.status(400).json({ errors: errors.array() });
+      return;
     }
-    // datetime "1970-01-01T00:00:00Z"
-    console.log("youtube search query", req.query);
+    const publishedAfter = req.query.publishedAfter as string | undefined;
+    const publishedBefore = req.query.publishedBefore as string | undefined;
     const hour_ago = Number(req.query.hour_ago) || undefined;
-    
+
     const result_search = await get_youtube_search({
-      publishedAfter: req.query.publishedAfter as string | undefined,
-      publishedBefore: req.query.publishedBefore as string | undefined,
+      publishedAfter,
+      publishedBefore,
       hour_ago,
     }).catch((e) => {
       console.error("youtube_search error");
