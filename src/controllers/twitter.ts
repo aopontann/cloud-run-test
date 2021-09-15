@@ -1,5 +1,5 @@
 import express from "express";
-import { get_time } from "../services/get_times";
+import { get_time } from "../lib/get_times";
 import get_video from "../services/video/get_video";
 import tweet_videoId from "../services/twitter/tweet_video";
 import { type } from "os";
@@ -14,8 +14,8 @@ router.post(
     const startTimeBefore = get_time({ format: "YYYY-MM-DDT23:59:59" }) + "Z";
     const res_video = await get_video({
       songConfirm: true,
-      startAtAfter: startTimeAfter,
-      startAtBefore: startTimeBefore,
+      startTimeAtAfter: startTimeAfter,
+      startTimeAtBefore: startTimeBefore,
     }).catch((e) => {
       res.status(500).json("error");
       throw e;

@@ -1,6 +1,6 @@
 import { youtube_v3 } from "googleapis";
 import prisma from "../../lib/client";
-import { get_time } from "../get_times";
+import { get_time } from "../../lib/get_times";
 
 export default async function (query: youtube_v3.Schema$Video[]): Promise<void> {
   console.log("update_viewCount");

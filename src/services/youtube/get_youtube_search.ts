@@ -1,5 +1,5 @@
 import { google } from "googleapis";
-import { get_time } from "../get_times";
+import { get_time } from "../../lib/get_times";
 
 //指定した期間と指定したチャンネルの全ての動画URLを取得する
 export default async function (q: {

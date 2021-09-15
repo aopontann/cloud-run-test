@@ -1,7 +1,7 @@
 import Twitter from "twitter";
 import { Status } from "twitter-d";
 import { Videos } from ".prisma/client";
-import { format_date } from "../get_times";
+import { format_date } from "../../lib/get_times";
 export default async function (q: { video: Videos[] }) {
   const client = new Twitter({
     consumer_key: process.env.TWITTER_API_KEY || "",

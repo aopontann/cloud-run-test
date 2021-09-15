@@ -1,4 +1,4 @@
-import { get_time } from "../get_times";
+import { get_time } from "../../lib/get_times";
 import { google } from "googleapis";
 import get_vtuber from "../vtuber/get_vtuber";
 
@@ -29,7 +29,7 @@ export default async function (q: {
     let cnt = 0;
     const cntMax = 50;
     let pageToken = "";
-    console.log("channelId=", channelId);
+    // console.log("channelId=", channelId);
 
     while (cnt++ < cntMax) {
       const res = await service.activities
