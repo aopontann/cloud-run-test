@@ -7,102 +7,187 @@ import update_statistics from "../services/video/update_statistics";
 import get_youtube_videos from "../services/youtube/get_youtube_videos";
 import search_vtuberName from "../services/tag/search_vtuberName";
 import add_tag from "../services/tag/add_tag";
+import { query, body, validationResult } from "express-validator";
+import { checkQuery, checkJSONBody } from "../lib/checkQuery";
+import { typeOf } from "../lib/typeOf";
 
 const router = express.Router();
+const toBoolean = (str: string) => {
+  return str == "true" ? true : str == "false" ? false : undefined;
+};
 
-router.get("/", async function (req: express.Request, res: express.Response) {
-  const videoId = req.query.id as string | undefined;
-  const songConfirm = req.query.songConfirm as string | undefined;
-  const startAtAfter = req.query.startAtAfter as string | undefined;
-  const startAtBefore = req.query.startAtBefore as string | undefined;
-  const maxResults = Number(req.query.maxResults) || undefined;
-  const page = Number(req.query.page) || undefined;
-  const order = req.query.order as string | undefined;
-  const tags = req.query.tags as string | undefined;
+router.get(
+  "/",
+  // もうちょっといい書き方ないかな？↓
+  query("id").if(query("id").exists()).isAscii(),
+  query("songConfirm").if(query("songConfirm").exists()).isBoolean(),
+  query("startTimeAtAfter").if(query("startTimeAtAfter").exists()).isRFC3339(),
+  query("startTimeAtBefore")
+    .if(query("startTimeAtBefore").exists())
+    .isRFC3339(),
+  query("maxResults").if(query("maxResults").exists()).isInt({ min: 1 }),
+  query("page").if(query("page").exists()).isInt({ min: 1 }),
+  query("order")
+    .if(query("order").exists())
+    .isIn(["startTime", "viewCount", "random"]),
+  query("tags").if(query("tags").exists()).isAscii(),
+  checkQuery([
+    "id",
+    "songConfirm",
+    "startTimeAtAfter",
+    "startTimeAtBefore",
+    "maxResults",
+    "page",
+    "order",
+    "tags",
+  ]),
 
-  console.log("get_videos query", req.query);
+  async (req: express.Request, res: express.Response) => {
+    const videoId = req.query.id ? String(req.query.id).split(",") : undefined;
+    const songConfirm = toBoolean(String(req.query.songConfirm));
+    const startTimeAtAfter = req.query.startTimeAtAfter
+      ? String(req.query.startTimeAtAfter)
+      : undefined;
+    const startTimeAtBefore = req.query.startTimeAtBefore
+      ? String(req.query.startTimeAtBefore)
+      : undefined;
+    const maxResults = Number(req.query.maxResults) || undefined;
+    const page = Number(req.query.page) || undefined;
+    const order = req.query.order ? String(req.query.order) : undefined;
+    const tags = req.query.tags ? String(req.query.tags).split(",") : undefined;
 
-  const result = await get_video({
-    videoId: videoId ? videoId.split(",") : undefined,
-    songConfirm:
-      songConfirm == "true" || songConfirm == "false"
-        ? JSON.parse(songConfirm.toLowerCase())
-        : undefined,
-    startAtAfter,
-    startAtBefore,
-    maxResults,
-    page,
-    tags: tags ? tags.split(",") : undefined,
-    order,
-  }).catch((e) => {
-    console.log("get_video error", e);
-    res.status(500).json({
-      error: "get_video error",
-    });
-    throw e;
-  });
-
-  res.status(200).json({
-    videoId_str: result.map(video => video.id).join(","),
-    result
-  });
-});
-
-router.post("/", async function (req: express.Request, res: express.Response) {
-  await add_video({
-    all_videoInfo: req.body.songConfirm || req.body.result || [],
-    songConfirm: true,
-  }).catch((e) => {
-    console.log("add_video error", e);
-    res.status(500).json("add_video error");
-  });
-  await add_video({
-    all_videoInfo: req.body.unsongConfirm || [],
-    songConfirm: false,
-  }).catch((e) => {
-    console.log("add_video error", e);
-    res.status(500).json({
-      error: "add_video error",
-    });
-    throw e;
-  });
-
-  const result_search_name = await search_vtuberName(req.body.songConfirm || req.body.result || []);
-  for await (const name of result_search_name) {
-    await add_tag(name).catch(e => {
-      console.error("add tags error:", e);
+    console.log("get_videos query", req.query);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+    const result = await get_video({
+      id: videoId,
+      songConfirm,
+      startTimeAtAfter,
+      startTimeAtBefore,
+      maxResults,
+      page,
+      tags,
+      order,
+    }).catch((e) => {
+      console.log("get_video error", e);
+      res.status(500).json({
+        error: "get_video error",
+      });
       throw e;
-    })
-  }
-
-  res.status(201).json("success");
-});
-
-router.put("/", async function (req: express.Request, res: express.Response) {
-  console.log("update_videos body", req.body);
-  const result = await update_video({
-    id: req.body.id || "",
-    songConfirm: req.body.songConfirm,
-    title: req.body.title,
-    description: req.body.description
-  }).catch((e) => {
-    console.log("update_video error", e);
-    res.status(500).json({
-      error: "update_video error",
     });
-    throw e;
-  });
-  res.status(201).json({
-    result: result,
-  });
-});
+
+    res.status(200).json({
+      videoId_str: result.items.map((video) => video.id).join(","),
+      ...result,
+    });
+  }
+);
+
+router.post(
+  "/",
+  body().custom((value) => {
+    if (value.songConfirm || value.result || value.unsongConfirm) {
+      return true;
+    } else {
+      throw new Error("not youtube video");
+    }
+  }),
+  checkJSONBody(["songConfirm", "result", "unsongConfirm", "message"]),
+
+  async (req: express.Request, res: express.Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+    try {
+      await add_video({
+        all_videoInfo: req.body.songConfirm || req.body.result || [],
+        songConfirm: true,
+      });
+      await add_video({
+        all_videoInfo: req.body.unsongConfirm || [],
+        songConfirm: false,
+      });
+    } catch (e) {
+      console.log("add_video error", e);
+      res.status(500).json({
+        error: "add_video error",
+      });
+      throw e;
+    }
+    res.status(201).json("success");
+  }
+);
+
+router.put(
+  "/",
+  body("videoId")
+    .isAscii()
+    .custom(async (videoId) => {
+      const getResult = await get_video({ id: videoId });
+      if (getResult.items.length == 0) {
+        throw new Error("not found video");
+      }
+      return true;
+    }),
+  body("songConfirm").if(body("songConfirm").exists()).isBoolean(),
+  body("title")
+    .if(body("title").exists())
+    .custom((value) => {
+      if (value === "" || typeOf(value) !== "string") {
+        throw new Error("NG title");
+      }
+      return true;
+    }),
+  body("description")
+    .if(body("description").exists())
+    .custom((value) => {
+      if (value === "" || typeOf(value) !== "string") {
+        throw new Error("NG description");
+      }
+      return true;
+    }),
+  checkJSONBody(["videoId", "songConfirm", "title", "description"]),
+
+  async function (req: express.Request, res: express.Response) {
+    const videoId = req.body.videoId ? String(req.body.videoId) : "error";
+    const songConfirm = toBoolean(String(req.body.songConfirm));
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+    console.log("update_videos body", req.body);
+    const result = await update_video({
+      id: videoId,
+      songConfirm,
+      title: req.body.title,
+      description: req.body.description,
+    }).catch((e) => {
+      console.log("update_video error", e);
+      res.status(500).json({
+        error: "update_video error",
+      });
+      throw e;
+    });
+    res.status(201).json({
+      result: result,
+    });
+  }
+);
 
 router.put("/viewCount", async function (req, res) {
   // DB から動画情報を取得
-  const result_DB_get_videos = await get_video({
+  const result_get_videos = await get_video({
     songConfirm: true,
   });
-  const target_videoId = result_DB_get_videos.map((videoInfo) => videoInfo.id);
+  const target_videoId = result_get_videos.items.map(
+    (videoInfo) => videoInfo.id
+  );
 
   // 動画の詳細データ(視聴回数や評価数など)を取得する
   const result_get_youtube_videos = await get_youtube_videos({
@@ -124,10 +209,27 @@ router.put("/viewCount", async function (req, res) {
 
 router.delete(
   "/",
+  // バリデーション
+  query("id")
+    .isAscii()
+    .custom(async (videoId) => {
+      const getResult = await get_video({ id: videoId });
+      if (getResult.items.length == 0) {
+        throw new Error("not found video");
+      }
+      return true;
+    }),
+  checkQuery(["id"]),
+
   async function (req: express.Request, res: express.Response) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
     console.log("delete start");
-    const all_videoId = req.query.id ? (req.query.id as string).split(",") : [];
-    await delete_video(all_videoId).catch((e) => {
+    const all_videoId = req.query.id ? String(req.query.id).split(",") : [];
+    await delete_video([...all_videoId]).catch((e) => {
       console.log("delete_video error", e);
       res.status(500).json({
         error: "delete_video error",
