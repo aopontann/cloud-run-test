@@ -1,13 +1,15 @@
 import prisma from "../../lib/client";
 
-export default async function (query?: { names?: string[] }) {
+export default async function (query?: { names?: string[]; videoId?: string }) {
   const names = query?.names || null;
+  const videoId = query?.videoId || null;
   const NG_tags = ["test"];
 
   const get_tags = await prisma.tags.groupBy({
     where: {
       AND: [
         { name: names ? { in: names } : undefined },
+        { videoId: videoId || undefined },
         { name: { notIn: NG_tags } },
       ],
     },
@@ -19,21 +21,6 @@ export default async function (query?: { names?: string[] }) {
       name: "asc",
     },
   });
-
-  /*
-  //await prisma.$connect();
-  const get_tags = await prisma.tags
-    .findMany({
-      where: {
-        name: names ? { in: names } : undefined,
-      },
-      orderBy: {name: "asc"},
-    })
-    .catch((e) => {
-      console.error("get_tag error");
-      throw e;
-    });
-  */
 
   return get_tags;
 }
