@@ -5,8 +5,6 @@ import update_video from "../services/video/update_video";
 import delete_video from "../services/video/delete_video";
 import update_statistics from "../services/video/update_statistics";
 import get_youtube_videos from "../services/youtube/get_youtube_videos";
-import search_vtuberName from "../services/tag/search_vtuberName";
-import add_tag from "../services/tag/add_tag";
 import { query, body, validationResult } from "express-validator";
 import { checkQuery, checkJSONBody } from "../lib/checkQuery";
 import { typeOf } from "../lib/typeOf";
