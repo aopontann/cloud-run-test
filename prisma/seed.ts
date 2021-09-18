@@ -1,6 +1,7 @@
 import prisma from "../src/lib/client";
 import add_video from "../src/services/video/add_video";
 import add_tag from "../src/services/tag/add_tag";
+import search_vtuberName from "../src/services/tag/search_vtuberName";
 
 const all_vtuberInfo = require("../sample/sample_VtuberList.json");
 const sample_videoList = require("../sample/sample_VideoList.json");
@@ -45,73 +46,12 @@ async function main() {
     all_videoInfo: sample_videoList.unsongConfirm,
     songConfirm: false,
   });
-
-  /*
-  let cnt = 1;
-  for await (const videoInfo of sample_videoList.result) {
-    console.log(
-      `(${cnt++} / ${sample_videoList.result.length}) videoId = ${videoInfo.id}`
-    );
-    const thumb = videoInfo.snippet.thumbnails;
-    const count = videoInfo.statistics;
-    const startTime =
-      videoInfo.liveStreamingDetails?.scheduledStartTime ||
-      videoInfo.liveStreamingDetails?.actualStartTime ||
-      videoInfo.snippet.publishedAt ||
-      "2000-01-01T00:00:00";
-
-    await prisma.videos
-      .upsert({
-        where: { id: videoInfo.id },
-        create: {
-          id: videoInfo.id,
-          title: videoInfo.snippet?.title || "",
-          description: videoInfo.snippet?.description || "",
-          songConfirm: true,
-          startTime: toJST(startTime),
-          createdAt: get_time2({}),
-          thumbnail: {
-            create: {
-              defaultUrl: thumb?.default?.url || null,
-              medium: thumb?.medium?.url || null,
-              high: thumb?.high?.url || null,
-              standard: thumb?.standard?.url || null,
-              maxres: thumb?.maxres?.url || null,
-            },
-          },
-          statistic: {
-            create: {
-              createdAt: get_time2({}),
-              updatedAt: get_time2({}),
-              viewCount: count?.viewCount ? Number(count.viewCount) : null,
-              likeCount: count?.likeCount ? Number(count.likeCount) : null,
-              dislikeCount: count?.dislikeCount
-                ? Number(count.dislikeCount)
-                : null,
-              commentCount: count?.commentCount
-                ? Number(count.commentCount)
-                : null,
-            },
-          },
-        },
-        update: {},
-      })
-      .catch((e) => {
-        console.log("add_video error!");
-        throw e;
-      });
-  }
-  */
   
   // タグデータ
-  /*
-  for await (const saveTags of sample_tags){
-    await add_tag({
-      videoId: saveTags.videoId,
-      tags: [...saveTags.tags]
-    })
+  const result_search = await search_vtuberName(sample_videoList.songConfirm)
+  for await (const result of result_search) {
+    await add_tag(result)
   }
-  */
 }
 
 main()
