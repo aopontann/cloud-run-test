@@ -19,12 +19,15 @@ export default async function (all_videoInfo: youtube_v3.Schema$Video[]) {
   //console.log(all_channelId);
 
   for (const videoInfo of all_videoInfo) {
-    const videotime = videoInfo.contentDetails?.duration || "PT99H99M499S"; // 例 "PT1H33M45S"
+    // 生放送の公開予定情報の場合、contentDetails.duration は "P0D" となっている
+    // あらかじめ動画の長さが決まっている動画(歌ってみた動画など)は動画の長さデータが格納されている
+    const videotime = videoInfo.contentDetails?.duration || "P0D"; // 例 "PT1H33M45S"
     const comptime = "PT9M59S"; // 9分59秒
 
     if (
       videotime.search(/\d\dM/) === -1 &&
-      comptime.length >= videotime.length
+      comptime.length >= videotime.length &&
+      videotime !== "P0D"
     ) {
       // 動画の長さが9分59秒以下の場合
       const checktitle = videoInfo.snippet?.title || "";
