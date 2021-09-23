@@ -1,14 +1,15 @@
 import express from "express";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
 
-const target_validate = [
-  "affiliation",
-  "type",
-  "id",
-  "name",
-  "birthday",
-  "readname",
-  "image",
-];
+interface VtuberData {
+  id?: string;
+  name?: string;
+  affiliation?: string;
+  type?: string;
+  birthday?: string;
+}
+
 const all_affiliation = [
   "にじさんじ",
   "NIJISANJI KR",
@@ -18,51 +19,77 @@ const all_affiliation = [
 ];
 const all_type = ["活動中", "卒業", "ユニット", "公式"];
 
-export const validateQuery_vtuber =
-  (requireKeys?: string[]) =>
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const query = req.query || {};
-    console.log("query", query);
-    // affiliation バリデーションチェック
-    if (query.affiliation) {
-      for (const affi of String(query.affiliation).split(",")) {
-        if (!all_affiliation.includes(affi)) {
-          res.status(400).json({ errors: "NG affiliation" });
-        }
-      }
-    }
+// インスタンスを作成
+const ajv = new Ajv();
+addFormats(ajv);
 
-    // type バリデーションチェック
-    if (query.type) {
-      for (const type of String(query.type).split(",")) {
-        if (!all_type.includes(type)) {
-          res.status(400).json({ errors: "NG type" });
-        }
-      }
-    }
+const schema = {
+  type: "object",
+  properties: {
+    id: {
+      type: "string",
+      pattern: "^[\x20-\x7E]+$", //ascii
+    },
+    name: {
+      type: "string",
+    },
+    affiliation: {
+      type: "string",
+    },
+    type: {
+      type: "string",
+    },
+    birthday: {
+      type: "string",
+      pattern: "[0-9]{4}", // 4桁固定数字
+    },
+  },
+  additionalProperties: false,
+};
 
-    if (query.birthday) {
-      if (!String(query.birthday).match(/[0-9]{4}/)) {
-        res.status(400).json({ errors: "NG birthday" });
-      }
-    }
+// バリデーション関数を作成
+const validate = ajv.compile(schema);
 
-    for (const [key, val] of Object.entries(query)) {
-      // 「""」文字排除
-      if (val === "") {
-        res.status(400).json({ errors: `NG ${key}` });
-      }
-      // target_validate以外のkey排除
-      if (!target_validate.includes(key)) {
-        res.status(400).json({ errors: `Cannot be specified ${key}` });
-      }
-    }
-    // 必須パラメータが全て含まれているか
-    for (const requireKey of requireKeys || []) {
-      if (!Object.keys(query).includes(requireKey)) {
-        res.status(400).json({ errors: `not found require key ${requireKey}` });
-      }
-    }
+export const validateQuery_vtuber = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  const query: VtuberData = req.query || {};
 
-    next();
-  };
+  // バリデーションを実行
+  const valid = validate(query);
+  if (!valid) {
+    // バリデーションエラー
+    res.status(400).json({ errors: validate.errors });
+    return;
+  }
+
+  if (query.affiliation) {
+    for (const affi of query.affiliation.split(",")) {
+      if (!all_affiliation.includes(affi)) {
+        res.status(400).json({ errors: "NG affiliation" });
+        return;
+      }
+    }
+  }
+
+  if (query.type) {
+    for (const type of query.type.split(",")) {
+      if (!all_type.includes(type)) {
+        res.status(400).json({ errors: "NG type" });
+        return;
+      }
+    }
+  }
+
+  // 「""」文字排除
+  for (const [key, val] of Object.entries(query)) {
+    if (val === "") {
+      res.status(400).json({ errors: `NG ${key}` });
+      return;
+    }
+  }
+
+  next();
+};
