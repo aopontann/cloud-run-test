@@ -77,16 +77,19 @@ export const validateBody_PUT_vtuber = (
 
   if (body.affiliation && !all_affiliation.includes(body.affiliation)) {
     res.status(400).json({ errors: "NG affiliation" });
+    return;
   }
 
   if (body.type && !all_type.includes(body.type)) {
     res.status(400).json({ errors: "NG type" });
+    return;
   }
 
   // 「""」文字排除
   for (const [key, val] of Object.entries(body)) {
     if (val === "") {
       res.status(400).json({ errors: `NG ${key}` });
+      return;
     }
   }
 
