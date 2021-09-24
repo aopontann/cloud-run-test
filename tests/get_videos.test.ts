@@ -79,6 +79,21 @@ describe("get-videos", () => {
       });
   });
 
+  // postmanでは200を返すが、テスト上では400を返してしまう
+  /*
+  test("get videos startTimeAtAfter,before-'2021-06-01T00:00:00%2B09:00'", async () => {
+    return request(app)
+      .get("/videos")
+      .query({
+        startTimeAtAfter: "2021-06-01T00:00:00%2B09:00",
+        startTimeAtBefore: "2021-06-08T00:00:00%2B09:00",
+      })
+      .then((res) => {
+        expect(res.status).toBe(200);
+      });
+  });
+  */
+
   test("get videos order-startTime", async () => {
     return request(app)
       .get("/videos")
@@ -202,11 +217,12 @@ describe("get-videos", () => {
       });
   });
 
-  test("(err) get videos startTimeAtAfter-'2021-06-01T00:00:00'", async () => {
+  test("(err) startTimeAtAfter-'2021-06-01T00:00:00'", async () => {
     return request(app)
       .get("/videos")
       .query({
         startTimeAtAfter: "2021-06-01T00:00:00",
+        startTimeAtBefore: "2021-06-02T00:00:00",
       })
       .then((res) => {
         expect(res.status).toBe(400);
@@ -333,5 +349,16 @@ describe("get-videos", () => {
         expect(res.status).toBe(400);
       });
   });
-  
+
+  test("(err) get videos tags-'abc,,def'", async () => {
+    return request(app)
+      .get("/videos")
+      .query({
+        tags: "abc,,def",
+      })
+      .then((res) => {
+        expect(res.status).toBe(400);
+      });
+  });
+
 });
