@@ -80,7 +80,7 @@ describe("get-vtuber", () => {
     return request(app)
       .get("/vtuber")
       .query({
-        id: "UCBi8YaVyZpiKWN3_Z0dCTfQ"
+        type: "活動中"
       })
       .then((res) => {
         expect(res.status).toBe(200);
@@ -114,7 +114,7 @@ describe("get-vtuber", () => {
     return request(app)
       .get("/vtuber")
       .query({
-        birthday: "0930"
+        affiliation: "にじにゃんじ"
       })
       .then((res) => {
         expect(res.status).toBe(400);
