@@ -117,7 +117,7 @@ describe("post-vtuber", () => {
         id: "test002",
         name: "テスト２",
         readname: "てすとに",
-        affiliation: "NIJISANJI KR",
+        affiliation: "NIJISANJI KR123",
         type: "活動中",
       })
       .then((res) => {
