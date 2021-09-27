@@ -62,7 +62,7 @@ router.put(
   "/",
   validateBody_PUT_vtuber,
   async function (req: express.Request, res: express.Response): Promise<void> {
-    await update_vtuber({ ...req.body }).catch((e) => {
+    const result = await update_vtuber({ ...req.body }).catch((e) => {
       console.log("update_vtuber error!", e);
       res.status(500).json({
         error: "update_vtuber error",
@@ -70,7 +70,9 @@ router.put(
       throw e;
     });
 
-    res.status(201).json("success!");
+    res.status(200).json({
+      result,
+    });
   }
 );
 
