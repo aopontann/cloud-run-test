@@ -1,6 +1,7 @@
 import express from "express";
 import Ajv, { JSONSchemaType } from "ajv";
 import addFormats from "ajv-formats";
+import get_vtuber from "../../services/vtuber/get_vtuber"
 
 interface VtuberData {
   id: string;
@@ -30,7 +31,7 @@ const schema = {
   properties: {
     id: {
       type: "string",
-      pattern: "/^[\x20-\x7e]+$/", //ascii
+      pattern: "^[\x20-\x7e]+$", //ascii
     },
     name: {
       type: "string",
@@ -46,7 +47,7 @@ const schema = {
     },
     birthday: {
       type: "string",
-      pattern: "/[0-9]{4}/", // 4桁固定数字
+      pattern: "[0-9]{4}", // 4桁固定数字
     },
     image: {
       type: "string",
@@ -59,7 +60,7 @@ const schema = {
 // バリデーション関数を作成
 const validate = ajv.compile(schema);
 
-export const validateBody_POST_vtuber = (
+export const validateBody_POST_vtuber = async(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
@@ -70,8 +71,14 @@ export const validateBody_POST_vtuber = (
   const valid = validate(body);
   if (!valid) {
     // バリデーションエラー
-    console.log(validate.errors);
     res.status(400).json({ errors: validate.errors });
+    return;
+  }
+
+  //既に保存されている場合
+  const result_vtuber = await get_vtuber({id: [body.id]})
+  if (result_vtuber.length > 0) {
+    res.status(400).json({ errors: "already saved id" });
     return;
   }
 

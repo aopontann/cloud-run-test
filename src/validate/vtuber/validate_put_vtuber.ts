@@ -1,6 +1,8 @@
 import express from "express";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
+import get_vtuber from "../../services/vtuber/get_vtuber"
+
 
 interface VtuberData {
   id: string;
@@ -30,7 +32,7 @@ const schema = {
   properties: {
     id: {
       type: "string",
-      pattern: "/^[\x20-\x7e]+$/", //ascii
+      pattern: "^[\x20-\x7e]+$", //ascii
     },
     name: {
       type: "string",
@@ -46,7 +48,7 @@ const schema = {
     },
     birthday: {
       type: "string",
-      pattern: "/[0-9]{4}/", // 4桁固定数字
+      pattern: "[0-9]{4}", // 4桁固定数字
     },
     image: {
       type: "string",
@@ -59,7 +61,7 @@ const schema = {
 // バリデーション関数を作成
 const validate = ajv.compile(schema);
 
-export const validateBody_PUT_vtuber = (
+export const validateBody_PUT_vtuber = async(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
@@ -72,6 +74,13 @@ export const validateBody_PUT_vtuber = (
     // バリデーションエラー
     console.log(validate.errors);
     res.status(400).json({ errors: validate.errors });
+    return;
+  }
+
+  //保存されていないデータ idを指定した時
+  const result_vtuber = await get_vtuber({id: [body.id]})
+  if (result_vtuber.length == 0) {
+    res.status(400).json({ errors: "not found id" });
     return;
   }
 
