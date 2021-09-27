@@ -8,6 +8,7 @@ import get_youtube_videos from "../services/youtube/get_youtube_videos";
 import { query, body, validationResult } from "express-validator";
 import { checkQuery, checkJSONBody } from "../lib/checkQuery";
 import { typeOf } from "../lib/typeOf";
+import { validateQuery_GET_videos } from "../validate/videos/validate_get_videos";
 
 const router = express.Router();
 const toBoolean = (str: string) => {
@@ -16,30 +17,9 @@ const toBoolean = (str: string) => {
 
 router.get(
   "/",
-  // もうちょっといい書き方ないかな？↓
-  query("id").if(query("id").exists()).isAscii(),
-  query("songConfirm").if(query("songConfirm").exists()).isBoolean(),
   query("startTimeAtAfter").if(query("startTimeAtAfter").exists()).isRFC3339(),
-  query("startTimeAtBefore")
-    .if(query("startTimeAtBefore").exists())
-    .isRFC3339(),
-  query("maxResults").if(query("maxResults").exists()).isInt({ min: 1 }),
-  query("page").if(query("page").exists()).isInt({ min: 1 }),
-  query("order")
-    .if(query("order").exists())
-    .isIn(["startTime", "viewCount", "random"]),
-  query("tags").if(query("tags").exists()).isAscii(),
-  checkQuery([
-    "id",
-    "songConfirm",
-    "startTimeAtAfter",
-    "startTimeAtBefore",
-    "maxResults",
-    "page",
-    "order",
-    "tags",
-  ]),
-
+  query("startTimeAtBefore").if(query("startTimeAtBefore").exists()).isRFC3339(),
+  validateQuery_GET_videos,
   async (req: express.Request, res: express.Response) => {
     const videoId = req.query.id ? String(req.query.id).split(",") : undefined;
     const songConfirm = toBoolean(String(req.query.songConfirm));
@@ -60,6 +40,7 @@ router.get(
       res.status(400).json({ errors: errors.array() });
       return;
     }
+    
     const result = await get_video({
       id: videoId,
       songConfirm,
@@ -123,7 +104,7 @@ router.post(
 
 router.put(
   "/",
-  body("videoId")
+  body("id")
     .isAscii()
     .custom(async (videoId) => {
       const getResult = await get_video({ id: videoId });
@@ -149,10 +130,10 @@ router.put(
       }
       return true;
     }),
-  checkJSONBody(["videoId", "songConfirm", "title", "description"]),
+  checkJSONBody(["id", "songConfirm", "title", "description"]),
 
   async function (req: express.Request, res: express.Response) {
-    const videoId = req.body.videoId ? String(req.body.videoId) : "error";
+    const id = req.body.id ? String(req.body.id) : "error";
     const songConfirm = toBoolean(String(req.body.songConfirm));
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -161,7 +142,7 @@ router.put(
     }
     console.log("update_videos body", req.body);
     const result = await update_video({
-      id: videoId,
+      id,
       songConfirm,
       title: req.body.title,
       description: req.body.description,
