@@ -13,14 +13,14 @@ import {
   match_list_indeterminate,
 } from './verificationDataList';
 
+const service = youtube('v3');
+
 @Injectable()
 export class YouTubeService {
   constructor(private prisma: PrismaService, private dts: DatetimeService) {}
 
   async activities(params: ActivitiesParams): Promise<string[]> {
     const { all_channelId, publishedAfter, publishedBefore } = params;
-    const service = youtube('v3');
-
     console.log(`探索期間(UTC) ${publishedAfter} <--> ${publishedBefore}`);
 
     //  期間分全ての動画情報を入れる
@@ -62,8 +62,6 @@ export class YouTubeService {
 
   async search(params: SearchParams): Promise<string[]> {
     const { publishedAfter, publishedBefore } = params;
-    const service = youtube('v3');
-
     console.log(`探索期間(UTC) ${publishedAfter} <--> ${publishedBefore}`);
 
     // 関連性の高いデータだけ取得するため、1ページのみのデータを取得
@@ -95,7 +93,6 @@ export class YouTubeService {
 
   async videos(params: VideosParams) {
     const { videoIdList } = params;
-    const service = youtube('v3');
     const result_items: youtube_v3.Schema$Video[] = [];
     let cnt = 0;
     const cutsize = 50;
