@@ -1,0 +1,48 @@
+export const match_list_ng = [
+  'まいにち動画',
+  '漫画',
+  '【アニメ】',
+  'マリオカート',
+  'Apex',
+  'APEX',
+  'ARK',
+  'Ark',
+  'XFD',
+  'クロスフェード',
+  'メドレー',
+  'Reaction',
+];
+
+export const match_list_ok = [
+  '歌ってみた',
+  '歌わせていただきました',
+  '歌って踊ってみた',
+  'cover',
+  'Cover',
+  'COVER',
+  'MV',
+  'Music Video',
+  'ソング',
+  'song',
+  'オリジナル曲',
+  'オリジナルMV',
+  'Official Lyric Video',
+];
+
+export const match_list_indeterminate = [
+  'feat',
+  '歌',
+  'うた',
+  '曲',
+  'vocal',
+  'Vocal',
+  'song',
+  'Song',
+  'music',
+  'Music',
+  '唄',
+  'ワンコーラス',
+  '試聴',
+  'short',
+  'Short',
+];

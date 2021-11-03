@@ -1,3 +1,4 @@
+/*
 import prisma from "../src/lib/client";
 import add_video from "../src/services/video/add_video";
 import add_tag from "../src/services/tag/add_tag";
@@ -36,7 +37,7 @@ async function main() {
       });
     errorFlag ? console.log("error!") : console.log("success!");
   }
-  
+
   // 動画データ
   await add_video({
     all_videoInfo: sample_videoList.songConfirm,
@@ -46,7 +47,7 @@ async function main() {
     all_videoInfo: sample_videoList.unsongConfirm,
     songConfirm: false,
   });
-  
+
   // タグデータ
   const result_search = await search_vtuberName(sample_videoList.songConfirm)
   for await (const result of result_search) {
@@ -61,3 +62,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+*/
