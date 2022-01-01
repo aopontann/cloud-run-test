@@ -11,6 +11,8 @@ export class VideoService {
   constructor(private prisma: PrismaService) {}
   async getVideo(params: GetVideoParams) {
     const NG_tags = ['test'];
+    console.log(`songConfirm: ${params.songConfirm}`);
+    console.log(`type songConfirm: ${typeof params.songConfirm}`);
     const {
       videoId,
       songConfirm,
@@ -40,7 +42,7 @@ export class VideoService {
                 viewCount: 'desc',
               },
             },
-      skip: maxResults * (page - 1),
+      skip: maxResults ? maxResults * (page - 1) : undefined,
       take: order == 'random' ? 9999 : maxResults,
       include: {
         thumbnail: true,
